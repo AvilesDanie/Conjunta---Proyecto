@@ -1,0 +1,484 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{amsmath}
+
+% Configuración de encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Banco BanQuito - Módulo de Crédito}
+\rhead{Item 2 - Descripción de Caso de Uso}
+\cfoot{\thepage}
+
+% Colores personalizados
+\definecolor{headercolor}{RGB}{0,102,204}
+\definecolor{lightgray}{RGB}{240,240,240}
+
+\title{\textbf{DESCRIPCIÓN DEL CASO DE USO\\[0.5cm]
+\Large Obtener Monto Máximo de Crédito}}
+\author{Sistema Banco BanQuito - Módulo de Crédito\\
+Examen Complexivo - Arquitectura de Software}
+\date{Octubre 2025}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\vspace{1cm}
+
+\begin{center}
+\begin{tabular}{|p{5cm}|p{9cm}|}
+\hline
+\textbf{ID del Caso de Uso} & CU-02 \\
+\hline
+\textbf{Nombre} & Obtener Monto Máximo de Crédito \\
+\hline
+\textbf{Actor Principal} & Sistema Comercializadora de Electrodomésticos \\
+\hline
+\textbf{Tipo} & Servicio Web SOAP \\
+\hline
+\textbf{Prioridad} & Alta \\
+\hline
+\textbf{Puntos Rúbrica} & Item 6 - 1.5 puntos \\
+\hline
+\end{tabular}
+\end{center}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Descripción General}
+
+Este caso de uso permite calcular el monto máximo de crédito que puede ser otorgado a un cliente del Banco BanQuito, basándose en el análisis de sus movimientos bancarios de los últimos 3 meses. El sistema evaluará los promedios de depósitos y retiros para determinar la capacidad crediticia del cliente.
+
+\subsection{Objetivo}
+
+Determinar de forma automática el límite de crédito que puede ser aprobado para un cliente, aplicando una fórmula financiera que considera sus ingresos (depósitos) y gastos (retiros) históricos.
+
+\section{Precondiciones}
+
+\begin{enumerate}[label=\arabic*.]
+    \item El cliente debe existir en la base de datos del sistema CORE (tabla CLIENTE)
+    \item El cliente debe estar registrado con una cédula válida (10 dígitos)
+    \item El cliente debe tener al menos una cuenta asociada (tabla CUENTA)
+    \item Debe existir historial de movimientos en los últimos 3 meses (tabla MOVIMIENTO)
+    \item \textit{Recomendado:} El cliente debe haber pasado la validación de "Sujeto de Crédito" (CU-01)
+\end{enumerate}
+
+\section{Postcondiciones}
+
+\subsection{Postcondición de Éxito}
+\begin{itemize}
+    \item El sistema retorna el monto máximo de crédito calculado como un valor decimal (ejemplo: 3456.78)
+    \item El monto es expresado en dólares estadounidenses (USD)
+    \item El monto es mayor a 0 (cero)
+\end{itemize}
+
+\subsection{Postcondición de Fallo}
+\begin{itemize}
+    \item El sistema retorna monto \$0.00 si no hay suficiente historial de movimientos
+    \item El sistema retorna monto \$0.00 si la diferencia entre promedios es negativa o cero
+    \item El sistema retorna un mensaje de error SOAP si la cédula no existe
+\end{itemize}
+
+\newpage
+
+\section{Flujo Principal (Flujo Básico)}
+
+\subsection{Acciones del Actor}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=1.5cm]
+    \item El Sistema Comercializadora invoca el servicio web \texttt{obtenerMontoMaximoCredito(cedula)} con la cédula del cliente como parámetro.
+    
+    \item El Sistema Comercializadora recibe el monto máximo aprobado.
+\end{enumerate}
+
+\subsection{Respuestas del Sistema}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=1.5cm]
+    \setcounter{enumi}{1}
+    
+    \item El sistema valida que la cédula tenga formato correcto (10 dígitos numéricos).
+    
+    \item El sistema busca al cliente en la tabla CLIENTE usando la cédula proporcionada.
+    
+    \item El sistema verifica que el cliente existe. Si no existe, ejecuta \textbf{Flujo Alternativo 1}.
+    
+    \item El sistema obtiene el número de cuenta(s) asociada(s) al cliente desde la tabla CUENTA.
+    
+    \item El sistema calcula la fecha límite: \textbf{Fecha actual - 90 días}.
+    
+    \item \textbf{[Sub-proceso: Calcular Promedio de Depósitos]} 
+    
+    El sistema ejecuta la consulta SQL:
+    \begin{verbatim}
+    SELECT AVG(VALOR) 
+    FROM MOVIMIENTO 
+    WHERE NUM_CUENTA IN (cuentas_cliente) 
+      AND TIPO = 'D' 
+      AND FECHA >= fecha_limite
+    \end{verbatim}
+    
+    \item El sistema almacena el resultado como \textbf{PromedioDepositos}.
+    
+    \item \textbf{[Sub-proceso: Calcular Promedio de Retiros]}
+    
+    El sistema ejecuta la consulta SQL:
+    \begin{verbatim}
+    SELECT AVG(VALOR) 
+    FROM MOVIMIENTO 
+    WHERE NUM_CUENTA IN (cuentas_cliente) 
+      AND TIPO = 'R' 
+      AND FECHA >= fecha_limite
+    \end{verbatim}
+    
+    \item El sistema almacena el resultado como \textbf{PromedioRetiros}.
+    
+    \item El sistema verifica que ambos promedios sean diferentes de NULL. Si alguno es NULL, ejecuta \textbf{Flujo Alternativo 2}.
+    
+    \item \textbf{[Sub-proceso: Aplicar Fórmula]} 
+    
+    El sistema calcula:
+    \begin{equation}
+    MontoMaximo = ((PromedioDepositos - PromedioRetiros) \times 0.60) \times 9
+    \end{equation}
+    
+    \item El sistema verifica que $MontoMaximo > 0$. Si es $\leq 0$, ejecuta \textbf{Flujo Alternativo 3}.
+    
+    \item El sistema redondea el MontoMaximo a 2 decimales.
+    
+    \item El sistema retorna el MontoMaximo en formato decimal al servicio web.
+\end{enumerate}
+
+\newpage
+
+\section{Flujos Alternativos}
+
+\subsection{Flujo Alternativo 1: Cliente no existe}
+
+\begin{itemize}
+    \item \textbf{Paso donde se bifurca:} Paso 4
+    \item \textbf{Condición:} La cédula no se encuentra en la tabla CLIENTE
+    \item \textbf{Acciones:}
+    \begin{enumerate}
+        \item El sistema registra en el log: "Cliente con cédula [X] no encontrado"
+        \item El sistema retorna una excepción SOAP con el mensaje: "ERROR: Cliente no registrado en el banco"
+        \item El flujo termina
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Flujo Alternativo 2: Sin historial de movimientos}
+
+\begin{itemize}
+    \item \textbf{Paso donde se bifurca:} Paso 11
+    \item \textbf{Condición:} No existen depósitos o retiros en los últimos 3 meses
+    \item \textbf{Acciones:}
+    \begin{enumerate}
+        \item El sistema asigna \$0.00 a los promedios que sean NULL
+        \item El sistema continúa al paso 12
+        \item Como resultado, MontoMaximo será 0 o negativo, activando el Flujo Alternativo 3
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Flujo Alternativo 3: Monto calculado es cero o negativo}
+
+\begin{itemize}
+    \item \textbf{Paso donde se bifurca:} Paso 13
+    \item \textbf{Condición:} $(PromedioDepositos - PromedioRetiros) \leq 0$ o resultado final $\leq 0$
+    \item \textbf{Acciones:}
+    \begin{enumerate}
+        \item El sistema asigna $MontoMaximo = \$0.00$
+        \item El sistema retorna \$0.00 como monto máximo
+        \item El flujo termina (indica que el cliente no tiene capacidad de pago)
+    \end{enumerate}
+\end{itemize}
+
+\newpage
+
+\section{Flujos de Excepción}
+
+\subsection{Excepción 1: Error de conexión a la base de datos}
+\begin{itemize}
+    \item \textbf{Condición:} Falla la conexión JDBC en cualquier consulta SQL
+    \item \textbf{Acción:} 
+    \begin{itemize}
+        \item Sistema retorna SOAP Fault con código "DB\_CONNECTION\_ERROR"
+        \item Mensaje: "Error al conectar con la base de datos. Intente nuevamente."
+        \item Registra error en log del servidor
+    \end{itemize}
+\end{itemize}
+
+\subsection{Excepción 2: Cédula con formato inválido}
+\begin{itemize}
+    \item \textbf{Condición:} Cédula no es numérica o no tiene 10 dígitos
+    \item \textbf{Acción:}
+    \begin{itemize}
+        \item Sistema retorna SOAP Fault con código "INVALID\_CEDULA\_FORMAT"
+        \item Mensaje: "Formato de cédula inválido. Debe contener 10 dígitos numéricos."
+    \end{itemize}
+\end{itemize}
+
+\subsection{Excepción 3: Error en cálculo matemático}
+\begin{itemize}
+    \item \textbf{Condición:} División por cero o valor NULL inesperado en cálculo
+    \item \textbf{Acción:}
+    \begin{itemize}
+        \item Sistema registra el error en log
+        \item Sistema retorna $MontoMaximo = \$0.00$
+        \item Continúa flujo (no interrumpe)
+    \end{itemize}
+\end{itemize}
+
+\newpage
+
+\section{Reglas de Negocio}
+
+\begin{longtable}{|c|p{4cm}|p{8cm}|}
+\hline
+\textbf{ID} & \textbf{Regla} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{ID} & \textbf{Regla} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RN-01 & Ventana de cálculo & Se consideran únicamente los últimos 90 días (3 meses) desde la fecha actual \\
+\hline
+
+RN-02 & Tipos de movimiento & TIPO = 'D' para depósitos, TIPO = 'R' para retiros \\
+\hline
+
+RN-03 & Fórmula financiera & $MontoMax = ((AvgDep - AvgRet) \times 60\%) \times 9$ \newline Factor 0.60 = 60\% de capacidad de pago \newline Factor 9 = Multiplicador de 9 meses \\
+\hline
+
+RN-04 & Múltiples cuentas & Si el cliente tiene varias cuentas, se suman todos los movimientos de todas las cuentas \\
+\hline
+
+RN-05 & Monto mínimo & Si el resultado es menor o igual a 0, se retorna \$0.00 (no créditos negativos) \\
+\hline
+
+RN-06 & Precisión decimal & Resultado redondeado a 2 decimales (centavos) \\
+\hline
+
+\caption{Reglas de Negocio del Caso de Uso}
+\end{longtable}
+
+\section{Datos de Entrada y Salida}
+
+\subsection{Parámetros de Entrada}
+
+\begin{center}
+\begin{tabular}{|l|l|c|p{5cm}|l|}
+\hline
+\textbf{Parámetro} & \textbf{Tipo} & \textbf{Obligatorio} & \textbf{Descripción} & \textbf{Ejemplo} \\
+\hline
+cedula & String & Sí & Cédula de identidad del cliente (10 dígitos) & "1712345678" \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Datos de Salida}
+
+\begin{center}
+\begin{tabular}{|l|l|p{6cm}|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Ejemplo} \\
+\hline
+montoMaximo & Decimal(10,2) & Monto máximo de crédito aprobado en USD & 3456.78 \\
+\hline
+\end{tabular}
+\end{center}
+
+\newpage
+
+\section{Ejemplo de Cálculo Completo}
+
+\subsection{Datos de Entrada}
+\begin{itemize}
+    \item Cédula: "1712345678"
+    \item Fecha actual: 2025-10-29
+    \item Fecha límite: 2025-07-31 (90 días atrás)
+\end{itemize}
+
+\subsection{Movimientos en Base de Datos (últimos 3 meses)}
+
+\textbf{Depósitos (TIPO='D'):}
+\begin{itemize}
+    \item 2025-08-15: \$1200.00
+    \item 2025-09-10: \$1500.00
+    \item 2025-10-05: \$1300.00
+\end{itemize}
+
+\textbf{Retiros (TIPO='R'):}
+\begin{itemize}
+    \item 2025-08-20: \$400.00
+    \item 2025-09-15: \$350.00
+    \item 2025-10-10: \$450.00
+\end{itemize}
+
+\subsection{Proceso de Cálculo}
+
+\begin{align*}
+\text{PromedioDepositos} &= \frac{1200 + 1500 + 1300}{3} = \$1333.33 \\[0.3cm]
+\text{PromedioRetiros} &= \frac{400 + 350 + 450}{3} = \$400.00 \\[0.3cm]
+\text{Diferencia} &= 1333.33 - 400.00 = \$933.33 \\[0.3cm]
+\text{60\% de diferencia} &= 933.33 \times 0.60 = \$560.00 \\[0.3cm]
+\text{MontoMaximo} &= 560.00 \times 9 = \$5040.00
+\end{align*}
+
+\subsection{Resultado Final}
+\begin{center}
+\fcolorbox{headercolor}{lightgray}{
+\parbox{0.8\textwidth}{
+\centering
+\textbf{\Large Monto Máximo de Crédito Aprobado:}\\[0.3cm]
+\textbf{\Huge \$5,040.00}
+}
+}
+\end{center}
+
+\newpage
+
+\section{Requisitos Especiales}
+
+\subsection{Requisitos No Funcionales}
+
+\begin{enumerate}
+    \item \textbf{Rendimiento:} El servicio debe responder en menos de 3 segundos
+    \item \textbf{Disponibilidad:} Servicio disponible 24/7 (99.5\% uptime)
+    \item \textbf{Seguridad:}
+    \begin{itemize}
+        \item Validación de formato de cédula antes de consultar BD
+        \item Protección contra SQL Injection (uso de PreparedStatement)
+        \item Cifrado de comunicación SOAP (HTTPS recomendado)
+    \end{itemize}
+    \item \textbf{Escalabilidad:} Soportar hasta 100 consultas concurrentes
+    \item \textbf{Logging:} Registrar cada invocación con: timestamp, cédula consultada, resultado
+\end{enumerate}
+
+\subsection{Requisitos de Datos}
+
+\begin{enumerate}
+    \item Cédula debe ser string de 10 caracteres numéricos
+    \item Montos deben usar tipo DECIMAL(10,2) para evitar pérdida de precisión
+    \item Fechas en formato ISO 8601 (yyyy-MM-dd)
+    \item Cálculos financieros con precisión de 2 decimales
+\end{enumerate}
+
+\section{Casos de Prueba}
+
+\begin{longtable}{|c|l|p{5cm}|p{4cm}|}
+\hline
+\textbf{ID} & \textbf{Cédula} & \textbf{Escenario} & \textbf{Resultado Esperado} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{ID} & \textbf{Cédula} & \textbf{Escenario} & \textbf{Resultado Esperado} \\
+\hline
+\endhead
+
+TC-01 & 1712345678 & Cliente con movimientos normales & Monto > 0 (ej: \$5040.00) \\
+\hline
+
+TC-02 & 1798765432 & Cliente sin movimientos últimos 3 meses & Monto = \$0.00 \\
+\hline
+
+TC-03 & 1700000001 & Cliente con más retiros que depósitos & Monto = \$0.00 \\
+\hline
+
+TC-04 & 9999999999 & Cliente no existe en BD & SOAP Fault: "Cliente no registrado" \\
+\hline
+
+TC-05 & ABC123XYZ0 & Formato de cédula inválido & SOAP Fault: "Formato inválido" \\
+\hline
+
+TC-06 & 1712345678 & Cliente con múltiples cuentas & Suma movimientos de todas las cuentas \\
+\hline
+
+\caption{Casos de Prueba del Caso de Uso}
+\end{longtable}
+
+\newpage
+
+\section{Matriz de Trazabilidad}
+
+\begin{center}
+\begin{tabular}{|p{7cm}|c|c|}
+\hline
+\textbf{Requisito Funcional} & \textbf{Item Rúbrica} & \textbf{Prioridad} \\
+\hline
+Consultar movimientos de últimos 3 meses & Item 6 & Alta \\
+\hline
+Calcular promedio de depósitos & Item 6 & Alta \\
+\hline
+Calcular promedio de retiros & Item 6 & Alta \\
+\hline
+Aplicar fórmula: ((AvgDep-AvgRet)*60\%)*9 & Item 6 & Alta \\
+\hline
+Retornar monto vía Web Service SOAP & Item 6 & Alta \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Ejemplo de Mensaje SOAP}
+
+\subsection{Petición SOAP (Request)}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:ban="http://banquito.com/credito">
+  <soap:Body>
+    <ban:ObtenerMontoMaximoRequest>
+      <cedula>1712345678</cedula>
+    </ban:ObtenerMontoMaximoRequest>
+  </soap:Body>
+</soap:Envelope>
+\end{verbatim}
+
+\subsection{Respuesta SOAP (Response - Éxito)}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:ban="http://banquito.com/credito">
+  <soap:Body>
+    <ban:ObtenerMontoMaximoResponse>
+      <montoMaximo>5040.00</montoMaximo>
+    </ban:ObtenerMontoMaximoResponse>
+  </soap:Body>
+</soap:Envelope>
+\end{verbatim}
+
+\subsection{Respuesta SOAP (Fault - Error)}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <soap:Fault>
+      <faultcode>INVALID_CEDULA_FORMAT</faultcode>
+      <faultstring>Formato de cédula inválido. 
+                   Debe contener 10 dígitos numéricos.</faultstring>
+    </soap:Fault>
+  </soap:Body>
+</soap:Envelope>
+\end{verbatim}
+
+\end{document}
