@@ -21,11 +21,11 @@ public class DetalleFactura {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_factura")
+    @JoinColumn(name = "id_factura", foreignKey = @ForeignKey(name = "fk_detalle_factura"))
     private Factura factura;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_electrodomestico")
+    @JoinColumn(name = "id_electrodomestico", foreignKey = @ForeignKey(name = "fk_detalle_electrodomestico"))
     private Electrodomestico electrodomestico;
 
     @Column(nullable = false)

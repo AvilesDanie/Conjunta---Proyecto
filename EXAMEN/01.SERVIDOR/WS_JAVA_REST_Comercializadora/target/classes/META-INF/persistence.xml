@@ -9,7 +9,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
         <!-- Entidades JPA -->
-        <class>ec.ec.edu.monster.model.Usuario</class>
+        <class>ec.edu.monster.model.Usuario</class>
         <class>ec.edu.monster.model.Electrodomestico</class>
         <class>ec.edu.monster.model.Factura</class>
         <class>ec.edu.monster.model.DetalleFactura</class>
@@ -24,12 +24,18 @@
             <property name="jakarta.persistence.jdbc.password" value="MONSTER9"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 
-            <!-- Crear / extender tablas automáticamente -->
-            <property name="jakarta.persistence.schema-generation.database.action" 
-                      value="create-or-extend-tables"/>
-
+            <!-- Crear tablas automáticamente -->
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+            <property name="eclipselink.ddl-generation.output-mode" value="database"/>
+            
+            <!-- Forzar la creación de tablas en cada despliegue (SOLO PARA DESARROLLO) -->
+            <!-- IMPORTANTE: Cambiar a 'create-or-extend-tables' en producción -->
+            <property name="eclipselink.deploy-on-startup" value="true"/>
+            
             <!-- Opcional: log de SQL -->
             <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>
