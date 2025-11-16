@@ -134,7 +134,15 @@ public class UsuarioController {
     public Response crear(CrearUsuarioRequest req) {
         if (req == null || req.username == null || req.password == null || req.rol == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("username, password y rol son obligatorios")
+                    .entity("{\"error\":\"username, password y rol son obligatorios\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        
+        if (req.password.length() < 6) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"La contraseña debe tener al menos 6 caracteres\"}")
+                    .type(MediaType.APPLICATION_JSON)
                     .build();
         }
 
@@ -152,7 +160,8 @@ public class UsuarioController {
             if (count > 0) {
                 em.getTransaction().rollback();
                 return Response.status(Response.Status.CONFLICT)
-                        .entity("Ya existe un usuario con ese username")
+                        .entity("{\"error\":\"Ya existe un usuario con ese username\"}")
+                        .type(MediaType.APPLICATION_JSON)
                         .build();
             }
 

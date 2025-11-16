@@ -13,6 +13,7 @@ package ec.edu.monster;
 
 import ec.edu.monster.controller.ElectrodomesticoController;
 import ec.edu.monster.controller.FacturaController;
+import ec.edu.monster.controller.UsuarioController;
 
 
 
@@ -68,6 +69,7 @@ public class ApplicationConfig extends Application {
         // === Tus controllers REST ===
         resources.add(ElectrodomesticoController.class);
         resources.add(FacturaController.class);
+        resources.add(UsuarioController.class);
         // agrega aquí cualquier otro controller REST que tengas
 
         // === Recurso de Swagger-Core que expone /api/openapi.json ===

@@ -153,7 +153,10 @@ public class ClienteController {
         try {
             Cliente c = em.find(Cliente.class, cedula);
             if (c == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cliente no encontrado\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
             return Response.ok(toDTOCienteOnly(c)).build();
         } finally {
@@ -172,7 +175,15 @@ public class ClienteController {
         if (req == null || req.cedula == null || req.nombre == null
                 || req.tipoCuentaInicial == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("cedula, nombre, numCuentaInicial y tipoCuentaInicial son obligatorios")
+                    .entity("{\"error\":\"cedula, nombre y tipoCuentaInicial son obligatorios\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        
+        if (req.cedula.length() != 10) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"La cédula debe tener 10 dígitos\"}")
+                    .type(MediaType.APPLICATION_JSON)
                     .build();
         }
 
@@ -183,7 +194,9 @@ public class ClienteController {
             if (em.find(Cliente.class, req.cedula) != null) {
                 em.getTransaction().rollback();
                 return Response.status(Response.Status.CONFLICT)
-                        .entity("Ya existe un cliente con esa cédula").build();
+                        .entity("{\"error\":\"Ya existe un cliente con esa cédula\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
 
             Cliente c = new Cliente();
@@ -246,7 +259,10 @@ public class ClienteController {
             Cliente c = em.find(Cliente.class, cedula);
             if (c == null) {
                 em.getTransaction().rollback();
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cliente no encontrado\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
 
             if (req.nombre != null) c.setNombre(req.nombre);
@@ -289,7 +305,10 @@ public class ClienteController {
             Cliente c = em.find(Cliente.class, cedula);
             if (c == null) {
                 em.getTransaction().rollback();
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cliente no encontrado\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
             em.remove(c);
             em.getTransaction().commit();

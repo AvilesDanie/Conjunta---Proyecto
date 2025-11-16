@@ -129,7 +129,10 @@ public class CuotaAmortizacionController {
         try {
             CuotaAmortizacion cuota = em.find(CuotaAmortizacion.class, id);
             if (cuota == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cuota no encontrada\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
             return Response.ok(toDTO(cuota)).build();
         } finally {
@@ -164,7 +167,10 @@ public class CuotaAmortizacionController {
             CuotaAmortizacion cuota = em.find(CuotaAmortizacion.class, id);
             if (cuota == null) {
                 em.getTransaction().rollback();
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cuota no encontrada\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
 
             if (dto.estado != null && !dto.estado.isBlank()) {
@@ -214,7 +220,10 @@ public class CuotaAmortizacionController {
             CuotaAmortizacion cuota = em.find(CuotaAmortizacion.class, id);
             if (cuota == null) {
                 em.getTransaction().rollback();
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cuota no encontrada\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
 
             cuota.setEstado("ANULADA");

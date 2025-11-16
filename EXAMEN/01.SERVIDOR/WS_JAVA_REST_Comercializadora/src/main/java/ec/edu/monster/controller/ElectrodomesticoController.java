@@ -64,7 +64,16 @@ public class ElectrodomesticoController {
     public Response crear(ElectroRequestDTO req) {
         if (req == null || req.codigo == null || req.nombre == null || req.precioVenta == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("codigo, nombre y precioVenta son obligatorios").build();
+                    .entity("{\"error\":\"codigo, nombre y precioVenta son obligatorios\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        
+        if (req.precioVenta.compareTo(BigDecimal.ZERO) <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"precioVenta debe ser mayor a 0\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
         }
 
         EntityManager em = JPAUtil.getEntityManager();
@@ -79,7 +88,9 @@ public class ElectrodomesticoController {
             if (count > 0) {
                 em.getTransaction().rollback();
                 return Response.status(Response.Status.CONFLICT)
-                        .entity("Ya existe un electrodoméstico con ese código").build();
+                        .entity("{\"error\":\"Ya existe un electrodoméstico con ese código\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
 
             Electrodomestico e = new Electrodomestico();

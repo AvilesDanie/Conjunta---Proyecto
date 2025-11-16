@@ -215,7 +215,10 @@ public class CreditoController {
         try {
             Credito c = em.find(Credito.class, id);
             if (c == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Crédito no encontrado\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
             return Response.ok(toDTO(c)).build();
         } finally {

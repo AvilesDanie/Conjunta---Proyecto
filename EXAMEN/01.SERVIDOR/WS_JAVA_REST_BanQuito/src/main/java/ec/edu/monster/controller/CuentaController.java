@@ -112,7 +112,10 @@ public class CuentaController {
         try {
             Cuenta c = em.find(Cuenta.class, numCuenta);
             if (c == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cuenta no encontrada\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
             return Response.ok(toDTO(c)).build();
         } finally {

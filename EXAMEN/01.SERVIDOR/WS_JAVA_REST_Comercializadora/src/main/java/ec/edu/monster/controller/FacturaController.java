@@ -117,7 +117,10 @@ public class FacturaController {
         try {
             Factura f = em.find(Factura.class, id);
             if (f == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Factura no encontrada\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
             return Response.ok(toDTO(f)).build();
         } finally {
@@ -137,14 +140,17 @@ public class FacturaController {
             req.formaPago == null) {
 
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("cedulaCliente, nombreCliente, idElectrodomestico, cantidad>0 y formaPago son obligatorios")
+                    .entity("{\"error\":\"cedulaCliente, nombreCliente, idElectrodomestico, cantidad>0 y formaPago son obligatorios\"}")
+                    .type(MediaType.APPLICATION_JSON)
                     .build();
         }
 
         String forma = req.formaPago.toUpperCase();
         if (!forma.equals("EFECTIVO") && !forma.equals("CREDITO")) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("formaPago debe ser EFECTIVO o CREDITO").build();
+                    .entity("{\"error\":\"formaPago debe ser EFECTIVO o CREDITO\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
         }
 
         EntityManager em = JPAUtil.getEntityManager();
@@ -155,7 +161,9 @@ public class FacturaController {
             if (electro == null) {
                 em.getTransaction().rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Electrodoméstico no existe").build();
+                        .entity("{\"error\":\"Electrodoméstico no existe\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
 
             // Total bruto = precio * cantidad
