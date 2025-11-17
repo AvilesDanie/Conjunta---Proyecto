@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:_02.CLIMOV.ViewModels"
+             x:Class="_02.CLIMOV.Views.FacturasScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:FacturaViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource NaranjaPrincipal}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Historial de Facturas" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Facturas}" Margin="16">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="🧾" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay facturas registradas" FontSize="16" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFacturaSelected" CommandParameter="{Binding IdFactura}"/>
+                        </Frame.GestureRecognizers>
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+                                <Frame Grid.Column="0" WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0" HasShadow="False">
+                                    <Frame.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{StaticResource CyanOscuro}" Offset="0.0"/>
+                                            <GradientStop Color="#26C6DA" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Frame.Background>
+                                    <Label Text="🧾" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Frame>
+
+                                <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center">
+                                    <Label Text="{Binding NumeroFactura}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                    <Label Text="{Binding NombreCliente}" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                </VerticalStackLayout>
+
+                                <Label Grid.Column="2" Text="{Binding Total, StringFormat='$ {0:N2}'}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource CyanOscuro}" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="{StaticResource GrisBordes}"/>
+
+                            <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0" Text="{Binding Fecha, StringFormat='Fecha: {0}'}" FontSize="12" TextColor="{StaticResource TextoGrisMedio}" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="Ver detalle ›" FontSize="12" TextColor="{StaticResource CyanOscuro}" FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="{StaticResource CyanOscuro}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

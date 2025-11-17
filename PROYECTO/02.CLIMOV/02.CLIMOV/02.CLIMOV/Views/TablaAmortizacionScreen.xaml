@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.TablaAmortizacionScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource CyanOscuro}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Tabla de Amortización" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
+                <Frame Padding="20" CornerRadius="16" HasShadow="True">
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource CyanOscuro}" Offset="0.0"/>
+                            <GradientStop Color="#26C6DA" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="12" ColumnSpacing="16">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Monto:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                        <Label x:Name="LabelMonto" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource TextoBlanco}"/>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Tasa:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                        <Label x:Name="LabelTasa" Grid.Row="1" Grid.Column="1" TextColor="{StaticResource TextoBlanco}"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Plazo:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                        <Label x:Name="LabelPlazo" Grid.Row="2" Grid.Column="1" TextColor="{StaticResource TextoBlanco}"/>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Cuota Mensual:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                        <Label x:Name="LabelCuotaMensual" Grid.Row="3" Grid.Column="1" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                    </Grid>
+                </Frame>
+
+                <CollectionView x:Name="CollectionTabla">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Margin="0,0,0,12" Padding="16" CornerRadius="12" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+                                    <Frame Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" BackgroundColor="{StaticResource CyanOscuro}" HasShadow="False" VerticalOptions="Start">
+                                        <Label Text="{Binding NumeroCuota}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Frame>
+
+                                    <Label Grid.Row="0" Grid.Column="1" Text="Cuota Mensual" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding CuotaMensual, StringFormat='$ {0:N2}'}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+
+                                    <Label Grid.Row="1" Grid.Column="1" Text="Interés" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                                    <Label Grid.Row="1" Grid.Column="2" Text="{Binding Interes, StringFormat='$ {0:N2}'}" FontSize="12" TextColor="{StaticResource RojoError}"/>
+
+                                    <Label Grid.Row="2" Grid.Column="1" Text="Capital" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                                    <Label Grid.Row="2" Grid.Column="2" Text="{Binding Capital, StringFormat='$ {0:N2}'}" FontSize="12" TextColor="{StaticResource VerdeExito}"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

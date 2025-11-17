@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:_02.CLIMOV.Helpers"
+             x:Class="_02.CLIMOV.Views.HomeComercializadoraScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Frame Grid.Row="0" Padding="20,24" CornerRadius="0" HasShadow="True" BackgroundColor="{StaticResource NaranjaPrincipal}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Image Grid.Column="0" 
+                       Source="logo_perfil_electroquito.png"
+                       WidthRequest="40"
+                       HeightRequest="40"
+                       Aspect="AspectFit"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0"/>
+                
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                    <Label Text="ElectroQuito" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}"/>
+                    <Label Text="{x:Static helpers:SessionManager.Username, StringFormat='Bienvenido, {0}'}" FontSize="14" TextColor="{StaticResource TextoBlanco}" Opacity="0.9"/>
+                </VerticalStackLayout>
+                <ImageButton Grid.Column="2" Source="logout.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" VerticalOptions="Center" Clicked="OnLogoutClicked"/>
+            </Grid>
+        </Frame>
+
+        <ScrollView Grid.Row="1">
+            <Grid Padding="16" RowDefinitions="Auto,Auto,Auto" RowSpacing="16" ColumnDefinitions="*,*" ColumnSpacing="16">
+                <Frame Grid.Row="0" Grid.Column="0" Padding="0" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnElectrodomesticosClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid Padding="20" RowDefinitions="Auto,*,Auto">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{StaticResource NaranjaPrincipal}" Offset="0.0"/>
+                                <GradientStop Color="{StaticResource NaranjaClaro}" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Label Grid.Row="0" Text="📺" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Grid.Row="1" Text="Productos" FontSize="18" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center" Margin="0,8,0,0"/>
+                        <Label Grid.Row="2" Text="" FontSize="1" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <Frame Grid.Row="0" Grid.Column="1" Padding="0" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNuevoElectroClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid Padding="20" RowDefinitions="Auto,*,Auto">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{StaticResource VerdeExito}" Offset="0.0"/>
+                                <GradientStop Color="{StaticResource VerdeBrillanteSaldo}" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Label Grid.Row="0" Text="➕" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Grid.Row="1" Text="Nuevo" FontSize="18" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center" Margin="0,8,0,0"/>
+                        <Label Grid.Row="2" Text="Producto" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <Frame Grid.Row="1" Grid.Column="0" Padding="0" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFacturarClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid Padding="20" RowDefinitions="Auto,*,Auto">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{StaticResource AzulPrimario}" Offset="0.0"/>
+                                <GradientStop Color="{StaticResource AzulClaro}" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Label Grid.Row="0" Text="🛍️" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Grid.Row="1" Text="Facturar" FontSize="18" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center" Margin="0,8,0,0"/>
+                        <Label Grid.Row="2" Text="" FontSize="1" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <Frame Grid.Row="1" Grid.Column="1" Padding="0" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFacturasClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid Padding="20" RowDefinitions="Auto,*,Auto">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{StaticResource Morado}" Offset="0.0"/>
+                                <GradientStop Color="#8E24AA" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Label Grid.Row="0" Text="🧾" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Grid.Row="1" Text="Facturas" FontSize="18" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center" Margin="0,8,0,0"/>
+                        <Label Grid.Row="2" Text="" FontSize="1" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                    </Grid>
+                </Frame>
+            </Grid>
+        </ScrollView>
+
+        <Frame Grid.Row="2" Padding="12" CornerRadius="0" BackgroundColor="{StaticResource FondoClaro}" HasShadow="False">
+            <Label Text="© 2025 ElectroQuito - Sistema de Comercialización" FontSize="12" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+        </Frame>
+    </Grid>
+</ContentPage>

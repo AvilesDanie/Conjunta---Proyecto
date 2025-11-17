@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.LoginComercializadoraScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="24" VerticalOptions="Center">
+            <Frame Padding="32,40" CornerRadius="24" HasShadow="True">
+                <Frame.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="{StaticResource VerdeExito}" Offset="0.0"/>
+                        <GradientStop Color="{StaticResource VerdeBrillanteSaldo}" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Frame.Background>
+
+                <VerticalStackLayout Spacing="24">
+                    <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" Padding="15" BackgroundColor="#33FFFFFF" HorizontalOptions="Center" HasShadow="False">
+                        <Image Source="logo_perfil_electroquito.png" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Frame>
+
+                    <Label Text="ElectroQuito" FontSize="32" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                    
+                    <Label Text="Sistema de Comercialización" FontSize="16" TextColor="{StaticResource TextoBlanco}" Opacity="0.9" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="24" CornerRadius="20" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="Iniciar Sesión" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}" HorizontalOptions="Center"/>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Usuario" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                        <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                            <Entry x:Name="EntryUsuario" Placeholder="Ingrese su usuario" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" Margin="12,8"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Contraseña" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                        <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                            <Grid ColumnDefinitions="*,Auto" Margin="12,8">
+                                <Entry x:Name="EntryPassword" Grid.Column="0" Placeholder="Ingrese su contraseña" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" IsPassword="{Binding IsPasswordHidden}"/>
+                                <ImageButton Grid.Column="1" Source="visibility.png" BackgroundColor="Transparent" WidthRequest="24" HeightRequest="24" Clicked="OnTogglePasswordClicked"/>
+                            </Grid>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <Button x:Name="BtnLogin" Text="INGRESAR" BackgroundColor="{StaticResource VerdeExito}" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold" FontSize="16" CornerRadius="12" HeightRequest="56" Clicked="OnLoginClicked" Margin="0,10,0,0"/>
+
+                    <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource VerdeExito}" WidthRequest="32" HeightRequest="32" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="← Volver" BackgroundColor="Transparent" TextColor="{StaticResource TextoGrisMedio}" Clicked="OnVolverClicked"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

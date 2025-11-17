@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:_02.CLIMOV.ViewModels"
+             x:Class="_02.CLIMOV.Views.TodasCuentasScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:CuentaViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource VerdeExito}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Todas las Cuentas" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Cuentas}" Margin="16">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="🏦" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay cuentas registradas" FontSize="16" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+                                <Frame Grid.Column="0" WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0" BackgroundColor="{StaticResource VerdeExito}" HasShadow="False">
+                                    <Label Text="💳" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Frame>
+                                <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center">
+                                    <Label Text="{Binding NumeroCuenta}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                    <Label Text="{Binding TipoCuenta}" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="{StaticResource GrisBordes}"/>
+
+                            <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="Saldo Disponible" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                                    <Label Text="{Binding Saldo, StringFormat='$ {0:N2}'}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource VerdeExito}"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="Movimientos" BackgroundColor="{StaticResource VerdeExito}" TextColor="{StaticResource TextoBlanco}" FontSize="12" Padding="12,6" CornerRadius="8" Margin="0,0,8,0" Clicked="OnVerMovimientosClicked" CommandParameter="{Binding NumeroCuenta}"/>
+                                <Button Grid.Column="2" Text="Eliminar" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource RojoError}" BorderColor="{StaticResource RojoError}" BorderWidth="2" FontSize="12" Padding="12,6" CornerRadius="8" Clicked="OnEliminarClicked" CommandParameter="{Binding NumeroCuenta}"/>
+                            </Grid>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ImageButton Grid.Row="2" Source="add.png" BackgroundColor="{StaticResource VerdeExito}" WidthRequest="56" HeightRequest="56" CornerRadius="28" Margin="0,0,16,16" HorizontalOptions="End" VerticalOptions="End" Clicked="OnNuevaCuentaClicked"/>
+
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="{StaticResource VerdeExito}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

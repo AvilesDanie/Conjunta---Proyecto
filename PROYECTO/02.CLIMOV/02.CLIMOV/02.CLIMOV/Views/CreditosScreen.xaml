@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:_02.CLIMOV.ViewModels"
+             x:Class="_02.CLIMOV.Views.CreditosScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:CreditoViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource CyanOscuro}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Gestión de Créditos" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Creditos}" Margin="16">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="💰" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay créditos registrados" FontSize="16" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+                                <Frame Grid.Column="0" WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0" BackgroundColor="{StaticResource CyanOscuro}" HasShadow="False">
+                                    <Label Text="💳" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Frame>
+                                <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center">
+                                    <Label Text="{Binding NumeroCuenta}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                    <Label Text="{Binding Estado}" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2" Text="{Binding Monto, StringFormat='$ {0:N2}'}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource CyanOscuro}" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="{StaticResource GrisBordes}"/>
+
+                            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="16">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="Tasa de Interés" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                                    <Label Text="{Binding TasaInteres, StringFormat='{0}%'}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1">
+                                    <Label Text="Plazo" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                                    <Label Text="{Binding PlazoMeses, StringFormat='{0} meses'}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Button Grid.Row="3" Text="Ver Cuotas" BackgroundColor="{StaticResource CyanOscuro}" TextColor="{StaticResource TextoBlanco}" CornerRadius="12" Clicked="OnVerCuotasClicked" CommandParameter="{Binding IdCredito}"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ImageButton Grid.Row="2" Source="add.png" BackgroundColor="{StaticResource CyanOscuro}" WidthRequest="56" HeightRequest="56" CornerRadius="28" Margin="0,0,16,16" HorizontalOptions="End" VerticalOptions="End" Clicked="OnEvaluarCreditoClicked"/>
+
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="{StaticResource CyanOscuro}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

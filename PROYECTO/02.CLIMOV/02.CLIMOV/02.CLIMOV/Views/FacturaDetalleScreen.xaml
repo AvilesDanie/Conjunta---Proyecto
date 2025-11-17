@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.FacturaDetalleScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource CyanOscuro}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Detalle de Factura" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
+                <Frame Padding="24" CornerRadius="20" HasShadow="True">
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource CyanOscuro}" Offset="0.0"/>
+                            <GradientStop Color="#26C6DA" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="🧾" FontSize="56" HorizontalOptions="Center"/>
+                        <Label x:Name="LabelNumeroFactura" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                        <Label x:Name="LabelFecha" FontSize="14" TextColor="{StaticResource TextoBlanco}" Opacity="0.9" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Información del Cliente" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                        
+                        <Grid ColumnDefinitions="Auto,*" RowSpacing="12" ColumnSpacing="12">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Cédula:" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                            <Label x:Name="LabelCedula" Grid.Row="0" Grid.Column="1" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                            
+                            <Label Grid.Row="1" Grid.Column="0" Text="Nombre:" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                            <Label x:Name="LabelNombreCliente" Grid.Row="1" Grid.Column="1" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Productos" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                        
+                        <CollectionView x:Name="CollectionDetalles">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="0,0,0,8" Padding="16" CornerRadius="12" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+                                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding NombreElectrodomestico}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                            
+                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Cantidad, StringFormat='Cantidad: {0}'}" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding PrecioUnitario, StringFormat='$ {0:N2} c/u'}" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                            
+                                            <Label Grid.Row="2" Grid.Column="0" Text="Subtotal:" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding Subtotal, StringFormat='$ {0:N2}'}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource VerdeExito}"/>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <BoxView HeightRequest="2" BackgroundColor="{StaticResource GrisBordes}"/>
+
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                            <Label Grid.Column="0" Text="TOTAL:" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                            <Label x:Name="LabelTotal" Grid.Column="1" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource CyanOscuro}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource CyanOscuro}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

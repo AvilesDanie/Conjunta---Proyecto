@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             x:Class="_02.CLIMOV.Views.AppSelectionScreen"
+             Shell.NavBarIsVisible="False">
+    
+    <Grid BackgroundColor="{StaticResource AzulPrimario}">
+
+        <!-- Contenido -->
+        <ScrollView>
+            <VerticalStackLayout Padding="32" Spacing="40" VerticalOptions="Center">
+                
+                <!-- Header -->
+                <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                    <!-- Icono circular -->
+                    <Frame CornerRadius="80" 
+                           WidthRequest="160" 
+                           HeightRequest="160" 
+                           Padding="20"
+                           HasShadow="True"
+                           BackgroundColor="{StaticResource BlancoPuro}"
+                           HorizontalOptions="Center">
+                        <Image Source="logo_banquito.png" 
+                               Aspect="AspectFit"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Frame>
+
+                    <Label Text="¡Bienvenido!"
+                           FontSize="42"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextoBlanco}"
+                           HorizontalOptions="Center"/>
+
+                    <Label Text="Sistema Integrado de Gestión"
+                           FontSize="18"
+                           TextColor="{StaticResource TextoBlanco}"
+                           Opacity="0.9"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Tarjetas de selección -->
+                <VerticalStackLayout Spacing="24">
+                    
+                    <!-- Tarjeta BanQuito -->
+                    <Frame CornerRadius="24"
+                           Padding="0"
+                           HasShadow="True"
+                           BackgroundColor="{StaticResource BlancoPuro}">
+                        <VerticalStackLayout Padding="32,24" Spacing="16">
+                            <Image Source="logo_banquito.png"
+                                   WidthRequest="80"
+                                   HeightRequest="80"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center"/>
+                            
+                            <Label Text="BanQuito"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextoPrincipal}"
+                                   HorizontalOptions="Center"/>
+                            
+                            <Label Text="Sistema Bancario"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextoGrisMedio}"
+                                   HorizontalOptions="Center"/>
+
+                            <Button Text="Acceder →"
+                                    BackgroundColor="{StaticResource AzulPrimario}"
+                                    TextColor="{StaticResource TextoBlanco}"
+                                    FontAttributes="Bold"
+                                    CornerRadius="12"
+                                    HeightRequest="50"
+                                    Clicked="OnBanquitoClicked"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Tarjeta Comercializadora -->
+                    <Frame CornerRadius="24"
+                           Padding="0"
+                           HasShadow="True">
+                        <Frame.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#FF6D00" Offset="0.0"/>
+                                <GradientStop Color="#FF8A00" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Frame.Background>
+                        <VerticalStackLayout Padding="32,24" Spacing="16">
+                            <Image Source="logo_perfil_electroquito.png" 
+                                   WidthRequest="80"
+                                   HeightRequest="80"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center"/>
+                            
+                            <Label Text="ElectroQuito"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextoBlanco}"
+                                   HorizontalOptions="Center"/>
+                            
+                            <Label Text="Comercializadora Digital"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextoBlanco}"
+                                   Opacity="0.9"
+                                   HorizontalOptions="Center"/>
+
+                            <Button Text="INGRESAR"
+                                    BackgroundColor="{StaticResource BlancoPuro}"
+                                    TextColor="#FF6D00"
+                                    FontAttributes="Bold"
+                                    CornerRadius="12"
+                                    HeightRequest="50"
+                                    Clicked="OnComercializadoraClicked"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

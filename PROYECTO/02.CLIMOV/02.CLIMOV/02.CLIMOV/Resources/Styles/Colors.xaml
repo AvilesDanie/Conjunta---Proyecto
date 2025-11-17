@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ====== COLORES PRINCIPALES ====== -->
+    <Color x:Key="AzulPrimarioOscuro">#0D47A1</Color>
+    <Color x:Key="AzulPrimario">#1565C0</Color>
+    <Color x:Key="AzulPrimarioMedio">#1976D2</Color>
+    <Color x:Key="AzulClaro">#42A5F5</Color>
+    <Color x:Key="AzulMuyClaro">#E3F2FD</Color>
+
+    <!-- ====== COLORES VERDES ====== -->
+    <Color x:Key="VerdeExito">#2E7D32</Color>
+    <Color x:Key="VerdeBrillanteSaldo">#66BB6A</Color>
+    <Color x:Key="VerdeSuaveFondo">#E8F5E9</Color>
+
+    <!-- ====== COLORES ROJOS ====== -->
+    <Color x:Key="RojoError">#EF5350</Color>
+    <Color x:Key="RojoIconoError">#FF6B6B</Color>
+    <Color x:Key="RojoFondoError">#FFEBEE</Color>
+
+    <!-- ====== COLORES MORADO Y CYAN ====== -->
+    <Color x:Key="Morado">#6A1B9A</Color>
+    <Color x:Key="CyanOscuro">#00838F</Color>
+
+    <!-- ====== COLORES NARANJA (ElectroQuito) ====== -->
+    <Color x:Key="NaranjaPrincipal">#FF6D00</Color>
+    <Color x:Key="NaranjaClaro">#FF8A00</Color>
+    <Color x:Key="NaranjaMuyClaro">#FFE0B2</Color>
+
+    <!-- ====== COLORES DE TEXTO ====== -->
+    <Color x:Key="TextoPrincipal">#212121</Color>
+    <Color x:Key="TextoGrisMedio">#757575</Color>
+    <Color x:Key="TextoBlanco">#FFFFFF</Color>
+
+    <!-- ====== COLORES DE FONDO ====== -->
+    <Color x:Key="BlancoPuro">#FFFFFF</Color>
+    <Color x:Key="FondoClaro">#F5F5F5</Color>
+    <Color x:Key="GrisBordes">#E0E0E0</Color>
+    <Color x:Key="FondoDisabled">#F5F5F5</Color>
+    <Color x:Key="FondoSuaveAzul">#F5F5FF</Color>
+
+    <!-- ====== GRADIENTES (Para uso en código) ====== -->
+    <Color x:Key="GradienteVioletaInicio">#1A237E</Color>
+    <Color x:Key="GradienteVioletaMedio">#283593</Color>
+    <Color x:Key="GradienteVioletaFin">#303F9F</Color>
+
+    <!-- ====== BRUSHES ====== -->
+    <SolidColorBrush x:Key="AzulPrimarioBrush" Color="{StaticResource AzulPrimario}"/>
+    <SolidColorBrush x:Key="VerdeExitoBrush" Color="{StaticResource VerdeExito}"/>
+    <SolidColorBrush x:Key="RojoErrorBrush" Color="{StaticResource RojoError}"/>
+    <SolidColorBrush x:Key="TextoPrincipalBrush" Color="{StaticResource TextoPrincipal}"/>
+    <SolidColorBrush x:Key="TextoBlancoBrush" Color="{StaticResource TextoBlanco}"/>
+    <SolidColorBrush x:Key="FondoClaroBrush" Color="{StaticResource FondoClaro}"/>
+
+    <!-- ====== COLORES COMPATIBLES CON STYLES.XAML ====== -->
+    <!-- Colores requeridos por los estilos predeterminados de MAUI -->
+    <Color x:Key="Primary">#1565C0</Color>
+    <Color x:Key="PrimaryDark">#0D47A1</Color>
+    <Color x:Key="PrimaryDarkText">#FFFFFF</Color>
+    <Color x:Key="Secondary">#2E7D32</Color>
+    <Color x:Key="SecondaryDarkText">#E0E0E0</Color>
+    <Color x:Key="Accent">#00BCD4</Color>
+    <Color x:Key="Magenta">#D500F9</Color>
+    
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="OffBlack">#1E1E1E</Color>
+    <Color x:Key="MidnightBlue">#191970</Color>
+    
+    <Color x:Key="Gray100">#F5F5F5</Color>
+    <Color x:Key="Gray200">#EEEEEE</Color>
+    <Color x:Key="Gray300">#E0E0E0</Color>
+    <Color x:Key="Gray400">#BDBDBD</Color>
+    <Color x:Key="Gray500">#9E9E9E</Color>
+    <Color x:Key="Gray600">#757575</Color>
+    <Color x:Key="Gray900">#212121</Color>
+    <Color x:Key="Gray950">#191919</Color>
+</ResourceDictionary>

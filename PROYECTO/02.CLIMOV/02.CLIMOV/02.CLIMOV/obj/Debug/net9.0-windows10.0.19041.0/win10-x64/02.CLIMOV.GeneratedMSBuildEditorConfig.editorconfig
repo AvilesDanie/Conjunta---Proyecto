@@ -1,0 +1,203 @@
+is_global = true
+build_property.TargetFramework = net9.0-windows10.0.19041.0
+build_property.TargetPlatformMinVersion = 10.0.17763.0
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 9A19103F-16F7-4668-BE54-9A1E7A4F7556
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = _02.CLIMOV
+build_property.ProjectDir = C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\PROYECTO\02.CLIMOV\02.CLIMOV\02.CLIMOV\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTAotOptimizerEnabled = true
+build_property.CsWinRTAotExportsEnabled = 
+build_property.CsWinRTRcwFactoryFallbackGeneratorForceOptIn = 
+build_property.CsWinRTRcwFactoryFallbackGeneratorForceOptOut = 
+build_property.CsWinRTCcwLookupTableGeneratorEnabled = true
+build_property.CsWinRTMergeReferencedActivationFactories = 
+build_property.CsWinRTAotWarningLevel = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.App.xaml
+build_metadata.AdditionalFiles.TargetPath = App.xaml
+build_metadata.AdditionalFiles.RelativePath = App.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/AppShell.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.AppShell.xaml
+build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
+build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/MainPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.MainPage.xaml
+build_metadata.AdditionalFiles.TargetPath = MainPage.xaml
+build_metadata.AdditionalFiles.RelativePath = MainPage.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Resources/Styles/Colors.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Resources.Styles.Colors.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Resources/Styles/Styles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/AppSelectionScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.AppSelectionScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AppSelectionScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AppSelectionScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/ClienteDetalleScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.ClienteDetalleScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\ClienteDetalleScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\ClienteDetalleScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/ClientesScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.ClientesScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\ClientesScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\ClientesScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CrearClienteScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CrearClienteScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CrearClienteScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CrearClienteScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CrearCuentaScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CrearCuentaScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CrearCuentaScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CrearCuentaScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CrearElectrodomesticoScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CrearElectrodomesticoScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CrearElectrodomesticoScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CrearElectrodomesticoScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CrearMovimientoScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CrearMovimientoScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CrearMovimientoScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CrearMovimientoScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CreditosScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CreditosScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CreditosScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CreditosScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CuentasPorClienteScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CuentasPorClienteScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CuentasPorClienteScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CuentasPorClienteScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/CuotasScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.CuotasScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CuotasScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CuotasScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/EditarClienteScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.EditarClienteScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\EditarClienteScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\EditarClienteScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/ElectrodomesticosScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.ElectrodomesticosScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\ElectrodomesticosScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\ElectrodomesticosScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/EvaluarCreditoScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.EvaluarCreditoScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\EvaluarCreditoScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\EvaluarCreditoScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/FacturaDetalleScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.FacturaDetalleScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\FacturaDetalleScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\FacturaDetalleScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/FacturarScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.FacturarScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\FacturarScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\FacturarScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/FacturasScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.FacturasScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\FacturasScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\FacturasScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/HomeBanquitoScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.HomeBanquitoScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\HomeBanquitoScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\HomeBanquitoScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/HomeComercializadoraScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.HomeComercializadoraScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\HomeComercializadoraScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\HomeComercializadoraScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/LoginBanquitoScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.LoginBanquitoScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\LoginBanquitoScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\LoginBanquitoScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/LoginComercializadoraScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.LoginComercializadoraScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\LoginComercializadoraScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\LoginComercializadoraScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/MovimientosScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.MovimientosScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MovimientosScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MovimientosScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/SplashScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.SplashScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SplashScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SplashScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/TablaAmortizacionScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.TablaAmortizacionScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\TablaAmortizacionScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\TablaAmortizacionScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/TodasCuentasScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.TodasCuentasScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\TodasCuentasScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\TodasCuentasScreen.xaml
+
+[C:/Users/DETPC/OneDrive/Documentos/Github/Conjunta---Proyecto/PROYECTO/02.CLIMOV/02.CLIMOV/02.CLIMOV/Views/UsuariosScreen.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = _02.CLIMOV.Views.UsuariosScreen.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\UsuariosScreen.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\UsuariosScreen.xaml

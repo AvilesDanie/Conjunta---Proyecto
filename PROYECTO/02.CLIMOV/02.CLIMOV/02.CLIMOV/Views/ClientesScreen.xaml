@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:_02.CLIMOV.ViewModels"
+             x:Class="_02.CLIMOV.Views.ClientesScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:ClienteViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        
+        <!-- TopBar -->
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource AzulPrimarioMedio}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0"
+                        Source="arrow_back.png"
+                        BackgroundColor="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        Clicked="OnBackClicked"/>
+            <Label Grid.Column="1"
+                   Text="Lista de Clientes"
+                   TextColor="{StaticResource TextoBlanco}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   Margin="10,0,0,0"/>
+        </Grid>
+
+        <!-- Buscador -->
+        <Frame Grid.Row="1" Margin="16,16,16,0" Padding="0" CornerRadius="12" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+            <SearchBar Placeholder="Buscar por nombre o cédula"
+                      PlaceholderColor="{StaticResource TextoGrisMedio}"
+                      TextColor="{StaticResource TextoPrincipal}"
+                      Text="{Binding SearchText}"/>
+        </Frame>
+
+        <!-- Lista de Clientes -->
+        <CollectionView Grid.Row="2" 
+                       ItemsSource="{Binding ClientesFiltrados}"
+                       Margin="16,16,16,0">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="👥" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay clientes registrados" 
+                           FontSize="16" 
+                           TextColor="{StaticResource TextoGrisMedio}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="0" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnClienteSelected" CommandParameter="{Binding Cedula}"/>
+                        </Frame.GestureRecognizers>
+                        <Grid Padding="20">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="{StaticResource AzulPrimario}" Offset="0.0"/>
+                                    <GradientStop Color="{StaticResource AzulPrimarioMedio}" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="48,*">
+                                <Frame Grid.Column="0" WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0" BackgroundColor="#33FFFFFF" HasShadow="False">
+                                    <Label Text="👤" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Frame>
+                                <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}"/>
+                                    <Label Text="{Binding Cedula, StringFormat='CI: {0}'}" FontSize="14" TextColor="{StaticResource TextoBlanco}" Opacity="0.9"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                            
+                            <!-- Divider -->
+                            <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="#33FFFFFF" Margin="0,12"/>
+                            
+                            <!-- Info adicional -->
+                            <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto,*" Margin="0,12,0,0" RowSpacing="4" ColumnSpacing="16">
+                                <Label Grid.Column="0" Text="📅" FontSize="20"/>
+                                <Label Grid.Column="1" Text="{Binding FechaNacimiento}" FontSize="12" TextColor="{StaticResource TextoBlanco}" Opacity="0.8" VerticalOptions="Center"/>
+                                <Label Grid.Column="2" Text="💍" FontSize="20"/>
+                                <Label Grid.Column="3" Text="{Binding EstadoCivil}" FontSize="12" TextColor="{StaticResource TextoBlanco}" Opacity="0.8" VerticalOptions="Center"/>
+                            </Grid>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- FAB -->
+        <ImageButton Grid.Row="3"
+                    Source="add.png"
+                    BackgroundColor="{StaticResource AzulPrimarioMedio}"
+                    WidthRequest="56"
+                    HeightRequest="56"
+                    CornerRadius="28"
+                    Margin="0,0,16,16"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Clicked="OnNuevoClienteClicked"/>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="2"
+                         IsRunning="{Binding IsLoading}"
+                         IsVisible="{Binding IsLoading}"
+                         Color="{StaticResource AzulPrimario}"
+                         WidthRequest="48"
+                         HeightRequest="48"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

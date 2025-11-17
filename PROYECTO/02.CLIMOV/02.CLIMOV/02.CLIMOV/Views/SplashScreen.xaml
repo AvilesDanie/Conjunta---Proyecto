@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.SplashScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource AzulPrimario}">
+    
+    <Grid>
+        <!-- Fondo con gradiente -->
+        <BoxView>
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{StaticResource AzulPrimario}" Offset="0.0" />
+                    <GradientStop Color="{StaticResource AzulPrimarioMedio}" Offset="1.0" />
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Contenido centrado -->
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="30">
+            
+            <!-- Texto del logo -->
+            <Label Text="BanQuito &amp; ElectroQuito"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextoBlanco}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+
+            <!-- Indicador de carga -->
+            <ActivityIndicator IsRunning="True"
+                             Color="{StaticResource TextoBlanco}"
+                             WidthRequest="48"
+                             HeightRequest="48"
+                             HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

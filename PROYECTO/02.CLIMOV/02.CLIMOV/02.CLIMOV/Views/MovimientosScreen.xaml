@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.MovimientosScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource Morado}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Movimientos" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <Frame Grid.Row="1" Margin="16,16,16,0" Padding="20" CornerRadius="16" HasShadow="True">
+            <Frame.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="{StaticResource Morado}" Offset="0.0"/>
+                    <GradientStop Color="#8E24AA" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Frame.Background>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Cuenta" FontSize="14" TextColor="{StaticResource TextoBlanco}" Opacity="0.8"/>
+                <Label x:Name="LabelNumeroCuenta" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}"/>
+                <Label Text="Saldo Actual" FontSize="14" TextColor="{StaticResource TextoBlanco}" Opacity="0.8" Margin="0,8,0,0"/>
+                <Label x:Name="LabelSaldo" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}"/>
+            </VerticalStackLayout>
+        </Frame>
+
+        <CollectionView Grid.Row="2" x:Name="CollectionMovimientos" Margin="16,16,16,0">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="📝" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay movimientos registrados" FontSize="16" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="16" CornerRadius="12" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" HasShadow="False">
+                                <Frame.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="{Binding TipoMovimiento, Converter={StaticResource TipoMovimientoColorConverter}, ConverterParameter=Start}" Offset="0.0"/>
+                                        <GradientStop Color="{Binding TipoMovimiento, Converter={StaticResource TipoMovimientoColorConverter}, ConverterParameter=End}" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Label Text="{Binding TipoMovimiento, Converter={StaticResource TipoMovimientoIconConverter}}" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                                <Label Text="{Binding TipoMovimiento}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                <Label Text="{Binding Fecha}" FontSize="12" TextColor="{StaticResource TextoGrisMedio}"/>
+                            </VerticalStackLayout>
+
+                            <Label Grid.Column="2" Text="{Binding Monto, StringFormat='$ {0:N2}'}" FontSize="18" FontAttributes="Bold" TextColor="{Binding TipoMovimiento, Converter={StaticResource TipoMovimientoColorConverter}, ConverterParameter=Text}" VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ImageButton Grid.Row="3" Source="add.png" BackgroundColor="{StaticResource Morado}" WidthRequest="56" HeightRequest="56" CornerRadius="28" Margin="0,0,16,16" HorizontalOptions="End" VerticalOptions="End" Clicked="OnNuevoMovimientoClicked"/>
+
+        <ActivityIndicator Grid.Row="2" x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource Morado}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

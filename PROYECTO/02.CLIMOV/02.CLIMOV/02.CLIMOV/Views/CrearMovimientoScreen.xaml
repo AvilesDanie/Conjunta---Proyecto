@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.CrearMovimientoScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource Morado}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Nuevo Movimiento" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
+                <Frame Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                    <VerticalStackLayout Spacing="20">
+                        <Label Text="Registrar Movimiento" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Cuenta" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                            <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}" BackgroundColor="{StaticResource FondoDisabled}">
+                                <Entry x:Name="EntryNumeroCuenta" IsReadOnly="True" TextColor="{StaticResource TextoGrisMedio}" Margin="12,8"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Tipo de Movimiento *" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                            <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                                <Picker x:Name="PickerTipoMovimiento" TextColor="{StaticResource TextoPrincipal}" Margin="12,8">
+                                    <Picker.Items>
+                                        <x:String>DEPOSITO</x:String>
+                                        <x:String>RETIRO</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Monto *" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                            <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                                <Entry x:Name="EntryMonto" Placeholder="0.00" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" Keyboard="Numeric" Margin="12,8"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <Button x:Name="BtnRegistrar" Text="Registrar Movimiento" BackgroundColor="{StaticResource Morado}" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold" CornerRadius="12" HeightRequest="56" Clicked="OnRegistrarClicked" Margin="0,10,0,0"/>
+
+                        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource Morado}" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

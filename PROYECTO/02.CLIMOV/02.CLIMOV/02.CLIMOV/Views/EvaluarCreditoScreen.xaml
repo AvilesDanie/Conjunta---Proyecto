@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.EvaluarCreditoScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource CyanOscuro}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Evaluar Crédito" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
+                <Frame Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                    <VerticalStackLayout Spacing="20">
+                        <Label Text="Solicitud de Crédito" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Número de Cuenta *" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                            <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                                <Entry x:Name="EntryNumeroCuenta" Placeholder="Ingrese el número de cuenta" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" Margin="12,8"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Monto del Crédito *" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                            <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                                <Entry x:Name="EntryMonto" Placeholder="0.00" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" Keyboard="Numeric" Margin="12,8"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Plazo (meses) *" TextColor="{StaticResource TextoPrincipal}" FontSize="14" FontAttributes="Bold"/>
+                            <Frame CornerRadius="12" Padding="0" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+                                <Entry x:Name="EntryPlazo" Placeholder="12" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" Keyboard="Numeric" Margin="12,8"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <Button x:Name="BtnEvaluar" Text="Evaluar Crédito" BackgroundColor="{StaticResource CyanOscuro}" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold" CornerRadius="12" HeightRequest="56" Clicked="OnEvaluarClicked" Margin="0,10,0,0"/>
+
+                        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource CyanOscuro}" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame x:Name="FrameResultado" IsVisible="False" Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Resultado de la Evaluación" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                        
+                        <Frame x:Name="FrameAprobado" Padding="16" CornerRadius="12" HasShadow="False" BackgroundColor="{StaticResource VerdeExito}">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="✅ Crédito Aprobado" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                                <BoxView HeightRequest="1" BackgroundColor="#33FFFFFF"/>
+                                <Grid ColumnDefinitions="*,Auto" RowSpacing="8">
+                                    <Label Grid.Row="0" Grid.Column="0" Text="Tasa de Interés:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                                    <Label x:Name="LabelTasa" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource TextoBlanco}"/>
+                                    
+                                    <Label Grid.Row="1" Grid.Column="0" Text="Cuota Mensual:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                                    <Label x:Name="LabelCuotaMensual" Grid.Row="1" Grid.Column="1" TextColor="{StaticResource TextoBlanco}"/>
+                                    
+                                    <Label Grid.Row="2" Grid.Column="0" Text="Total a Pagar:" TextColor="{StaticResource TextoBlanco}" FontAttributes="Bold"/>
+                                    <Label x:Name="LabelTotalPagar" Grid.Row="2" Grid.Column="1" TextColor="{StaticResource TextoBlanco}"/>
+                                </Grid>
+                                <Button Text="Ver Tabla de Amortización" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource VerdeExito}" CornerRadius="12" Clicked="OnVerTablaClicked"/>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Frame x:Name="FrameRechazado" IsVisible="False" Padding="16" CornerRadius="12" HasShadow="False" BackgroundColor="{StaticResource RojoError}">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="❌ Crédito Rechazado" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                                <Label x:Name="LabelMotivoRechazo" TextColor="{StaticResource TextoBlanco}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

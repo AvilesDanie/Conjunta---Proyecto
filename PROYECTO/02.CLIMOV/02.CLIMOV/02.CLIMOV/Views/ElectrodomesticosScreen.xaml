@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:_02.CLIMOV.ViewModels"
+             x:Class="_02.CLIMOV.Views.ElectrodomesticosScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:ElectrodomesticoViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource NaranjaPrincipal}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Catálogo de Electrodomésticos" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <Frame Grid.Row="1" Margin="16,16,16,0" Padding="0" CornerRadius="12" HasShadow="False" BorderColor="{StaticResource GrisBordes}">
+            <SearchBar Placeholder="Buscar por nombre" PlaceholderColor="{StaticResource TextoGrisMedio}" TextColor="{StaticResource TextoPrincipal}" Text="{Binding SearchText}"/>
+        </Frame>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding ElectrodomesticosFiltrados}" Margin="16,16,16,0">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="📺" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay electrodomésticos registrados" FontSize="16" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="16" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Grid ColumnDefinitions="80,*,Auto" ColumnSpacing="12">
+                            <Frame Grid.Column="0" WidthRequest="80" HeightRequest="80" CornerRadius="12" Padding="0" HasShadow="False" BackgroundColor="{StaticResource FondoClaro}">
+                                <Label Text="📺" FontSize="40" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
+                                <Label Text="{Binding Nombre}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                <Label Text="{Binding Descripcion}" FontSize="12" TextColor="{StaticResource TextoGrisMedio}" MaxLines="2" LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding Precio, StringFormat='$ {0:N2}'}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource NaranjaPrincipal}" Margin="0,4,0,0"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                                <Button Text="✏️" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource AzulPrimario}" BorderColor="{StaticResource AzulPrimario}" BorderWidth="2" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" FontSize="16" Clicked="OnEditarClicked" CommandParameter="{Binding IdElectrodomestico}"/>
+                                <Button Text="🗑️" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource RojoError}" BorderColor="{StaticResource RojoError}" BorderWidth="2" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" FontSize="16" Clicked="OnEliminarClicked" CommandParameter="{Binding IdElectrodomestico}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ImageButton Grid.Row="3" Source="add.png" BackgroundColor="{StaticResource NaranjaPrincipal}" WidthRequest="56" HeightRequest="56" CornerRadius="28" Margin="0,0,16,16" HorizontalOptions="End" VerticalOptions="End" Clicked="OnNuevoClicked"/>
+
+        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="{StaticResource NaranjaPrincipal}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

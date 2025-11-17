@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.HomeBanquitoScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        
+        <!-- TopBar -->
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource AzulPrimario}" Padding="20" ColumnDefinitions="Auto,*,Auto">
+            <Image Grid.Column="0" 
+                   Source="logo_banquito.png"
+                   WidthRequest="40"
+                   HeightRequest="40"
+                   Aspect="AspectFit"
+                   VerticalOptions="Center"
+                   Margin="0,0,12,0"/>
+            
+            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                <Label Text="BanQuito"
+                       TextColor="{StaticResource TextoBlanco}"
+                       FontSize="24"
+                       FontAttributes="Bold"/>
+                <Label x:Name="LabelBienvenida"
+                       TextColor="{StaticResource TextoBlanco}"
+                       FontSize="14"
+                       Opacity="0.9"/>
+            </VerticalStackLayout>
+
+            <ImageButton Grid.Column="2"
+                        Source="exit.png"
+                        BackgroundColor="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        Clicked="OnLogoutClicked"/>
+        </Grid>
+
+        <!-- Contenido -->
+        <ScrollView Grid.Row="1">
+            <Grid Padding="16" RowSpacing="16" ColumnSpacing="16"
+                  RowDefinitions="140,140,140" ColumnDefinitions="*,*">
+
+                <!-- Clientes -->
+                <Frame Grid.Row="0" Grid.Column="0" Padding="16" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnClientesClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource AzulPrimario}" Offset="0.0" />
+                            <GradientStop Color="{StaticResource AzulPrimarioMedio}" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="👥" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Clientes"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoBlanco}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Nuevo Cliente -->
+                <Frame Grid.Row="0" Grid.Column="1" Padding="16" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNuevoClienteClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource VerdeExito}" Offset="0.0" />
+                            <GradientStop Color="{StaticResource VerdeBrillanteSaldo}" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="➕👤" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Nuevo Cliente"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoBlanco}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Cuentas -->
+                <Frame Grid.Row="1" Grid.Column="0" Padding="16" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCuentasClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource Morado}" Offset="0.0" />
+                            <GradientStop Color="#8E24AA" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="🏦" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Cuentas"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoBlanco}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Créditos -->
+                <Frame Grid.Row="1" Grid.Column="1" Padding="16" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCreditosClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource AzulPrimario}" Offset="0.0" />
+                            <GradientStop Color="{StaticResource AzulClaro}" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="💳" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Créditos"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoBlanco}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Cuotas -->
+                <Frame Grid.Row="2" Grid.Column="0" Padding="16" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCuotasClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource CyanOscuro}" Offset="0.0" />
+                            <GradientStop Color="#26C6DA" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="🧾" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Cuotas"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoBlanco}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Usuarios -->
+                <Frame Grid.Row="2" Grid.Column="1" Padding="16" CornerRadius="20" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnUsuariosClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Frame.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource VerdeExito}" Offset="0.0" />
+                            <GradientStop Color="#43A047" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Frame.Background>
+                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="👤" FontSize="32" HorizontalOptions="Center"/>
+                        <Label Text="Usuarios"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoBlanco}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </Grid>
+        </ScrollView>
+
+        <!-- Footer -->
+        <Grid Grid.Row="2" BackgroundColor="{StaticResource AzulPrimario}" Padding="20" HeightRequest="60">
+            <Label Text="BanQuito © 2024"
+                   TextColor="{StaticResource TextoBlanco}"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Grid>
+    </Grid>
+</ContentPage>

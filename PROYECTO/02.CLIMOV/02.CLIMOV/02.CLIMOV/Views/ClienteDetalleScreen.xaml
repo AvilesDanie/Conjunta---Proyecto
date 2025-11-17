@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.ClienteDetalleScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource AzulPrimarioMedio}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Detalle del Cliente" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
+                <Frame Padding="24" CornerRadius="20" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                    <VerticalStackLayout Spacing="20">
+                        <Frame WidthRequest="80" HeightRequest="80" CornerRadius="40" Padding="0" BackgroundColor="{StaticResource AzulPrimario}" HorizontalOptions="Center" HasShadow="False">
+                            <Label Text="👤" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+
+                        <Label x:Name="LabelNombre" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}" HorizontalOptions="Center"/>
+
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource GrisBordes}"/>
+
+                        <Grid ColumnDefinitions="Auto,*" RowSpacing="16" ColumnSpacing="12">
+                            <Label Grid.Row="0" Grid.Column="0" Text="📇" FontSize="24"/>
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="4">
+                                <Label Text="Cédula" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                <Label x:Name="LabelCedula" FontSize="16" TextColor="{StaticResource TextoPrincipal}"/>
+                            </VerticalStackLayout>
+
+                            <Label Grid.Row="1" Grid.Column="0" Text="📅" FontSize="24"/>
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
+                                <Label Text="Fecha de Nacimiento" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                <Label x:Name="LabelFechaNacimiento" FontSize="16" TextColor="{StaticResource TextoPrincipal}"/>
+                            </VerticalStackLayout>
+
+                            <Label Grid.Row="2" Grid.Column="0" Text="💍" FontSize="24"/>
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="4">
+                                <Label Text="Estado Civil" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                                <Label x:Name="LabelEstadoCivil" FontSize="16" TextColor="{StaticResource TextoPrincipal}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource GrisBordes}"/>
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <Button Grid.Column="0" Text="Ver Cuentas" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource AzulPrimario}" BorderColor="{StaticResource AzulPrimario}" BorderWidth="2" CornerRadius="12" Clicked="OnVerCuentasClicked"/>
+                            <Button Grid.Column="1" Text="Editar" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource AzulPrimario}" BorderColor="{StaticResource AzulPrimario}" BorderWidth="2" CornerRadius="12" Clicked="OnEditarClicked"/>
+                            <Button Grid.Column="2" Text="Eliminar" BackgroundColor="{StaticResource BlancoPuro}" TextColor="{StaticResource RojoError}" BorderColor="{StaticResource RojoError}" BorderWidth="2" CornerRadius="12" Clicked="OnEliminarClicked"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource AzulPrimario}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

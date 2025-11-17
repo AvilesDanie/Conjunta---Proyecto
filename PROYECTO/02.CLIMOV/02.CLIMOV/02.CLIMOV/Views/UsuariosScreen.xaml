@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_02.CLIMOV.Views.UsuariosScreen"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource FondoClaro}">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource AzulPrimarioMedio}" Padding="16" ColumnDefinitions="Auto,*">
+            <ImageButton Grid.Column="0" Source="arrow_back.png" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="Usuarios del Sistema" TextColor="{StaticResource TextoBlanco}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0,0,0"/>
+        </Grid>
+
+        <CollectionView Grid.Row="1" x:Name="CollectionUsuarios" Margin="16">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                    <Label Text="👥" FontSize="80" HorizontalOptions="Center" Opacity="0.7"/>
+                    <Label Text="No hay usuarios registrados" FontSize="16" TextColor="{StaticResource TextoGrisMedio}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="20" CornerRadius="16" HasShadow="True" BackgroundColor="{StaticResource BlancoPuro}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                            <Frame Grid.Column="0" WidthRequest="56" HeightRequest="56" CornerRadius="28" Padding="0" HasShadow="False">
+                                <Frame.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="{StaticResource AzulPrimario}" Offset="0.0"/>
+                                        <GradientStop Color="{StaticResource AzulPrimarioMedio}" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Label Text="👤" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
+                                <Label Text="{Binding NombreUsuario}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                                <Label Text="{Binding Rol}" FontSize="14" TextColor="{StaticResource TextoGrisMedio}"/>
+                            </VerticalStackLayout>
+
+                            <Frame Grid.Column="2" Padding="12,6" CornerRadius="12" HasShadow="False" BackgroundColor="{StaticResource VerdeExito}" VerticalOptions="Center">
+                                <Label Text="Activo" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource TextoBlanco}"/>
+                            </Frame>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="1" x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{StaticResource AzulPrimarioMedio}" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>
