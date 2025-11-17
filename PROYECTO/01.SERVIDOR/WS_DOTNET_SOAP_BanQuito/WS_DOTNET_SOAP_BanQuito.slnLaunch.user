@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "..\\WS_DOTNET_SOAP_Comercializadora\\WS_DOTNET_SOAP_Comercializadora.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

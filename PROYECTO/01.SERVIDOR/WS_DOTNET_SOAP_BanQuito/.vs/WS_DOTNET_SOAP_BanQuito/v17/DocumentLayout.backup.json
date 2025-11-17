@@ -1,0 +1,140 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_banquito\\ws_dotnet_soap_banquito\\ec.edu.monster.controller\\clientecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|solutionrelative:ws_dotnet_soap_banquito\\ec.edu.monster.controller\\clientecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_banquito\\ws_dotnet_soap_banquito\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|solutionrelative:ws_dotnet_soap_banquito\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}|..\\WS_DOTNET_SOAP_Comercializadora\\WS_DOTNET_SOAP_Comercializadora.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_comercializadora\\ec.edu.monster.controller\\facturacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}|..\\WS_DOTNET_SOAP_Comercializadora\\WS_DOTNET_SOAP_Comercializadora.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_comercializadora\\ec.edu.monster.integracion\\banquitosoapclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}|..\\WS_DOTNET_SOAP_Comercializadora\\WS_DOTNET_SOAP_Comercializadora.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_comercializadora\\ec.edu.monster.integracion\\banquitodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_banquito\\ws_dotnet_soap_banquito\\ec.edu.monster.dto\\creditodtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|solutionrelative:ws_dotnet_soap_banquito\\ec.edu.monster.dto\\creditodtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|d:\\onedrive\\desktop\\aaaaaaaaaaaaa\\conjunta---proyecto\\proyecto\\01.servidor\\ws_dotnet_soap_banquito\\ws_dotnet_soap_banquito\\ec.edu.monster.controller\\icreditocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC9CBEE7-7433-4609-AE77-52A292DDBE42}|WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito.csproj|solutionrelative:ws_dotnet_soap_banquito\\ec.edu.monster.controller\\icreditocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ClienteController.cs",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ClienteController.cs",
+              "RelativeDocumentMoniker": "WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ClienteController.cs",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ClienteController.cs",
+              "RelativeToolTip": "WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ClienteController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-17T00:13:27.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Web.config",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\Web.config",
+              "RelativeDocumentMoniker": "WS_DOTNET_SOAP_BanQuito\\Web.config",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\Web.config",
+              "RelativeToolTip": "WS_DOTNET_SOAP_BanQuito\\Web.config",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAwwJAAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-11-16T23:56:07.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FacturaController.cs",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.controller\\FacturaController.cs",
+              "RelativeDocumentMoniker": "..\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.controller\\FacturaController.cs",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.controller\\FacturaController.cs",
+              "RelativeToolTip": "..\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.controller\\FacturaController.cs",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAgwHoAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T23:47:18.235Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BanquitoDto.cs",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoDto.cs",
+              "RelativeDocumentMoniker": "..\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoDto.cs",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoDto.cs",
+              "RelativeToolTip": "..\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T23:46:02.196Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BanquitoSoapClient.cs",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoSoapClient.cs",
+              "RelativeDocumentMoniker": "..\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoSoapClient.cs",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoSoapClient.cs",
+              "RelativeToolTip": "..\\WS_DOTNET_SOAP_Comercializadora\\ec.edu.monster.integracion\\BanquitoSoapClient.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAEMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T23:45:36.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CreditoDtos.cs",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.dto\\CreditoDtos.cs",
+              "RelativeDocumentMoniker": "WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.dto\\CreditoDtos.cs",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.dto\\CreditoDtos.cs",
+              "RelativeToolTip": "WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.dto\\CreditoDtos.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAqwBwAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T23:39:32.264Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ICreditoController.cs",
+              "DocumentMoniker": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ICreditoController.cs",
+              "RelativeDocumentMoniker": "WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ICreditoController.cs",
+              "ToolTip": "D:\\OneDrive\\Desktop\\aaaaaaaaaaaaa\\Conjunta---Proyecto\\PROYECTO\\01.SERVIDOR\\WS_DOTNET_SOAP_BanQuito\\WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ICreditoController.cs",
+              "RelativeToolTip": "WS_DOTNET_SOAP_BanQuito\\ec.edu.monster.controller\\ICreditoController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T23:39:23.107Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

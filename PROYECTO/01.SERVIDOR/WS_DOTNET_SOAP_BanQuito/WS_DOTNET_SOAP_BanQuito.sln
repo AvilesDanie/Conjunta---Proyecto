@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WS_DOTNET_SOAP_BanQuito", "WS_DOTNET_SOAP_BanQuito\WS_DOTNET_SOAP_BanQuito.csproj", "{DC9CBEE7-7433-4609-AE77-52A292DDBE42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WS_DOTNET_SOAP_Comercializadora", "..\WS_DOTNET_SOAP_Comercializadora\WS_DOTNET_SOAP_Comercializadora.csproj", "{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC9CBEE7-7433-4609-AE77-52A292DDBE42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC9CBEE7-7433-4609-AE77-52A292DDBE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC9CBEE7-7433-4609-AE77-52A292DDBE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC9CBEE7-7433-4609-AE77-52A292DDBE42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A230DB9-63FB-4A2F-B2AD-F5DFB489E226}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C05F5335-6B4B-44FF-B2F0-AA47B10CC764}
+	EndGlobalSection
+EndGlobal

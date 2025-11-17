@@ -1,0 +1,3 @@
+﻿<%@ ServiceHost Language="C#" Debug="true"
+    Service="WS_DOTNET_SOAP_Comercializadora.ec.edu.monster.controller.ElectrodomesticoController"
+    CodeBehind="ElectrodomesticoController.svc.cs" %>

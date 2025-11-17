@@ -1,0 +1,3 @@
+﻿<%@ ServiceHost Language="C#" Debug="true"
+    Service="WS_DOTNET_SOAP_Comercializadora.ec.edu.monster.controller.FacturaController"
+    CodeBehind="FacturaController.svc.cs" %>

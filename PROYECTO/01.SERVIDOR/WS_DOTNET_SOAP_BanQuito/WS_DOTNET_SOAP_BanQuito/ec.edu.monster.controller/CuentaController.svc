@@ -1,0 +1,4 @@
+﻿<%@ ServiceHost Language="C#" Debug="true"
+    Service="WS_DOTNET_SOAP_BanQuito.ec.edu.monster.controller.CuentaController" 
+    CodeBehind="CuentaController.svc.cs" %>
+
