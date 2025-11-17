@@ -247,7 +247,7 @@ fun CuentaCard(cuenta: CuentaResponse, navController: NavController) {
                     "$${String.format("%.2f", cuenta.saldo)}",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (cuenta.saldo >= BigDecimal.ZERO) Color(0xFF2E7D32) else Color(0xFFD32F2F)
+                    color = if (cuenta.saldo >= BigDecimal.ZERO) Color(0xFF66BB6A) else Color(0xFFEF5350)
                 )
             }
             

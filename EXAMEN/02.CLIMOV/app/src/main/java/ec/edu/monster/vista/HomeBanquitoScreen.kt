@@ -34,9 +34,56 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeBanquitoScreen(navController: NavController) {
+    var showCuotasDialog by remember { mutableStateOf(false) }
+    var idCredito by remember { mutableStateOf("") }
+    val toastHelper = rememberToastHelper()
+    
+    if (showCuotasDialog) {
+        AlertDialog(
+            onDismissRequest = { showCuotasDialog = false },
+            title = { Text("Consultar Cuotas") },
+            text = {
+                Column {
+                    Text("Ingrese el ID del crédito:")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = idCredito,
+                        onValueChange = { idCredito = it },
+                        label = { Text("ID Crédito") },
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color(0xFF212121),
+                            unfocusedTextColor = Color(0xFF212121),
+                            focusedLabelColor = Color(0xFF212121),
+                            unfocusedLabelColor = Color(0xFF757575)
+                        )
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (idCredito.isNotEmpty()) {
+                            navController.navigate(Screen.Cuotas.createRoute(idCredito))
+                            showCuotasDialog = false
+                            idCredito = ""
+                        } else {
+                            toastHelper.showError("Ingrese un ID válido")
+                        }
+                    }
+                ) {
+                    Text("Consultar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCuotasDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
     val context = LocalContext.current
     val sessionManager = remember { SessionManager(context) }
-    val toastHelper = rememberToastHelper()
     val scope = rememberCoroutineScope()
     
     val username by sessionManager.username.collectAsState(initial = "")
@@ -173,7 +220,7 @@ fun HomeBanquitoScreen(navController: NavController) {
                         title = "Cuotas",
                         icon = Icons.Default.Receipt,
                         color = Color(0xFF00838F),
-                        onClick = { navController.navigate(Screen.Creditos.route) }
+                        onClick = { showCuotasDialog = true }
                     )
                 }
                 

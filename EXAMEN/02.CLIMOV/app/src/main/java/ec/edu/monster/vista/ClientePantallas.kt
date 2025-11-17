@@ -117,6 +117,12 @@ fun CrearClienteScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 )
@@ -132,6 +138,10 @@ fun CrearClienteScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 )
@@ -165,7 +175,15 @@ fun CrearClienteScreen(
                     readOnly = true,
                     label = { Text("Estado Civil *") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedEstadoCivil) },
-                    modifier = Modifier.fillMaxWidth().menuAnchor()
+                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color(0xFF212121),
+                        unfocusedTextColor = Color(0xFF212121),
+                        focusedLabelColor = Color(0xFF212121),
+                        unfocusedLabelColor = Color(0xFF212121),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expandedEstadoCivil,
@@ -195,7 +213,15 @@ fun CrearClienteScreen(
                     readOnly = true,
                     label = { Text("Tipo de Cuenta *") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedTipoCuenta) },
-                    modifier = Modifier.fillMaxWidth().menuAnchor()
+                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color(0xFF212121),
+                        unfocusedTextColor = Color(0xFF212121),
+                        focusedLabelColor = Color(0xFF212121),
+                        unfocusedLabelColor = Color(0xFF212121),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expandedTipoCuenta,
@@ -224,6 +250,12 @@ fun CrearClienteScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 )
@@ -241,6 +273,12 @@ fun CrearClienteScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 )
@@ -426,6 +464,10 @@ fun EditarClienteScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 )
@@ -442,6 +484,12 @@ fun EditarClienteScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 )
@@ -462,6 +510,8 @@ fun EditarClienteScreen(
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color(0xFF212121),
                         unfocusedTextColor = Color(0xFF212121),
+                        focusedLabelColor = Color(0xFF212121),
+                        unfocusedLabelColor = Color(0xFF212121),
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White
                     )
@@ -701,11 +751,14 @@ fun ClienteDetalleScreen(
                     Button(
                         onClick = { navController.navigate(Screen.CuentasPorCliente.createRoute(cedula)) },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF1976D2))
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF1976D2),
+                            contentColor = Color.White
+                        )
                     ) {
-                        Icon(Icons.Default.AccountBalance, null)
+                        Icon(Icons.Default.AccountBalance, null, tint = Color.White)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("VER CUENTAS", fontWeight = FontWeight.Bold)
+                        Text("VER CUENTAS", fontWeight = FontWeight.Bold, color = Color.White)
                     }
                     
                     Spacer(modifier = Modifier.height(12.dp))
@@ -715,13 +768,13 @@ fun ClienteDetalleScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        OutlinedButton(
+                        Button(
                             onClick = {
                                 navController.navigate(Screen.EditarCliente.createRoute(cedula))
                             },
                             modifier = Modifier.weight(1f).height(56.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = Color(0xFF1976D2)
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White
                             )
                         ) {
                             Icon(Icons.Default.Edit, null)
@@ -729,12 +782,13 @@ fun ClienteDetalleScreen(
                             Text("EDITAR")
                         }
                         
-                        OutlinedButton(
+                        Button(
                             onClick = {
                                 showDeleteDialog = true
                             },
                             modifier = Modifier.weight(1f).height(56.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White,
                                 contentColor = Color(0xFFD32F2F)
                             )
                         ) {

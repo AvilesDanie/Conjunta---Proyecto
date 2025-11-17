@@ -155,13 +155,14 @@ fun CreditosScreen(navController: NavController) {
                     Text(
                         "Evaluación de Créditos",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Evalúe si un cliente es sujeto de crédito según su historial de movimientos",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color(0xFF212121)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
@@ -213,13 +214,14 @@ fun CreditosScreen(navController: NavController) {
                     Text(
                         "Consultar Cuotas",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Consulte las cuotas de amortización de un crédito específico",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color(0xFF212121)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
@@ -274,13 +276,14 @@ fun CreditosScreen(navController: NavController) {
                     Text(
                         "Información",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Los créditos aprobados generan automáticamente una tabla de amortización que puede consultar desde la facturación en ElectroQuito o desde esta sección",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color(0xFF212121)
                     )
                 }
             }

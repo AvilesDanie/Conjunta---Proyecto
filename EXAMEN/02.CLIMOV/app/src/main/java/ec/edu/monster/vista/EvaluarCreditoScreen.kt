@@ -1,5 +1,6 @@
 package ec.edu.monster.vista
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -70,6 +71,11 @@ fun EvaluarCreditoScreen(
             )
         }
     ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -80,7 +86,7 @@ fun EvaluarCreditoScreen(
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Row(
                     modifier = Modifier
@@ -99,12 +105,13 @@ fun EvaluarCreditoScreen(
                         Text(
                             "Evaluación de Crédito",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = 16.sp,
+                            color = Color(0xFF212121)
                         )
                         Text(
                             "Complete los datos para evaluar si el cliente es sujeto de crédito",
                             fontSize = 14.sp,
-                            color = Color.Gray
+                            color = Color(0xFF212121)
                         )
                     }
                 }
@@ -122,7 +129,13 @@ fun EvaluarCreditoScreen(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
                     focusedLabelColor = Color(0xFF212121),
-                    unfocusedLabelColor = Color(0xFF757575)
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
             
@@ -139,7 +152,13 @@ fun EvaluarCreditoScreen(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
                     focusedLabelColor = Color(0xFF212121),
-                    unfocusedLabelColor = Color(0xFF757575)
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
             
@@ -156,7 +175,13 @@ fun EvaluarCreditoScreen(
                     focusedTextColor = Color(0xFF212121),
                     unfocusedTextColor = Color(0xFF212121),
                     focusedLabelColor = Color(0xFF212121),
-                    unfocusedLabelColor = Color(0xFF757575)
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
             
@@ -167,7 +192,19 @@ fun EvaluarCreditoScreen(
                 leadingIcon = { Icon(Icons.Default.AccountBalance, null) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                placeholder = { Text("Cuenta donde se depositará el crédito") }
+                placeholder = { Text("Cuenta donde se depositará el crédito") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedLabelColor = Color(0xFF212121),
+                    unfocusedLabelColor = Color(0xFF212121),
+                    focusedLeadingIconColor = Color(0xFF212121),
+                    unfocusedLeadingIconColor = Color(0xFF212121),
+                    focusedPlaceholderColor = Color(0xFF757575),
+                    unfocusedPlaceholderColor = Color(0xFF757575),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -207,6 +244,7 @@ fun EvaluarCreditoScreen(
                     Text("EVALUAR CRÉDITO", fontSize = 16.sp)
                 }
             }
+        }
         }
     }
 }
