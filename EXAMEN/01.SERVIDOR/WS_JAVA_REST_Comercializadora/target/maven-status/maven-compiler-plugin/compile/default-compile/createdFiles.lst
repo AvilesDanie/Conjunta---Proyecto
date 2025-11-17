@@ -4,6 +4,7 @@ ec\edu\monster\JPAUtil.class
 ec\edu\monster\controller\ElectrodomesticoController.class
 ec\edu\monster\integracion\BanquitoClient$SolicitudCreditoDTO.class
 ec\edu\monster\controller\UsuarioController$ActualizarUsuarioRequest.class
+ec\edu\monster\controller\ElectrodomesticoController$ElectroMultipartRequest.class
 ec\edu\monster\integracion\BanquitoClient$CreditoResponseDTO.class
 ec\edu\monster\integracion\BanquitoClient.class
 ec\edu\monster\util\PasswordUtil.class
@@ -18,7 +19,6 @@ ec\edu\monster\controller\FacturaController$FacturaRequestDTO.class
 ec\edu\monster\controller\UsuarioController$CrearUsuarioRequest.class
 ec\edu\monster\controller\FacturaController$DetalleFacturaDTO.class
 ec\edu\monster\integracion\BanquitoClient$ResultadoEvaluacionDTO.class
-ec\edu\monster\controller\ElectrodomesticoController$ElectroRequestDTO.class
 ec\edu\monster\controller\UsuarioController$LoginRequest.class
 ec\edu\monster\model\Factura.class
 ec\edu\monster\controller\UsuarioController$UsuarioResponseDTO.class
