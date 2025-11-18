@@ -91,9 +91,10 @@ public class RegistrarMovimientoFrame extends JFrame {
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBackground(Color.WHITE);
+        formPanel.putClientProperty("FlatLaf.style", "arc: 12");
         formPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 1),
-            BorderFactory.createEmptyBorder(25, 30, 25, 30)
+            BorderFactory.createLineBorder(new Color(66, 133, 244), 2),
+            BorderFactory.createEmptyBorder(30, 35, 30, 35)
         ));
         formPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
         
@@ -118,8 +119,9 @@ public class RegistrarMovimientoFrame extends JFrame {
         formPanel.add(createFieldLabel("Tipo de Movimiento *"));
         String[] tiposMovimiento = {"DEPOSITO", "RETIRO", "TRANSFERENCIA"};
         tipoMovimientoCombo = new JComboBox<>(tiposMovimiento);
+        tipoMovimientoCombo.putClientProperty("FlatLaf.style", "arc: 8");
         tipoMovimientoCombo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tipoMovimientoCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        tipoMovimientoCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         tipoMovimientoCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         formPanel.add(tipoMovimientoCombo);
         formPanel.add(Box.createVerticalStrut(15));
@@ -128,16 +130,11 @@ public class RegistrarMovimientoFrame extends JFrame {
         formPanel.add(createFieldLabel("Valor *"));
         valorField = createTextField();
         formPanel.add(valorField);
-        formPanel.add(Box.createVerticalStrut(15));
-        
-        // Descripción
-        formPanel.add(createFieldLabel("Descripción (opcional)"));
-        descripcionField = createTextField();
-        formPanel.add(descripcionField);
         formPanel.add(Box.createVerticalStrut(25));
         
         // Botón Registrar
-        registrarBtn = new JButton("💾 Registrar Movimiento");
+        registrarBtn = new JButton("✓ Registrar Movimiento");
+        registrarBtn.putClientProperty("FlatLaf.style", "arc: 10; borderWidth: 0; font: bold +1");
         registrarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         registrarBtn.setForeground(Color.WHITE);
         registrarBtn.setBackground(ColorPalette.VERDE_EXITO);
@@ -164,11 +161,12 @@ public class RegistrarMovimientoFrame extends JFrame {
     
     private JTextField createTextField() {
         JTextField field = new JTextField();
+        field.putClientProperty("FlatLaf.style", "arc: 8");
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         field.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 1),
-            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+            BorderFactory.createEmptyBorder(10, 12, 10, 12)
         ));
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
         return field;
@@ -177,7 +175,6 @@ public class RegistrarMovimientoFrame extends JFrame {
     private void registrarMovimiento() {
         String tipoMovimiento = (String) tipoMovimientoCombo.getSelectedItem();
         String valorStr = valorField.getText().trim();
-        String descripcion = descripcionField.getText().trim();
         
         if (valorStr.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -209,14 +206,30 @@ public class RegistrarMovimientoFrame extends JFrame {
         registrarBtn.setText("Registrando...");
         
         double valorFinal = valor;
+        String tipoMovimientoFinal = tipoMovimiento;
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
                 MovimientoRequest request = new MovimientoRequest();
                 request.numCuenta = numCuenta;
-                request.tipoMovimiento = tipoMovimiento;
+                
+                // Convertir tipo a formato del servidor: DEP, RET, TRA
+                String tipoServidor = "";
+                switch (tipoMovimientoFinal) {
+                    case "DEPOSITO":
+                        tipoServidor = "DEP";
+                        break;
+                    case "RETIRO":
+                        tipoServidor = "RET";
+                        break;
+                    case "TRANSFERENCIA":
+                        tipoServidor = "TRA";
+                        break;
+                }
+                
+                request.tipo = tipoServidor;
+                request.tipoMovimiento = tipoServidor;
                 request.valor = java.math.BigDecimal.valueOf(valorFinal);
-                request.descripcion = descripcion.isEmpty() ? null : descripcion;
                 
                 movimientoController.registrarMovimiento(request);
                 return null;
@@ -238,7 +251,7 @@ public class RegistrarMovimientoFrame extends JFrame {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
                     registrarBtn.setEnabled(true);
-                    registrarBtn.setText("💾 Registrar Movimiento");
+                    registrarBtn.setText("✓ Registrar Movimiento");
                 }
             }
         };

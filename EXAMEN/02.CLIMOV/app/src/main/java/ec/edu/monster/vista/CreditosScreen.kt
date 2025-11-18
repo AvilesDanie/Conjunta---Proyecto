@@ -40,10 +40,13 @@ fun CreditosScreen(navController: NavController) {
                         label = { Text("ID Crédito") },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = Color(0xFF212121),
-                            unfocusedTextColor = Color(0xFF212121),
-                            focusedLabelColor = Color(0xFF212121),
-                            unfocusedLabelColor = Color(0xFF757575)
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedLabelColor = Color.White,
+                            unfocusedLabelColor = Color(0xFFBBBBBB),
+                            cursorColor = Color.White,
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color(0xFFBBBBBB)
                         )
                     )
                 }

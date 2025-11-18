@@ -12,6 +12,7 @@ package ec.edu.monster.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "credito")
@@ -42,7 +43,10 @@ public class Credito {
     private LocalDate fechaAprobacion;
 
     @Column(length = 15)
-    private String estado; // APROBADO, RECHAZADO, ACTIVO, CANCELADO
+    private String estado; // APROBADO, RECHAZADO, ACTIVO, CANCELADO, PAGADO
+    
+    @OneToMany(mappedBy = "credito", fetch = FetchType.LAZY)
+    private List<CuotaAmortizacion> cuotas;
 
     // Getters y setters
 
@@ -108,5 +112,13 @@ public class Credito {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    
+    public List<CuotaAmortizacion> getCuotas() {
+        return cuotas;
+    }
+    
+    public void setCuotas(List<CuotaAmortizacion> cuotas) {
+        this.cuotas = cuotas;
     }
 }

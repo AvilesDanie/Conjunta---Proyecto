@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|solutionrelative:02.climov\\services\\banquitosoapservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|c:\\users\\detpc\\onedrive\\documentos\\github\\conjunta---proyecto\\proyecto\\02.climov\\02.climov\\02.climov\\services\\comercializadorasoapservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|solutionrelative:02.climov\\services\\comercializadorasoapservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|c:\\users\\detpc\\onedrive\\documentos\\github\\conjunta---proyecto\\proyecto\\02.climov\\02.climov\\02.climov\\platforms\\android\\mainactivity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|solutionrelative:02.climov\\platforms\\android\\mainactivity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|c:\\users\\detpc\\onedrive\\documentos\\github\\conjunta---proyecto\\proyecto\\02.climov\\02.climov\\02.climov\\platforms\\android\\androidmanifest.xml||{4E01A4BC-CFCF-452C-8C08-51352512D197}",
+      "RelativeMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|solutionrelative:02.climov\\platforms\\android\\androidmanifest.xml||{4E01A4BC-CFCF-452C-8C08-51352512D197}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|c:\\users\\detpc\\onedrive\\documentos\\github\\conjunta---proyecto\\proyecto\\02.climov\\02.climov\\02.climov\\views\\cuotasscreen.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E972C6C4-1F7F-4D98-8EB2-CC3E2B130757}|02.CLIMOV\\02.CLIMOV.csproj|solutionrelative:02.climov\\views\\cuotasscreen.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -22,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,6 +43,41 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ComercializadoraSoapService.cs",
+              "DocumentMoniker": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Services\\ComercializadoraSoapService.cs",
+              "RelativeDocumentMoniker": "02.CLIMOV\\Services\\ComercializadoraSoapService.cs",
+              "ToolTip": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Services\\ComercializadoraSoapService.cs",
+              "RelativeToolTip": "02.CLIMOV\\Services\\ComercializadoraSoapService.cs",
+              "ViewState": "AgIAAOAAAAAAAAAAAAAQwOYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-17T14:12:39.59Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainActivity.cs",
+              "DocumentMoniker": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Platforms\\Android\\MainActivity.cs",
+              "RelativeDocumentMoniker": "02.CLIMOV\\Platforms\\Android\\MainActivity.cs",
+              "ToolTip": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Platforms\\Android\\MainActivity.cs",
+              "RelativeToolTip": "02.CLIMOV\\Platforms\\Android\\MainActivity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAYAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-17T14:07:16.936Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AndroidManifest.xml",
+              "DocumentMoniker": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Platforms\\Android\\AndroidManifest.xml",
+              "RelativeDocumentMoniker": "02.CLIMOV\\Platforms\\Android\\AndroidManifest.xml",
+              "ToolTip": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Platforms\\Android\\AndroidManifest.xml",
+              "RelativeToolTip": "02.CLIMOV\\Platforms\\Android\\AndroidManifest.xml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-11-17T14:07:05.723Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "CuotasScreen.xaml.cs",
               "DocumentMoniker": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Views\\CuotasScreen.xaml.cs",
               "RelativeDocumentMoniker": "02.CLIMOV\\Views\\CuotasScreen.xaml.cs",
@@ -38,12 +85,11 @@
               "RelativeToolTip": "02.CLIMOV\\Views\\CuotasScreen.xaml.cs",
               "ViewState": "AgIAAHIAAAAAAAAAAAAswIMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-17T04:48:53.596Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-17T04:48:53.596Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "CuotasScreen.xaml",
               "DocumentMoniker": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Views\\CuotasScreen.xaml",
               "RelativeDocumentMoniker": "02.CLIMOV\\Views\\CuotasScreen.xaml",
@@ -51,8 +97,7 @@
               "RelativeToolTip": "02.CLIMOV\\Views\\CuotasScreen.xaml",
               "ViewState": "AgIAABUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-11-17T04:48:44.259Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-17T04:48:44.259Z"
             },
             {
               "$type": "Document",
@@ -62,7 +107,7 @@
               "RelativeDocumentMoniker": "02.CLIMOV\\Services\\BanquitoSoapService.cs",
               "ToolTip": "C:\\Users\\DETPC\\OneDrive\\Documentos\\Github\\Conjunta---Proyecto\\PROYECTO\\02.CLIMOV\\02.CLIMOV\\02.CLIMOV\\Services\\BanquitoSoapService.cs",
               "RelativeToolTip": "02.CLIMOV\\Services\\BanquitoSoapService.cs",
-              "ViewState": "AgIAAG4AAAAAAAAAAAAmwHoAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAxwIAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-17T04:47:08.572Z",
               "EditorCaption": ""

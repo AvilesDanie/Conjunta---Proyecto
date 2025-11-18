@@ -22,3 +22,4 @@ ec\edu\monster\integracion\BanquitoClient$ResultadoEvaluacionDTO.class
 ec\edu\monster\controller\UsuarioController$LoginRequest.class
 ec\edu\monster\model\Factura.class
 ec\edu\monster\controller\UsuarioController$UsuarioResponseDTO.class
+ec\edu\monster\controller\FacturaController$DetalleRequestDTO.class

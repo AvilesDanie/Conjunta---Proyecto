@@ -48,7 +48,8 @@ data class ClienteOnlyResponse(
 // ============ CUENTA ============
 data class CuentaRequest(
     val cedulaCliente: String,
-    val tipoCuenta: String
+    val tipoCuenta: String,
+    val saldoInicial: BigDecimal? = null
 )
 
 data class CuentaResponse(
@@ -64,6 +65,7 @@ data class MovimientoRequest(
     val numCuenta: String,
     val tipo: String, // DEP, RET, TRA
     val valor: BigDecimal,
+    val numCuentaOrigen: String? = null,
     val numCuentaDestino: String? = null
 )
 

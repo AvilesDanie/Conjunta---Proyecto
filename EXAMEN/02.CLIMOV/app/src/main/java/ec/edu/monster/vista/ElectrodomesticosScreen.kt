@@ -1,5 +1,6 @@
 package ec.edu.monster.vista
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,14 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import ec.edu.monster.controlador.ElectrodomesticoState
 import ec.edu.monster.controlador.ElectrodomesticoViewModel
 import ec.edu.monster.modelo.ElectrodomesticoResponse
+import ec.edu.monster.util.RetrofitClient
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -167,22 +171,34 @@ fun ElectrodomesticoCard(
                         )
                     )
                 )
-                .padding(20.dp),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Imagen del producto
             Box(
                 modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFFF6F00).copy(alpha = 0.1f)),
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFF5F5F5)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    Icons.Default.Devices,
-                    contentDescription = null,
-                    tint = Color(0xFFFF6F00),
-                    modifier = Modifier.size(32.dp)
-                )
+                if (!electrodomestico.imagenUrl.isNullOrBlank()) {
+                    // Construir URL completa para la imagen
+                    val imageUrl = "${RetrofitClient.BASE_URL_COMERCIALIZADORA}${electrodomestico.imagenUrl}"
+                    Image(
+                        painter = rememberAsyncImagePainter(imageUrl),
+                        contentDescription = "Imagen de ${electrodomestico.nombre}",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.Devices,
+                        contentDescription = null,
+                        tint = Color(0xFFFF6F00),
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
             }
             
             Spacer(modifier = Modifier.width(16.dp))
@@ -200,14 +216,14 @@ fun ElectrodomesticoCard(
                     fontSize = 14.sp,
                     color = Color(0xFF757575)
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "$${String.format("%.2f", electrodomestico.precioVenta)}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF388E3C)
+                )
             }
-            
-            Text(
-                text = "$${String.format("%.2f", electrodomestico.precioVenta)}",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
         }
     }
 }

@@ -114,18 +114,13 @@ public class CrearCuentaFrame extends JFrame {
         formPanel.add(cedulaField);
         formPanel.add(Box.createVerticalStrut(15));
         
-        // Número de Cuenta
-        formPanel.add(createFieldLabel("Número de Cuenta *"));
-        numCuentaField = createTextField();
-        formPanel.add(numCuentaField);
-        formPanel.add(Box.createVerticalStrut(15));
-        
         // Tipo de Cuenta
         formPanel.add(createFieldLabel("Tipo de Cuenta *"));
         String[] tiposCuenta = {"AHORROS", "CORRIENTE"};
         tipoCuentaCombo = new JComboBox<>(tiposCuenta);
+        tipoCuentaCombo.putClientProperty("FlatLaf.style", "arc: 8");
         tipoCuentaCombo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tipoCuentaCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        tipoCuentaCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         tipoCuentaCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         formPanel.add(tipoCuentaCombo);
         formPanel.add(Box.createVerticalStrut(15));
@@ -145,7 +140,8 @@ public class CrearCuentaFrame extends JFrame {
         formPanel.add(Box.createVerticalStrut(25));
         
         // Botón Guardar
-        guardarBtn = new JButton("💾 Crear Cuenta");
+        guardarBtn = new JButton("✓ Crear Cuenta");
+        guardarBtn.putClientProperty("FlatLaf.style", "arc: 10; borderWidth: 0; font: bold +1");
         guardarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         guardarBtn.setForeground(Color.WHITE);
         guardarBtn.setBackground(ColorPalette.VERDE_EXITO);
@@ -172,28 +168,20 @@ public class CrearCuentaFrame extends JFrame {
     
     private JTextField createTextField() {
         JTextField field = new JTextField();
+        field.putClientProperty("FlatLaf.style", "arc: 8");
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         field.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 1),
-            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+            BorderFactory.createEmptyBorder(10, 12, 10, 12)
         ));
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
         return field;
     }
     
     private void crearCuenta() {
-        String numCuenta = numCuentaField.getText().trim();
         String tipoCuenta = (String) tipoCuentaCombo.getSelectedItem();
         String saldoStr = saldoField.getText().trim();
-        
-        if (numCuenta.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Por favor ingrese el número de cuenta",
-                "Error de Validación",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
         
         double saldo = 0.0;
         try {
@@ -222,7 +210,6 @@ public class CrearCuentaFrame extends JFrame {
             protected Void doInBackground() throws Exception {
                 CuentaRequest request = new CuentaRequest();
                 request.cedulaCliente = cedula;
-                request.numCuenta = numCuenta;
                 request.tipoCuenta = tipoCuenta;
                 request.saldo = java.math.BigDecimal.valueOf(saldoFinal);
                 

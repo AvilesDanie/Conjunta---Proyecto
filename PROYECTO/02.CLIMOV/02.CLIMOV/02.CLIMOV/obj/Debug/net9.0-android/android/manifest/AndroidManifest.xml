@@ -10,7 +10,7 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <permission android:name="com.companyname.x02.climov.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature" />
   <uses-permission android:name="com.companyname.x02.climov.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-  <application xmlns:p3="http://schemas.xmlsoap.org/apk/res/android" android:name="crc64a05477cec0fadc9d.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:label="02.CLIMOV" p3:allowBackup="true" p3:icon="@mipmap/appicon" p3:networkSecurityConfig="@xml/network_security_config" p3:roundIcon="@mipmap/appicon_round" p3:supportsRtl="true" p3:usesCleartextTraffic="true">
+  <application android:name="crc64a05477cec0fadc9d.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:icon="@mipmap/appicon" android:label="02.CLIMOV" android:networkSecurityConfig="@xml/network_security_config" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" android:usesCleartextTraffic="true">
     <activity android:name="crc64a05477cec0fadc9d.MainActivity" android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:exported="true" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

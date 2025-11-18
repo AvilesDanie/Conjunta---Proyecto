@@ -96,7 +96,7 @@ public class MovimientosPorCuentaFrame extends JFrame {
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         actionPanel.setBackground(ColorPalette.FONDO_CLARO);
         
-        JButton registrarBtn = new JButton("➕ Registrar Movimiento");
+        JButton registrarBtn = new JButton("+ Registrar Movimiento");
         registrarBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         registrarBtn.setForeground(Color.WHITE);
         registrarBtn.setBackground(ColorPalette.VERDE_EXITO);
@@ -120,41 +120,35 @@ public class MovimientosPorCuentaFrame extends JFrame {
             }
         };
         
-        table = new JTable(tableModel) {
-            @Override
-            public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
-                Component c = super.prepareRenderer(renderer, row, column);
-                if (!isCellSelected(row, column)) {
-                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 248, 250));
-                    if (column != 2 && column != 3 && column != 4) {
-                        c.setForeground(ColorPalette.TEXTO_PRINCIPAL_NEGRO);
-                    }
-                }
-                return c;
-            }
-        };
+        table = new JTable(tableModel);
+        
+        // Estilo FlatLaf con animaciones
+        table.putClientProperty("FlatLaf.style", "rowHeight: 60; selectionInactiveBackground: #BBE0FB; selectionInactiveForeground: #0D3C6C");
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        table.setRowHeight(50);
+        table.setRowHeight(60);
         table.setShowGrid(true);
-        table.setGridColor(new Color(224, 224, 224));
+        table.setGridColor(new Color(230, 230, 230));
         table.setIntercellSpacing(new Dimension(1, 1));
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setFillsViewportHeight(true);
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        table.getTableHeader().setBackground(ColorPalette.AZUL_PRIMARIO);
+        table.getTableHeader().setBackground(new Color(66, 133, 244));
         table.getTableHeader().setForeground(Color.WHITE);
-        table.getTableHeader().setPreferredSize(new Dimension(0, 45));
+        table.getTableHeader().setPreferredSize(new Dimension(0, 48));
         table.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                c.setBackground(ColorPalette.AZUL_PRIMARIO);
-                c.setForeground(Color.WHITE);
-                c.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                ((JLabel)c).setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE),
+                JLabel label = new JLabel(value.toString());
+                label.setOpaque(true);
+                label.setBackground(new Color(66, 133, 244));
+                label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                label.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 3, 0, new Color(25, 103, 210)),
                     BorderFactory.createEmptyBorder(5, 10, 5, 10)
                 ));
-                ((JLabel)c).setHorizontalAlignment(SwingConstants.CENTER);
-                return c;
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                return label;
             }
         });
         

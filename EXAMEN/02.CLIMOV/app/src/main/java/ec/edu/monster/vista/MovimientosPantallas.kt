@@ -435,7 +435,7 @@ fun CrearMovimientoScreen(
                         return@Button
                     }
                     
-                    if (tipoMovimiento == "TRA" && numCuentaDestino.isBlank()) {
+                    if (tipoMovimiento == "TRA" && numCuentaDestino.trim().isBlank()) {
                         toastHelper.showError("Ingrese la cuenta destino")
                         return@Button
                     }
@@ -443,10 +443,11 @@ fun CrearMovimientoScreen(
                     isLoading = true
                     scope.launch {
                         val request = MovimientoRequest(
-                            numCuenta = numCuenta,
+                            numCuenta = numCuenta.trim(),
                             tipo = tipoMovimiento,
                             valor = valorDecimal,
-                            numCuentaDestino = if (tipoMovimiento == "TRA") numCuentaDestino else null
+                            numCuentaOrigen = if (tipoMovimiento == "TRA") numCuenta.trim() else null,
+                            numCuentaDestino = if (tipoMovimiento == "TRA") numCuentaDestino.trim() else null
                         )
                         
                         val result = cuentaViewModel.crearMovimiento(request)

@@ -277,17 +277,20 @@ public class CreditoController {
             }
         }
 
-        // 3) Sin crédito activo
+        // 3) Sin crédito activo con cuotas pendientes
+        // Verificar si hay créditos ACTIVOS/APROBADOS con cuotas PENDIENTES
         TypedQuery<Long> qCreditos = em.createQuery(
-                "SELECT COUNT(c) FROM Credito c " +
+                "SELECT COUNT(DISTINCT c) FROM Credito c " +
+                        "JOIN c.cuotas cu " +
                         "WHERE c.cliente.cedula = :cedula " +
-                        "AND c.estado IN ('APROBADO','ACTIVO')",
+                        "AND c.estado IN ('APROBADO','ACTIVO') " +
+                        "AND cu.estado = 'PENDIENTE'",
                 Long.class
         );
         qCreditos.setParameter("cedula", solicitud.cedula);
         Long cantCreditos = qCreditos.getSingleResult();
         if (cantCreditos > 0) {
-            res.motivo = "El cliente ya tiene un crédito activo.";
+            res.motivo = "El cliente tiene un crédito con cuotas pendientes de pago.";
             return res;
         }
 

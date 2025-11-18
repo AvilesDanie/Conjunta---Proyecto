@@ -20,7 +20,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import ec.edu.monster.controlador.CreditoViewModel
 import ec.edu.monster.controlador.EvaluationState
+import ec.edu.monster.modelo.SolicitudCredito
 import ec.edu.monster.util.rememberToastHelper
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,19 +32,34 @@ fun EvaluarCreditoScreen(
 ) {
     val toastHelper = rememberToastHelper()
     val evaluationState by viewModel.evaluationState.collectAsState()
+    val scope = rememberCoroutineScope()
     
     var cedula by remember { mutableStateOf("") }
     var precioProducto by remember { mutableStateOf("") }
     var plazoMeses by remember { mutableStateOf("") }
     var numCuentaCredito by remember { mutableStateOf("") }
     
+    var resultadoEvaluacion by remember { mutableStateOf<ec.edu.monster.modelo.ResultadoEvaluacion?>(null) }
+    var mostrarBotonCrear by remember { mutableStateOf(false) }
+    
     LaunchedEffect(evaluationState) {
         when (val state = evaluationState) {
             is EvaluationState.EvaluationSuccess -> {
+                resultadoEvaluacion = state.resultado
                 if (state.resultado.aprobado) {
                     toastHelper.showSuccess("Crédito APROBADO - Monto máximo: $${state.resultado.montoMaximo}")
+                    mostrarBotonCrear = true
                 } else {
-                    toastHelper.showError("Crédito RECHAZADO - ${state.resultado.motivo}")
+                    val motivo = state.resultado.motivo ?: "No especificado"
+                    
+                    // Detectar si es por cuotas pendientes
+                    if (motivo.contains("cuotas pendientes", ignoreCase = true) ||
+                        motivo.contains("crédito activo", ignoreCase = true)) {
+                        toastHelper.showError("⚠️ RECHAZADO - PROBLEMA DEL SERVIDOR: Se detecta un crédito anterior con estado ACTIVO pero todas las cuotas están pagadas. El servidor debe actualizar el estado del crédito a FINALIZADO.")
+                    } else {
+                        toastHelper.showError("Crédito RECHAZADO - $motivo")
+                    }
+                    mostrarBotonCrear = false
                 }
                 viewModel.resetEvaluationState()
             }
@@ -242,6 +259,98 @@ fun EvaluarCreditoScreen(
                     Icon(Icons.Default.Assessment, null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("EVALUAR CRÉDITO", fontSize = 16.sp)
+                }
+            }
+            
+            // Botón para CREAR CRÉDITO (aparece solo si fue aprobado)
+            if (mostrarBotonCrear && resultadoEvaluacion != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9))
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = Color(0xFF2E7D32),
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    "Crédito APROBADO",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    color = Color(0xFF2E7D32)
+                                )
+                                Text(
+                                    "Monto máximo: $${resultadoEvaluacion!!.montoMaximo}",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF1B5E20)
+                                )
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Button(
+                            onClick = {
+                                val precio = precioProducto.toDoubleOrNull()
+                                val plazo = plazoMeses.toIntOrNull()
+                                
+                                if (precio != null && plazo != null) {
+                                    scope.launch {
+                                        val solicitud = SolicitudCredito(
+                                            cedula = cedula.trim(),
+                                            precioProducto = precio.toBigDecimal(),
+                                            plazoMeses = plazo,
+                                            numCuentaCredito = numCuentaCredito.trim()
+                                        )
+                                        
+                                        val result = viewModel.crearCredito(solicitud)
+                                        result.fold(
+                                            onSuccess = { credito ->
+                                                toastHelper.showSuccess("¡Crédito creado! ID: ${credito.id}")
+                                                mostrarBotonCrear = false
+                                                resultadoEvaluacion = null
+                                                cedula = ""
+                                                precioProducto = ""
+                                                plazoMeses = ""
+                                                numCuentaCredito = ""
+                                            },
+                                            onFailure = { error ->
+                                                val errorMsg = error.message ?: "Error desconocido"
+                                                
+                                                if (errorMsg.contains("cuotas pendientes", ignoreCase = true) ||
+                                                    errorMsg.contains("crédito activo", ignoreCase = true)) {
+                                                    toastHelper.showError("⚠️ PROBLEMA DEL SERVIDOR: Tienes un crédito anterior con todas las cuotas pagadas pero el estado no se actualizó a FINALIZADO. Contacta al administrador del servidor.")
+                                                } else {
+                                                    toastHelper.showError("Error al crear crédito: $errorMsg")
+                                                }
+                                            }
+                                        )
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
+                        ) {
+                            Icon(Icons.Default.Done, null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("CREAR CRÉDITO Y GENERAR CUOTAS", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
                 }
             }
         }

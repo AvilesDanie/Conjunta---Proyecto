@@ -6,12 +6,15 @@ import ec.edu.monster.util.ColorPalette;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class CrearElectrodomesticoFrame extends JFrame {
     
     private final ElectrodomesticoController electroController;
     private JTextField codigoField, nombreField, precioField;
-    private JButton guardarBtn;
+    private JButton guardarBtn, seleccionarImagenBtn;
+    private JLabel imagenPreviewLabel;
+    private File archivoImagenSeleccionado;
     
     public CrearElectrodomesticoFrame() {
         this.electroController = new ElectrodomesticoController();
@@ -20,7 +23,7 @@ public class CrearElectrodomesticoFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Nuevo Electrodoméstico - ElectroQuito");
-        setSize(700, 500);
+        setSize(750, 650);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -38,7 +41,7 @@ public class CrearElectrodomesticoFrame extends JFrame {
     
     private JPanel createTopBar() {
         JPanel topBar = new JPanel(new BorderLayout());
-        topBar.setBackground(new Color(255, 87, 34));
+        topBar.setBackground(ColorPalette.NARANJA_ELECTRO);
         topBar.setPreferredSize(new Dimension(0, 70));
         topBar.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
         
@@ -109,12 +112,58 @@ public class CrearElectrodomesticoFrame extends JFrame {
         formPanel.add(createFieldLabel("Precio de Venta *"));
         precioField = createTextField();
         formPanel.add(precioField);
+        formPanel.add(Box.createVerticalStrut(15));
+        
+        // Campo para seleccionar imagen
+        formPanel.add(createFieldLabel("Imagen del Producto *"));
+        formPanel.add(Box.createVerticalStrut(8));
+        
+        JPanel imagenPanel = new JPanel(new BorderLayout(10, 0));
+        imagenPanel.setOpaque(false);
+        imagenPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        imagenPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Preview de la imagen
+        imagenPreviewLabel = new JLabel("Sin imagen seleccionada");
+        imagenPreviewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imagenPreviewLabel.setVerticalAlignment(SwingConstants.CENTER);
+        imagenPreviewLabel.setBorder(BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 2));
+        imagenPreviewLabel.setPreferredSize(new Dimension(120, 120));
+        imagenPreviewLabel.setBackground(new Color(245, 245, 245));
+        imagenPreviewLabel.setOpaque(true);
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setOpaque(false);
+        
+        seleccionarImagenBtn = new JButton("📁 Seleccionar Imagen");
+        seleccionarImagenBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        seleccionarImagenBtn.setForeground(Color.WHITE);
+        seleccionarImagenBtn.setBackground(ColorPalette.NARANJA_ELECTRO);
+        seleccionarImagenBtn.setFocusPainted(false);
+        seleccionarImagenBtn.setBorderPainted(false);
+        seleccionarImagenBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        seleccionarImagenBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        seleccionarImagenBtn.addActionListener(e -> seleccionarImagen());
+        
+        buttonPanel.add(seleccionarImagenBtn);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        
+        JLabel infoLabel = new JLabel("<html><small>Formatos: JPG, PNG<br>Tamaño máx: 5MB</small></html>");
+        infoLabel.setForeground(Color.GRAY);
+        infoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        buttonPanel.add(infoLabel);
+        
+        imagenPanel.add(imagenPreviewLabel, BorderLayout.WEST);
+        imagenPanel.add(buttonPanel, BorderLayout.CENTER);
+        
+        formPanel.add(imagenPanel);
         formPanel.add(Box.createVerticalStrut(25));
         
-        guardarBtn = new JButton("💾 Crear Electrodoméstico");
+        guardarBtn = new JButton("+ Crear Electrodoméstico");
         guardarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         guardarBtn.setForeground(Color.WHITE);
-        guardarBtn.setBackground(ColorPalette.VERDE_EXITO);
+        guardarBtn.setBackground(ColorPalette.NARANJA_ELECTRO);
         guardarBtn.setFocusPainted(false);
         guardarBtn.setBorderPainted(false);
         guardarBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
@@ -147,6 +196,41 @@ public class CrearElectrodomesticoFrame extends JFrame {
         return field;
     }
     
+    private void seleccionarImagen() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar Imagen del Producto");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+            "Imágenes (JPG, PNG, GIF)", "jpg", "jpeg", "png", "gif"));
+        
+        int resultado = fileChooser.showOpenDialog(this);
+        
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            archivoImagenSeleccionado = fileChooser.getSelectedFile();
+            
+            // Validar tamaño (5MB máx)
+            if (archivoImagenSeleccionado.length() > 5 * 1024 * 1024) {
+                JOptionPane.showMessageDialog(this,
+                    "La imagen es demasiado grande. Tamaño máximo: 5MB",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                archivoImagenSeleccionado = null;
+                return;
+            }
+            
+            // Mostrar preview
+            try {
+                ImageIcon icon = new ImageIcon(archivoImagenSeleccionado.getAbsolutePath());
+                Image img = icon.getImage().getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+                imagenPreviewLabel.setIcon(new ImageIcon(img));
+                imagenPreviewLabel.setText("");
+            } catch (Exception e) {
+                imagenPreviewLabel.setText("Error al cargar");
+            }
+        }
+    }
+    
     private void crearElectrodomestico() {
         String codigo = codigoField.getText().trim();
         String nombre = nombreField.getText().trim();
@@ -155,6 +239,14 @@ public class CrearElectrodomesticoFrame extends JFrame {
         if (codigo.isEmpty() || nombre.isEmpty() || precioStr.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Por favor complete todos los campos",
+                "Error de Validación",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (archivoImagenSeleccionado == null) {
+            JOptionPane.showMessageDialog(this,
+                "Por favor seleccione una imagen del producto",
                 "Error de Validación",
                 JOptionPane.ERROR_MESSAGE);
             return;
@@ -185,12 +277,8 @@ public class CrearElectrodomesticoFrame extends JFrame {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                ElectrodomesticoRequest request = new ElectrodomesticoRequest();
-                request.codigo = codigo;
-                request.nombre = nombre;
-                request.precioVenta = java.math.BigDecimal.valueOf(precioFinal);
-                
-                electroController.crearElectrodomestico(request);
+                electroController.crearElectrodomesticoConImagen(
+                    codigo, nombre, precioFinal, archivoImagenSeleccionado);
                 return null;
             }
             
@@ -210,7 +298,7 @@ public class CrearElectrodomesticoFrame extends JFrame {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
                     guardarBtn.setEnabled(true);
-                    guardarBtn.setText("💾 Crear Electrodoméstico");
+                    guardarBtn.setText("+ Crear Electrodoméstico");
                 }
             }
         };

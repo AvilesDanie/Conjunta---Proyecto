@@ -7,6 +7,7 @@ ec\edu\monster\vista\CreditosFrame$6.class
 ec\edu\monster\vista\FacturasFrame$4.class
 ec\edu\monster\modelo\ComercializadoraModels$DetalleFacturaResponse.class
 ec\edu\monster\vista\EvaluarCreditoFrame$1.class
+ec\edu\monster\vista\FacturarFrame$9.class
 ec\edu\monster\util\ColorPalette.class
 ec\edu\monster\util\ToastNotification$3.class
 ec\edu\monster\vista\ElectrodomesticosFrame$5.class
@@ -20,7 +21,7 @@ ec\edu\monster\vista\LoginComercializadoraFrame$3.class
 ec\edu\monster\vista\HomeBanquitoFrame$2.class
 ec\edu\monster\vista\LoginBanquitoFrame$2.class
 ec\edu\monster\vista\MovimientosPorCuentaFrame.class
-ec\edu\monster\vista\EditarElectrodomesticoFrame$1.class
+ec\edu\monster\vista\FacturarFrame$8.class
 ec\edu\monster\vista\CreditosFrame$5.class
 ec\edu\monster\modelo\ComercializadoraModels$UsuarioResponse.class
 ec\edu\monster\vista\CuotasFrame$11.class
@@ -87,10 +88,12 @@ ec\edu\monster\vista\EditarUsuarioFrame$3.class
 ec\edu\monster\vista\CuentasPorClienteFrame$4.class
 ec\edu\monster\vista\TodasCuentasFrame$6.class
 ec\edu\monster\util\ToastNotification$2.class
+ec\edu\monster\vista\CuentasPorClienteFrame$5$1.class
 ec\edu\monster\vista\TablaAmortizacionFrame$6.class
 ec\edu\monster\modelo\ComercializadoraModels$ElectrodomesticoResponse.class
 ec\edu\monster\vista\FacturarFrame$4.class
 ec\edu\monster\vista\FacturasFrame$9.class
+ec\edu\monster\util\ModernTableRenderer.class
 ec\edu\monster\vista\LoginComercializadoraFrame$2.class
 ec\edu\monster\vista\CreditosFrame$9.class
 ec\edu\monster\vista\LoginBanquitoFrame$3.class
@@ -110,7 +113,6 @@ ec\edu\monster\vista\CrearUsuarioFrame.class
 ec\edu\monster\modelo\BanquitoModels$ClienteRequest.class
 ec\edu\monster\vista\UsuariosFrame$7.class
 ec\edu\monster\vista\CreditosFrame$3.class
-ec\edu\monster\vista\EditarElectrodomesticoFrame$3.class
 ec\edu\monster\controlador\ElectrodomesticoController.class
 ec\edu\monster\modelo\BanquitoModels$CreditoResponse.class
 ec\edu\monster\vista\ElectrodomesticosFrame$8.class
@@ -131,7 +133,6 @@ ec\edu\monster\vista\TablaAmortizacionFrame$8.class
 ec\edu\monster\vista\EditarUsuarioFrame$2.class
 ec\edu\monster\vista\ElectrodomesticosFrame$2.class
 ec\edu\monster\vista\HomeComercializadoraFrame$2.class
-ec\edu\monster\vista\CuentasPorClienteFrame$8.class
 ec\edu\monster\vista\ClientesFrame$3.class
 ec\edu\monster\vista\TodasCuentasFrame$7.class
 ec\edu\monster\vista\EditarClienteFrame$2.class
@@ -139,7 +140,6 @@ ec\edu\monster\vista\ElectrodomesticosFrame$10.class
 ec\edu\monster\vista\CrearCuentaFrame.class
 ec\edu\monster\vista\TablaAmortizacionFrame$2.class
 ec\edu\monster\vista\FacturarFrame$1.class
-ec\edu\monster\vista\EditarElectrodomesticoFrame.class
 ec\edu\monster\vista\TablaAmortizacionFrame$9.class
 ec\edu\monster\vista\CrearElectrodomesticoFrame$2.class
 ec\edu\monster\vista\UsuariosFrame$10.class
@@ -151,7 +151,6 @@ ec\edu\monster\vista\FacturarFrame.class
 ec\edu\monster\controlador\CuentaController.class
 ec\edu\monster\modelo\BanquitoModels$MovimientoResponse.class
 ec\edu\monster\vista\ElectrodomesticosFrame$9.class
-ec\edu\monster\vista\ClientesFrame$9.class
 ec\edu\monster\vista\TodasCuentasFrame.class
 ec\edu\monster\vista\CuentasPorClienteFrame$7.class
 ec\edu\monster\vista\UsuariosFrame$2.class
@@ -170,17 +169,17 @@ ec\edu\monster\vista\ClienteDetalleFrame$3.class
 ec\edu\monster\vista\TodasCuentasFrame$2.class
 ec\edu\monster\util\SessionManager.class
 ec\edu\monster\vista\ClientesFrame$8.class
+ec\edu\monster\vista\TodasCuentasFrame$6$1.class
 ec\edu\monster\vista\ClientesFrame$1.class
 ec\edu\monster\vista\CuotasFrame$6.class
 ec\edu\monster\vista\EvaluarCreditoFrame.class
 ec\edu\monster\vista\ClienteDetalleFrame$1.class
-ec\edu\monster\vista\MovimientosPorCuentaFrame$7.class
 ec\edu\monster\modelo\BanquitoModels$CuentaRequest.class
 ec\edu\monster\vista\EditarUsuarioFrame.class
+ec\edu\monster\vista\FacturarFrame$10.class
 ec\edu\monster\modelo\ComercializadoraModels$UsuarioRequest.class
 ec\edu\monster\vista\ElectrodomesticosFrame$1.class
 ec\edu\monster\vista\CuotasFrame$3.class
-ec\edu\monster\vista\EditarElectrodomesticoFrame$2.class
 ec\edu\monster\vista\EditarClienteFrame$3.class
 ec\edu\monster\vista\SplashFrame.class
 ec\edu\monster\modelo\BanquitoModels$UsuarioResponse.class
@@ -188,6 +187,7 @@ ec\edu\monster\controlador\UsuarioController.class
 ec\edu\monster\modelo\BanquitoModels$CuotaAmortizacion.class
 ec\edu\monster\util\ApiClient.class
 ec\edu\monster\vista\CreditosFrame$4.class
+ec\edu\monster\vista\EvaluarCreditoFrame$3.class
 ec\edu\monster\controlador\CreditoController.class
 ec\edu\monster\modelo\BanquitoModels$UsuarioRequest.class
 ec\edu\monster\vista\CrearUsuarioFrame$2.class

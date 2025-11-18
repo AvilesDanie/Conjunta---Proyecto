@@ -35,11 +35,22 @@ public class FacturaController {
 
     // ====== DTOs ======
 
+    public static class DetalleRequestDTO {
+        public Long idElectrodomestico;
+        public int cantidad;
+    }
+
     public static class FacturaRequestDTO {
         public String cedulaCliente;
         public String nombreCliente;
+        
+        // OPCIÓN 1: Un solo producto (formato antiguo, compatible)
         public Long idElectrodomestico;
         public int cantidad;
+        
+        // OPCIÓN 2: Múltiples productos (nuevo formato)
+        public List<DetalleRequestDTO> productos;
+        
         public String formaPago; // EFECTIVO o CREDITO
 
         // Solo si formaPago = CREDITO
@@ -132,17 +143,34 @@ public class FacturaController {
 
     @POST
     public Response crear(FacturaRequestDTO req) {
-        if (req == null ||
-            req.cedulaCliente == null ||
-            req.nombreCliente == null ||
-            req.idElectrodomestico == null ||
-            req.cantidad <= 0 ||
-            req.formaPago == null) {
-
+        // Validaciones básicas
+        if (req == null || req.cedulaCliente == null || req.nombreCliente == null || req.formaPago == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\":\"cedulaCliente, nombreCliente, idElectrodomestico, cantidad>0 y formaPago son obligatorios\"}")
+                    .entity("{\"error\":\"cedulaCliente, nombreCliente y formaPago son obligatorios\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build();
+        }
+        
+        // Validar que venga al menos un producto (formato antiguo O nuevo)
+        boolean formatoAntiguo = req.idElectrodomestico != null && req.cantidad > 0;
+        boolean formatoNuevo = req.productos != null && !req.productos.isEmpty();
+        
+        if (!formatoAntiguo && !formatoNuevo) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Debe especificar productos: use idElectrodomestico+cantidad O productos[]\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        
+        // Convertir formato antiguo a nuevo si es necesario
+        List<DetalleRequestDTO> productosAProcesar = new java.util.ArrayList<>();
+        if (formatoAntiguo) {
+            DetalleRequestDTO detalle = new DetalleRequestDTO();
+            detalle.idElectrodomestico = req.idElectrodomestico;
+            detalle.cantidad = req.cantidad;
+            productosAProcesar.add(detalle);
+        } else {
+            productosAProcesar.addAll(req.productos);
         }
 
         String forma = req.formaPago.toUpperCase();
@@ -157,19 +185,43 @@ public class FacturaController {
         try {
             em.getTransaction().begin();
 
-            Electrodomestico electro = em.find(Electrodomestico.class, req.idElectrodomestico);
-            if (electro == null) {
-                em.getTransaction().rollback();
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\":\"Electrodoméstico no existe\"}")
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
+            // Procesar todos los productos y calcular total bruto
+            List<DetalleFactura> detalles = new java.util.ArrayList<>();
+            BigDecimal totalBruto = BigDecimal.ZERO;
+            
+            for (DetalleRequestDTO prodReq : productosAProcesar) {
+                if (prodReq.cantidad <= 0) {
+                    em.getTransaction().rollback();
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("{\"error\":\"Cantidad debe ser mayor a 0\"}")
+                            .type(MediaType.APPLICATION_JSON)
+                            .build();
+                }
+                
+                Electrodomestico electro = em.find(Electrodomestico.class, prodReq.idElectrodomestico);
+                if (electro == null) {
+                    em.getTransaction().rollback();
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("{\"error\":\"Electrodoméstico con ID " + prodReq.idElectrodomestico + " no existe\"}")
+                            .type(MediaType.APPLICATION_JSON)
+                            .build();
+                }
+                
+                // Calcular subtotal de este producto
+                BigDecimal subtotal = electro.getPrecioVenta()
+                        .multiply(BigDecimal.valueOf(prodReq.cantidad))
+                        .setScale(2, RoundingMode.HALF_UP);
+                
+                totalBruto = totalBruto.add(subtotal);
+                
+                // Crear detalle (se agregará a la factura después)
+                DetalleFactura detalle = new DetalleFactura();
+                detalle.setElectrodomestico(electro);
+                detalle.setCantidad(prodReq.cantidad);
+                detalle.setPrecioUnitario(electro.getPrecioVenta());
+                detalle.setSubtotal(subtotal);
+                detalles.add(detalle);
             }
-
-            // Total bruto = precio * cantidad
-            BigDecimal totalBruto = electro.getPrecioVenta()
-                    .multiply(BigDecimal.valueOf(req.cantidad))
-                    .setScale(2, RoundingMode.HALF_UP);
 
             BigDecimal descuento = BigDecimal.ZERO;
             BigDecimal totalNeto = totalBruto;
@@ -226,15 +278,11 @@ public class FacturaController {
             f.setTotalNeto(totalNeto);
             f.setIdCreditoBanquito(idCreditoBanquito);
 
-            // Detalle único (un electrodoméstico)
-            DetalleFactura d = new DetalleFactura();
-            d.setFactura(f);
-            d.setElectrodomestico(electro);
-            d.setCantidad(req.cantidad);
-            d.setPrecioUnitario(electro.getPrecioVenta());
-            d.setSubtotal(totalBruto);
-
-            f.setDetalles(List.of(d));
+            // Asociar todos los detalles a la factura
+            for (DetalleFactura detalle : detalles) {
+                detalle.setFactura(f);
+            }
+            f.setDetalles(detalles);
 
             em.persist(f);  // cascada debería persistir el detalle si tienes Cascade.ALL
             em.getTransaction().commit();

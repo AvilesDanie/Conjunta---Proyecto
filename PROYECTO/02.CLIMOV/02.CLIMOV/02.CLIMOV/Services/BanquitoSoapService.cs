@@ -61,10 +61,10 @@ namespace _02.CLIMOV.Services
     public interface ICreditoController
     {
         [OperationContract]
-        Task<ResultadoEvaluacion> EvaluarCreditoAsync(SolicitudCredito solicitud);
+        Task<ResultadoEvaluacion> EvaluarCreditoAsync(SolicitudCredito req);
 
         [OperationContract]
-        Task<CreditoResponse> CrearCreditoAsync(SolicitudCredito solicitud);
+        Task<CreditoResponse> CrearCreditoAsync(SolicitudCredito req);
 
         [OperationContract]
         Task<CreditoResponse> ObtenerCreditoAsync(long id);
@@ -83,42 +83,53 @@ namespace _02.CLIMOV.Services
         Task<CuotaResponse> ObtenerCuotaAsync(long id);
 
         [OperationContract]
-        Task<CuotaResponse> ActualizarCuotaAsync(long id, ActualizarCuotaRequest dto);
+        Task<CuotaResponse> ActualizarCuotaAsync(long id, ActualizarCuotaRequest req);
 
         [OperationContract]
-        Task<string> AnularCuotaAsync(long id);
+        Task<bool> AnularCuotaAsync(long id);
     }
 
     [ServiceContract]
     public interface IUsuarioController
     {
         [OperationContract]
-        Task<List<UsuarioResponse>> ListarUsuariosAsync();
+        Task<List<UsuarioListResponse>> ListarUsuariosAsync();
 
         [OperationContract]
         Task<UsuarioResponse> BuscarUsuarioAsync(long id);
 
         [OperationContract]
-        Task<UsuarioResponse> CrearUsuarioAsync(UsuarioRequest req);
+        Task<UsuarioResponse> CrearUsuarioAsync(CrearUsuarioRequest req);
 
         [OperationContract]
-        Task<UsuarioResponse> ActualizarUsuarioAsync(long id, UsuarioRequest req);
+        Task<UsuarioResponse> ActualizarUsuarioAsync(long id, ActualizarUsuarioRequest req);
 
         [OperationContract]
         Task<bool> EliminarUsuarioAsync(long id);
 
         [OperationContract]
-        Task<UsuarioResponse> LoginAsync(UsuarioRequest req);
+        Task<UsuarioResponse> LoginAsync(LoginRequest req);
     }
 
-    // ===== CLASE DE SERVICIO PRINCIPAL DE BANQUITO =====
+    // ===== SERVICIO PRINCIPAL =====
 
     public class BanquitoSoapService
     {
-        // URL base del servidor SOAP de BanQuito
-        private const string BaseUrl = "http://192.168.100.53:52582";
+        // ========================================
+        // CONFIGURACIÓN GLOBAL - SOLO CAMBIAR AQUÍ
+        // ========================================
+        private const string IP_SERVIDOR = "10.40.25.70";
+        private const string PUERTO = "52582";
+        
+        // URLs COMPLETAS DE ENDPOINTS (SEGÚN WSDL)
+        private static string URL_USUARIOS => $"http://{IP_SERVIDOR}:{PUERTO}/BanQuitoService.svc/usuarios";
+        private static string URL_CLIENTES => $"http://{IP_SERVIDOR}:{PUERTO}/BanQuitoService.svc/clientes";
+        private static string URL_CUENTAS => $"http://{IP_SERVIDOR}:{PUERTO}/BanQuitoService.svc/cuentas";
+        private static string URL_MOVIMIENTOS => $"http://{IP_SERVIDOR}:{PUERTO}/BanQuitoService.svc/movimientos";
+        private static string URL_CREDITOS => $"http://{IP_SERVIDOR}:{PUERTO}/BanQuitoService.svc/creditos";
+        private static string URL_CUOTAS => $"http://{IP_SERVIDOR}:{PUERTO}/BanQuitoService.svc/cuotas";
 
-        private static ChannelFactory<T> CreateChannel<T>(string serviceName)
+        private static ChannelFactory<T> CreateChannel<T>(string endpointUrl)
         {
             var binding = new BasicHttpBinding
             {
@@ -130,10 +141,9 @@ namespace _02.CLIMOV.Services
                 CloseTimeout = TimeSpan.FromMinutes(1)
             };
 
-            // Permitir HTTP sin seguridad
             binding.Security.Mode = BasicHttpSecurityMode.None;
 
-            var endpoint = new EndpointAddress($"{BaseUrl}/BanQuitoService.svc");
+            var endpoint = new EndpointAddress(endpointUrl);
             
             System.Diagnostics.Debug.WriteLine($"[SOAP] Creando canal para: {endpoint.Uri}");
             
@@ -143,7 +153,7 @@ namespace _02.CLIMOV.Services
         // ===== CLIENTES =====
         public async Task<List<ClienteResponse>> ListarClientesAsync()
         {
-            var factory = CreateChannel<IClienteController>("ClienteController");
+            var factory = CreateChannel<IClienteController>(URL_CLIENTES);
             var client = factory.CreateChannel();
             try
             {
@@ -158,7 +168,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<ClienteOnlyResponse> ObtenerClienteAsync(string cedula)
         {
-            var factory = CreateChannel<IClienteController>("ClienteController");
+            var factory = CreateChannel<IClienteController>(URL_CLIENTES);
             var client = factory.CreateChannel();
             try
             {
@@ -173,7 +183,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<ClienteResponse> CrearClienteAsync(ClienteRequest req)
         {
-            var factory = CreateChannel<IClienteController>("ClienteController");
+            var factory = CreateChannel<IClienteController>(URL_CLIENTES);
             var client = factory.CreateChannel();
             try
             {
@@ -188,7 +198,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<ClienteOnlyResponse> ActualizarClienteAsync(string cedula, ClienteUpdateRequest req)
         {
-            var factory = CreateChannel<IClienteController>("ClienteController");
+            var factory = CreateChannel<IClienteController>(URL_CLIENTES);
             var client = factory.CreateChannel();
             try
             {
@@ -203,7 +213,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<bool> EliminarClienteAsync(string cedula)
         {
-            var factory = CreateChannel<IClienteController>("ClienteController");
+            var factory = CreateChannel<IClienteController>(URL_CLIENTES);
             var client = factory.CreateChannel();
             try
             {
@@ -219,7 +229,7 @@ namespace _02.CLIMOV.Services
         // ===== CUENTAS =====
         public async Task<List<CuentaResponse>> ListarCuentasAsync()
         {
-            var factory = CreateChannel<ICuentaController>("CuentaController");
+            var factory = CreateChannel<ICuentaController>(URL_CUENTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -234,7 +244,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<CuentaResponse> ObtenerCuentaAsync(string numCuenta)
         {
-            var factory = CreateChannel<ICuentaController>("CuentaController");
+            var factory = CreateChannel<ICuentaController>(URL_CUENTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -249,7 +259,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<List<CuentaResponse>> ListarCuentasPorClienteAsync(string cedula)
         {
-            var factory = CreateChannel<ICuentaController>("CuentaController");
+            var factory = CreateChannel<ICuentaController>(URL_CUENTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -264,7 +274,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<CuentaResponse> CrearCuentaAsync(CuentaRequest req)
         {
-            var factory = CreateChannel<ICuentaController>("CuentaController");
+            var factory = CreateChannel<ICuentaController>(URL_CUENTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -277,10 +287,25 @@ namespace _02.CLIMOV.Services
             }
         }
 
+        public async Task<bool> EliminarCuentaAsync(string numCuenta)
+        {
+            var factory = CreateChannel<ICuentaController>(URL_CUENTAS);
+            var client = factory.CreateChannel();
+            try
+            {
+                return await client.EliminarCuentaAsync(numCuenta);
+            }
+            finally
+            {
+                ((IClientChannel)client).Close();
+                factory.Close();
+            }
+        }
+
         // ===== MOVIMIENTOS =====
         public async Task<List<MovimientoResponse>> ListarMovimientosPorCuentaAsync(string numCuenta)
         {
-            var factory = CreateChannel<IMovimientoController>("MovimientoController");
+            var factory = CreateChannel<IMovimientoController>(URL_MOVIMIENTOS);
             var client = factory.CreateChannel();
             try
             {
@@ -293,9 +318,14 @@ namespace _02.CLIMOV.Services
             }
         }
 
+        public async Task<List<MovimientoResponse>> ObtenerMovimientosPorCuentaAsync(string numCuenta)
+        {
+            return await ListarMovimientosPorCuentaAsync(numCuenta);
+        }
+
         public async Task<MovimientoResponse> CrearMovimientoAsync(MovimientoRequest req)
         {
-            var factory = CreateChannel<IMovimientoController>("MovimientoController");
+            var factory = CreateChannel<IMovimientoController>(URL_MOVIMIENTOS);
             var client = factory.CreateChannel();
             try
             {
@@ -309,13 +339,13 @@ namespace _02.CLIMOV.Services
         }
 
         // ===== CRÉDITOS =====
-        public async Task<ResultadoEvaluacion> EvaluarCreditoAsync(SolicitudCredito solicitud)
+        public async Task<ResultadoEvaluacion> EvaluarCreditoAsync(SolicitudCredito req)
         {
-            var factory = CreateChannel<ICreditoController>("CreditoController");
+            var factory = CreateChannel<ICreditoController>(URL_CREDITOS);
             var client = factory.CreateChannel();
             try
             {
-                return await client.EvaluarCreditoAsync(solicitud);
+                return await client.EvaluarCreditoAsync(req);
             }
             finally
             {
@@ -324,28 +354,13 @@ namespace _02.CLIMOV.Services
             }
         }
 
-        public async Task<CreditoResponse> CrearCreditoAsync(SolicitudCredito solicitud)
+        public async Task<CreditoResponse> CrearCreditoAsync(SolicitudCredito req)
         {
-            var factory = CreateChannel<ICreditoController>("CreditoController");
+            var factory = CreateChannel<ICreditoController>(URL_CREDITOS);
             var client = factory.CreateChannel();
             try
             {
-                return await client.CrearCreditoAsync(solicitud);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<List<CreditoResponse>> ListarCreditosAsync()
-        {
-            var factory = CreateChannel<ICreditoController>("CreditoController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.ListarCreditosAsync();
+                return await client.CrearCreditoAsync(req);
             }
             finally
             {
@@ -356,7 +371,7 @@ namespace _02.CLIMOV.Services
 
         public async Task<CreditoResponse> ObtenerCreditoAsync(long id)
         {
-            var factory = CreateChannel<ICreditoController>("CreditoController");
+            var factory = CreateChannel<ICreditoController>(URL_CREDITOS);
             var client = factory.CreateChannel();
             try
             {
@@ -369,10 +384,25 @@ namespace _02.CLIMOV.Services
             }
         }
 
+        public async Task<List<CreditoResponse>> ListarCreditosAsync()
+        {
+            var factory = CreateChannel<ICreditoController>(URL_CREDITOS);
+            var client = factory.CreateChannel();
+            try
+            {
+                return await client.ListarCreditosAsync();
+            }
+            finally
+            {
+                ((IClientChannel)client).Close();
+                factory.Close();
+            }
+        }
+
         // ===== CUOTAS =====
         public async Task<List<CuotaResponse>> ListarPorCreditoAsync(long idCredito)
         {
-            var factory = CreateChannel<ICuotaController>("CuotaController");
+            var factory = CreateChannel<ICuotaController>(URL_CUOTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -385,9 +415,14 @@ namespace _02.CLIMOV.Services
             }
         }
 
+        public async Task<List<CuotaResponse>> ObtenerCuotasPorCreditoAsync(long idCredito)
+        {
+            return await ListarPorCreditoAsync(idCredito);
+        }
+
         public async Task<CuotaResponse> ObtenerCuotaAsync(long id)
         {
-            var factory = CreateChannel<ICuotaController>("CuotaController");
+            var factory = CreateChannel<ICuotaController>(URL_CUOTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -400,13 +435,13 @@ namespace _02.CLIMOV.Services
             }
         }
 
-        public async Task<CuotaResponse> ActualizarCuotaAsync(long id, ActualizarCuotaRequest dto)
+        public async Task<CuotaResponse> ActualizarCuotaAsync(long id, ActualizarCuotaRequest req)
         {
-            var factory = CreateChannel<ICuotaController>("CuotaController");
+            var factory = CreateChannel<ICuotaController>(URL_CUOTAS);
             var client = factory.CreateChannel();
             try
             {
-                return await client.ActualizarCuotaAsync(id, dto);
+                return await client.ActualizarCuotaAsync(id, req);
             }
             finally
             {
@@ -415,9 +450,9 @@ namespace _02.CLIMOV.Services
             }
         }
 
-        public async Task<string> AnularCuotaAsync(long id)
+        public async Task<bool> AnularCuotaAsync(long id)
         {
-            var factory = CreateChannel<ICuotaController>("CuotaController");
+            var factory = CreateChannel<ICuotaController>(URL_CUOTAS);
             var client = factory.CreateChannel();
             try
             {
@@ -431,9 +466,9 @@ namespace _02.CLIMOV.Services
         }
 
         // ===== USUARIOS =====
-        public async Task<List<UsuarioResponse>> ListarUsuariosAsync()
+        public async Task<List<UsuarioListResponse>> ListarUsuariosAsync()
         {
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
+            var factory = CreateChannel<IUsuarioController>(URL_USUARIOS);
             var client = factory.CreateChannel();
             try
             {
@@ -446,52 +481,58 @@ namespace _02.CLIMOV.Services
             }
         }
 
-        public async Task<UsuarioResponse> LoginAsync(UsuarioRequest req)
+        public async Task<List<UsuarioListResponse>> ObtenerUsuariosAsync()
         {
-            // PRIMERO: Verificar conectividad HTTP básica
-            try
+            return await ListarUsuariosAsync();
+        }
+
+        public async Task<UsuarioResponse> LoginAsync(LoginRequest req)
+        {
+            // Validar que req no sea null y tenga los campos requeridos
+            if (req == null)
             {
-                System.Diagnostics.Debug.WriteLine($"[SOAP TEST] Verificando conectividad a {BaseUrl}");
-                using (var httpClient = new System.Net.Http.HttpClient())
-                {
-                    httpClient.Timeout = TimeSpan.FromSeconds(10);
-                    var testUrl = $"{BaseUrl}/BanQuitoService.svc";
-                    System.Diagnostics.Debug.WriteLine($"[SOAP TEST] Probando GET a {testUrl}");
-                    
-                    var response = await httpClient.GetAsync(testUrl);
-                    System.Diagnostics.Debug.WriteLine($"[SOAP TEST] Respuesta HTTP: {response.StatusCode}");
-                }
-            }
-            catch (Exception testEx)
-            {
-                System.Diagnostics.Debug.WriteLine($"[SOAP TEST ERROR] {testEx.GetType().Name}: {testEx.Message}");
-                if (testEx.InnerException != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[SOAP TEST ERROR INNER] {testEx.InnerException.GetType().Name}: {testEx.InnerException.Message}");
-                    if (testEx.InnerException.InnerException != null)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"[SOAP TEST ERROR INNER2] {testEx.InnerException.InnerException.Message}");
-                    }
-                }
-                throw new Exception($"No se puede conectar al servidor {BaseUrl}. Verifique:\n1. Que el servidor esté corriendo\n2. Que esté en la misma red WiFi\n3. Que la IP sea correcta\n\nError técnico: {testEx.Message}", testEx);
+                throw new ArgumentNullException(nameof(req), "LoginRequest no puede ser null");
             }
 
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
+            if (string.IsNullOrWhiteSpace(req.Username))
+            {
+                throw new ArgumentException("El campo Username es obligatorio", nameof(req.Username));
+            }
+
+            if (string.IsNullOrWhiteSpace(req.Password))
+            {
+                throw new ArgumentException("El campo Password es obligatorio", nameof(req.Password));
+            }
+
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Usuario: {req.Username}");
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Password: {req.Password}");  // Mostrar contraseña para debug
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Password length: {req.Password?.Length}");
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] URL: {URL_USUARIOS}");
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] LoginRequest Type: {req.GetType().FullName}");
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Username IsNullOrEmpty: {string.IsNullOrEmpty(req.Username)}");
+            System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Password IsNullOrEmpty: {string.IsNullOrEmpty(req.Password)}");
+
+            var factory = CreateChannel<IUsuarioController>(URL_USUARIOS);
             var client = factory.CreateChannel();
             try
             {
-                System.Diagnostics.Debug.WriteLine($"[SOAP] Intentando login para usuario: {req.Username}");
-                System.Diagnostics.Debug.WriteLine($"[SOAP] URL: {BaseUrl}/BanQuitoService.svc");
-                return await client.LoginAsync(req);
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Llamando a client.LoginAsync...");
+                var result = await client.LoginAsync(req);
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Éxito - Usuario ID: {result?.Id}");
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Username: {result?.Username}");
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Rol: {result?.Rol}");
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Activo: {result?.Activo}");
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN] Result is null: {result == null}");
+                return result;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[SOAP ERROR] {ex.GetType().Name}: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN ERROR] {ex.GetType().Name}: {ex.Message}");
                 if (ex.InnerException != null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[SOAP INNER ERROR] {ex.InnerException.Message}");
+                    System.Diagnostics.Debug.WriteLine($"[SOAP LOGIN INNER ERROR] {ex.InnerException.Message}");
                 }
-                throw new Exception($"Error de conexión SOAP: {ex.Message}\n\nVerifique que el servidor esté corriendo en {BaseUrl}", ex);
+                throw new Exception($"Error de conexión SOAP: {ex.Message}", ex);
             }
             finally
             {
@@ -502,128 +543,8 @@ namespace _02.CLIMOV.Services
                 }
                 catch
                 {
-                    // Ignore cleanup errors
+                    // Ignorar errores al cerrar
                 }
-            }
-        }
-
-        public async Task<UsuarioResponse> BuscarUsuarioAsync(long id)
-        {
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.BuscarUsuarioAsync(id);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<UsuarioResponse> CrearUsuarioAsync(UsuarioRequest req)
-        {
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.CrearUsuarioAsync(req);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<List<UsuarioResponse>> ObtenerUsuariosAsync()
-        {
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.ListarUsuariosAsync();
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<List<MovimientoResponse>> ObtenerMovimientosPorCuentaAsync(string numCuenta)
-        {
-            var factory = CreateChannel<IMovimientoController>("MovimientoController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.ListarMovimientosPorCuentaAsync(numCuenta);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<List<CuotaResponse>> ObtenerCuotasPorCreditoAsync(long idCredito)
-        {
-            var factory = CreateChannel<ICuotaController>("CuotaController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.ListarPorCreditoAsync(idCredito);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<bool> EliminarCuentaAsync(string numCuenta)
-        {
-            var factory = CreateChannel<ICuentaController>("CuentaController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.EliminarCuentaAsync(numCuenta);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<UsuarioResponse> ActualizarUsuarioAsync(long id, UsuarioRequest req)
-        {
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.ActualizarUsuarioAsync(id, req);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
-            }
-        }
-
-        public async Task<bool> EliminarUsuarioAsync(long id)
-        {
-            var factory = CreateChannel<IUsuarioController>("UsuarioController");
-            var client = factory.CreateChannel();
-            try
-            {
-                return await client.EliminarUsuarioAsync(id);
-            }
-            finally
-            {
-                ((IClientChannel)client).Close();
-                factory.Close();
             }
         }
     }

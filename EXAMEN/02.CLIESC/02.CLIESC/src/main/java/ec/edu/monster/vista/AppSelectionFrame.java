@@ -4,6 +4,9 @@ import ec.edu.monster.util.ColorPalette;
 
 import javax.swing.*;
 import java.awt.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Pantalla de selección de aplicación
@@ -97,7 +100,7 @@ public class AppSelectionFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         centerPanel.add(createAppCard(
-            "🏦",
+            "/images/logoBanquito.png",
             "BanQuito",
             "Sistema Bancario Integral",
             new Color(41, 98, 255),
@@ -112,8 +115,8 @@ public class AppSelectionFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         centerPanel.add(createAppCard(
-            "🏪",
-            "ElectroQu",
+            "/images/logoPerfilElectroQuito.png",
+            "ElectroQuuito",
             "Comercializadora Digital",
             new Color(255, 87, 34),
             new Color(255, 87, 34),
@@ -132,7 +135,7 @@ public class AppSelectionFrame extends JFrame {
     /**
      * Crea una card de selección de aplicación
      */
-    private JPanel createAppCard(String emoji, String title, String description, 
+    private JPanel createAppCard(String imagePath, String title, String description, 
                                  Color cardColor, Color buttonColor, Runnable onAcceder) {
         JPanel card = new JPanel();
         card.setLayout(new BorderLayout(20, 20));
@@ -147,8 +150,17 @@ public class AppSelectionFrame extends JFrame {
         leftPanel.setOpaque(false);
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         
-        JLabel iconLabel = new JLabel(emoji);
-        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 56));
+        JLabel iconLabel = new JLabel();
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResourceAsStream(imagePath));
+            if (img != null) {
+                Image scaledImg = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+                iconLabel.setIcon(new ImageIcon(scaledImg));
+            }
+        } catch (IOException e) {
+            iconLabel.setText("📦");
+            iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 56));
+        }
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         leftPanel.add(iconLabel);
         

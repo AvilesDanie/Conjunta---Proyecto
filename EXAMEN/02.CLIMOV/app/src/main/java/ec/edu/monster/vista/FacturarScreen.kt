@@ -1,5 +1,6 @@
 package ec.edu.monster.vista
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import ec.edu.monster.controlador.CreditoViewModel
 import ec.edu.monster.controlador.ElectrodomesticoState
 import ec.edu.monster.controlador.ElectrodomesticoViewModel
@@ -32,6 +35,7 @@ import ec.edu.monster.controlador.FacturaViewModel
 import ec.edu.monster.modelo.ElectrodomesticoResponse
 import ec.edu.monster.modelo.FacturaRequest
 import ec.edu.monster.modelo.SolicitudCredito
+import ec.edu.monster.util.RetrofitClient
 import ec.edu.monster.util.rememberToastHelper
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -50,13 +54,20 @@ fun FacturarScreen(
     
     var cedula by remember { mutableStateOf("") }
     var nombreCliente by remember { mutableStateOf("") }
-    var productoSeleccionado by remember { mutableStateOf<ElectrodomesticoResponse?>(null) }
-    var cantidad by remember { mutableStateOf("1") }
+    
+    // Lista de productos seleccionados con cantidades
+    data class ProductoConCantidad(
+        val producto: ElectrodomesticoResponse,
+        var cantidad: Int
+    )
+    var productosSeleccionados by remember { mutableStateOf<List<ProductoConCantidad>>(emptyList()) }
+    
     var formaPago by remember { mutableStateOf("EFECTIVO") }
     var plazoMeses by remember { mutableStateOf("12") }
     var numCuenta by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var showProductDialog by remember { mutableStateOf(false) }
+    var cantidadTemporal by remember { mutableStateOf("1") }
     
     // Estados para evaluación de crédito
     var creditoEvaluado by remember { mutableStateOf(false) }
@@ -180,7 +191,7 @@ fun FacturarScreen(
                         )
                         .padding(20.dp)
                 ) {
-                    Text("Producto", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text("Productos", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF212121))
                     Spacer(modifier = Modifier.height(12.dp))
                     
                     Button(
@@ -190,32 +201,139 @@ fun FacturarScreen(
                             containerColor = Color(0xFFFF6F00)
                         )
                     ) {
-                        Icon(Icons.Default.Devices, null)
+                        Icon(Icons.Default.Add, null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(productoSeleccionado?.nombre ?: "Seleccionar Producto")
+                        Text("Agregar Producto")
                     }
                     
-                    productoSeleccionado?.let { producto ->
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Precio: $${producto.precioVenta}", fontSize = 16.sp, color = Color(0xFF388E3C))
-                    }
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    OutlinedTextField(
-                        value = cantidad,
-                        onValueChange = { cantidad = it },
-                        label = { Text("Cantidad") },
-                        leadingIcon = { Icon(Icons.Default.ShoppingCart, null) },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = Color(0xFF212121),
-                            unfocusedTextColor = Color(0xFF212121),
-                            focusedLabelColor = Color(0xFF212121),
-                            unfocusedLabelColor = Color(0xFF757575)
+                    // Lista de productos seleccionados
+                    if (productosSeleccionados.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            "Productos Agregados:",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF212121)
                         )
-                    )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        productosSeleccionados.forEach { item ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color(0xFFFFF3E0)
+                                ),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // Imagen del producto
+                                    Card(
+                                        modifier = Modifier.size(60.dp),
+                                        shape = RoundedCornerShape(6.dp),
+                                        elevation = CardDefaults.cardElevation(2.dp),
+                                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            if (!item.producto.imagenUrl.isNullOrBlank()) {
+                                                val imageUrl = "${RetrofitClient.BASE_URL_COMERCIALIZADORA}${item.producto.imagenUrl}"
+                                                Image(
+                                                    painter = rememberAsyncImagePainter(imageUrl),
+                                                    contentDescription = item.producto.nombre,
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    contentScale = ContentScale.Crop
+                                                )
+                                            } else {
+                                                Icon(
+                                                    Icons.Default.Image,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(30.dp),
+                                                    tint = Color(0xFF9E9E9E)
+                                                )
+                                            }
+                                        }
+                                    }
+                                    
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    
+                                    // Información del producto
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            item.producto.nombre,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF212121)
+                                        )
+                                        Text(
+                                            "Cant: ${item.cantidad} × $${String.format("%.2f", item.producto.precioVenta)}",
+                                            fontSize = 12.sp,
+                                            color = Color(0xFF757575)
+                                        )
+                                    }
+                                    
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Text(
+                                            "$${String.format("%.2f", item.producto.precioVenta.toDouble() * item.cantidad)}",
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF388E3C)
+                                        )
+                                        IconButton(
+                                            onClick = {
+                                                productosSeleccionados = productosSeleccionados.filter { it.producto.id != item.producto.id }
+                                                creditoEvaluado = false
+                                                sujetoCredito = false
+                                            },
+                                            modifier = Modifier.size(24.dp)
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Delete,
+                                                contentDescription = "Eliminar",
+                                                tint = Color(0xFFD32F2F),
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Total
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF388E3C))
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    "TOTAL:",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                                Text(
+                                    "$${String.format("%.2f", productosSeleccionados.sumOf { it.producto.precioVenta.toDouble() * it.cantidad })}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
                 }
             }
             
@@ -297,75 +415,18 @@ fun FacturarScreen(
                 }
             }
             
-            // Resumen
-            productoSeleccionado?.let { producto ->
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp),
-                    colors = CardDefaults.cardColors(Color.White)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .background(
-                                Brush.horizontalGradient(
-                                    colors = listOf(
-                                        Color.White,
-                                        Color(0xFFFFF3E0)
-                                    )
-                                )
-                            )
-                            .padding(20.dp)
-                    ) {
-                        Text(
-                            "Resumen",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            color = Color(0xFF212121)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        
-                        val cant = cantidad.toIntOrNull() ?: 1
-                        val totalBruto = producto.precioVenta.multiply(BigDecimal(cant))
-                        val descuento = if (formaPago == "EFECTIVO") {
-                            totalBruto.multiply(BigDecimal("0.33"))
-                        } else BigDecimal.ZERO
-                        val totalNeto = totalBruto.subtract(descuento)
-                        
-                        Text(
-                            "Subtotal: $${String.format("%.2f", totalBruto)}",
-                            color = Color(0xFF212121),
-                            fontSize = 16.sp
-                        )
-                        if (descuento > BigDecimal.ZERO) {
-                            Text(
-                                "Descuento: -$${String.format("%.2f", descuento)}",
-                                color = Color(0xFFD32F2F),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            "TOTAL: $${String.format("%.2f", totalNeto)}",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
-                            color = Color(0xFF388E3C)
-                        )
-                    }
-                }
-            }
-            
             // Botón evaluar crédito (solo si formaPago = CREDITO)
             if (formaPago == "CREDITO" && !creditoEvaluado) {
                 Button(
                     onClick = {
-                        if (cedula.isBlank() || numCuenta.isBlank() || productoSeleccionado == null) {
+                        if (cedula.isBlank() || numCuenta.isBlank() || productosSeleccionados.isEmpty()) {
                             toastHelper.showError("Complete todos los campos para evaluar crédito")
                             return@Button
                         }
                         
-                        val cant = cantidad.toIntOrNull() ?: 1
-                        val montoSolicitado = productoSeleccionado!!.precioVenta.multiply(BigDecimal(cant))
+                        val montoSolicitado = productosSeleccionados.sumOf { 
+                            (it.producto.precioVenta * BigDecimal(it.cantidad)).toDouble()
+                        }.toBigDecimal()
                         val plazo = plazoMeses.toIntOrNull() ?: 12
                         
                         isLoading = true
@@ -473,7 +534,7 @@ fun FacturarScreen(
             // Botón facturar
             Button(
                 onClick = {
-                    if (cedula.isBlank() || nombreCliente.isBlank() || productoSeleccionado == null) {
+                    if (cedula.isBlank() || nombreCliente.isBlank() || productosSeleccionados.isEmpty()) {
                         toastHelper.showError("Complete todos los campos")
                         return@Button
                     }
@@ -497,42 +558,19 @@ fun FacturarScreen(
                     
                     isLoading = true
                     scope.launch {
-                        // Si es crédito, primero crear el crédito en BanQuito
-                        var idCreditoCreado: Long? = null
-                        
-                        if (formaPago == "CREDITO" && sujetoCredito) {
-                            val cant = cantidad.toIntOrNull() ?: 1
-                            val montoSolicitado = productoSeleccionado!!.precioVenta.multiply(BigDecimal(cant))
-                            val plazo = plazoMeses.toIntOrNull() ?: 12
-                            
-                            val solicitud = SolicitudCredito(
-                                cedula = cedula,
-                                precioProducto = montoSolicitado,
-                                plazoMeses = plazo,
-                                numCuentaCredito = numCuenta
-                            )
-                            
-                            val resultCredito = creditoViewModel.crearCredito(solicitud)
-                            
-                            resultCredito.fold(
-                                onSuccess = { credito ->
-                                    idCreditoCreado = credito.id
-                                    toastHelper.showSuccess("Crédito creado: ID ${credito.id}")
-                                },
-                                onFailure = { error ->
-                                    isLoading = false
-                                    toastHelper.showError("Error al crear crédito: ${error.message}")
-                                    return@launch
-                                }
+                        // Crear la factura con múltiples productos
+                        // Comercializadora se encarga de crear el crédito en BanQuito si es necesario
+                        val productosRequest = productosSeleccionados.map { 
+                            ec.edu.monster.modelo.DetalleProductoRequest(
+                                idElectrodomestico = it.producto.id,
+                                cantidad = it.cantidad
                             )
                         }
                         
-                        // Ahora crear la factura
                         val request = FacturaRequest(
                             cedulaCliente = cedula,
                             nombreCliente = nombreCliente,
-                            idElectrodomestico = productoSeleccionado!!.id,
-                            cantidad = cantidad.toIntOrNull() ?: 1,
+                            productos = productosRequest,
                             formaPago = formaPago,
                             plazoMeses = if (formaPago == "CREDITO") plazoMeses.toIntOrNull() else null,
                             numCuentaCredito = if (formaPago == "CREDITO") numCuenta else null
@@ -543,11 +581,12 @@ fun FacturarScreen(
                         
                         result.fold(
                             onSuccess = { factura ->
-                                toastHelper.showSuccess("Factura creada exitosamente #${factura.id}")
+                                toastHelper.showSuccess("✅ Factura y crédito creados exitosamente #${factura.id}")
                                 navController.navigate(Screen.FacturaDetalle.createRoute(factura.id))
                             },
                             onFailure = { error ->
-                                toastHelper.showError(error.message ?: "Error al crear factura")
+                                val errorMsg = error.message ?: "Error desconocido"
+                                toastHelper.showError("Error: $errorMsg")
                             }
                         )
                     }
@@ -572,8 +611,14 @@ fun FacturarScreen(
     
     // Diálogo de selección de producto mejorado
     if (showProductDialog && electroState is ElectrodomesticoState.Success) {
+        var productoTemporal by remember { mutableStateOf<ElectrodomesticoResponse?>(null) }
+        
         AlertDialog(
-            onDismissRequest = { showProductDialog = false },
+            onDismissRequest = { 
+                showProductDialog = false
+                productoTemporal = null
+                cantidadTemporal = "1"
+            },
             title = {
                 Text(
                     "Seleccionar Producto",
@@ -582,92 +627,154 @@ fun FacturarScreen(
                 )
             },
             text = {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items((electroState as ElectrodomesticoState.Success).electrodomesticos) { electro ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    productoSeleccionado = electro
-                                    showProductDialog = false
-                                    // Resetear evaluación cuando cambia el producto
-                                    creditoEvaluado = false
-                                    sujetoCredito = false
-                                },
-                            shape = RoundedCornerShape(12.dp),
-                            elevation = CardDefaults.cardElevation(4.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (productoSeleccionado?.id == electro.id) {
-                                    Color(0xFFFFE0B2)
-                                } else {
-                                    Color.White
-                                }
-                            )
-                        ) {
-                            Row(
+                Column {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(350.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items((electroState as ElectrodomesticoState.Success).electrodomesticos) { electro ->
+                            Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(
-                                        Brush.horizontalGradient(
-                                            colors = if (productoSeleccionado?.id == electro.id) {
-                                                listOf(Color(0xFFFFE0B2), Color(0xFFFFCC80))
-                                            } else {
-                                                listOf(Color.White, Color(0xFFFFF3E0))
-                                            }
-                                        )
-                                    )
-                                    .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(0xFFFF6F00).copy(alpha = 0.1f)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        Icons.Default.Devices,
-                                        contentDescription = null,
-                                        tint = Color(0xFFFF6F00),
-                                        modifier = Modifier.size(28.dp)
-                                    )
-                                }
-                                
-                                Spacer(modifier = Modifier.width(12.dp))
-                                
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = electro.nombre,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16.sp,
-                                        color = Color(0xFF212121)
-                                    )
-                                    Text(
-                                        text = "Código: ${electro.codigo}",
-                                        fontSize = 13.sp,
-                                        color = Color(0xFF757575)
-                                    )
-                                }
-                                
-                                Text(
-                                    text = "$${electro.precioVenta}",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    color = Color(0xFF388E3C)
+                                    .clickable {
+                                        productoTemporal = electro
+                                    },
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = if (productoTemporal?.id == electro.id) {
+                                        Color(0xFFFFE0B2)
+                                    } else {
+                                        Color.White
+                                    }
                                 )
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(
+                                            Brush.horizontalGradient(
+                                                colors = if (productoTemporal?.id == electro.id) {
+                                                    listOf(Color(0xFFFFE0B2), Color(0xFFFFCC80))
+                                                } else {
+                                                    listOf(Color.White, Color(0xFFFFF3E0))
+                                                }
+                                            )
+                                        )
+                                        .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // Imagen del producto
+                                    Box(
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .background(Color(0xFFF5F5F5)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        if (!electro.imagenUrl.isNullOrBlank()) {
+                                            val imageUrl = "${RetrofitClient.BASE_URL_COMERCIALIZADORA}${electro.imagenUrl}"
+                                            Image(
+                                                painter = rememberAsyncImagePainter(imageUrl),
+                                                contentDescription = "Imagen de ${electro.nombre}",
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        } else {
+                                            Icon(
+                                                Icons.Default.Devices,
+                                                contentDescription = null,
+                                                tint = Color(0xFFFF6F00),
+                                                modifier = Modifier.size(32.dp)
+                                            )
+                                        }
+                                    }
+                                    
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = electro.nombre,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp,
+                                            color = Color(0xFF212121)
+                                        )
+                                        Text(
+                                            text = "Código: ${electro.codigo}",
+                                            fontSize = 13.sp,
+                                            color = Color(0xFF757575)
+                                        )
+                                    }
+                                    
+                                    Text(
+                                        text = "$${electro.precioVenta}",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 18.sp,
+                                        color = Color(0xFF388E3C)
+                                    )
+                                }
                             }
                         }
+                    }
+                    
+                    // Campo de cantidad
+                    if (productoTemporal != null) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        OutlinedTextField(
+                            value = cantidadTemporal,
+                            onValueChange = { cantidadTemporal = it },
+                            label = { Text("Cantidad") },
+                            leadingIcon = { Icon(Icons.Default.ShoppingCart, null) },
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true
+                        )
                     }
                 }
             },
             confirmButton = {
-                TextButton(onClick = { showProductDialog = false }) {
+                Button(
+                    onClick = {
+                        if (productoTemporal != null) {
+                            val cant = cantidadTemporal.toIntOrNull() ?: 1
+                            if (cant > 0) {
+                                // Verificar si el producto ya está en la lista
+                                val productoExistente = productosSeleccionados.find { it.producto.id == productoTemporal!!.id }
+                                if (productoExistente != null) {
+                                    // Actualizar cantidad
+                                    productosSeleccionados = productosSeleccionados.map {
+                                        if (it.producto.id == productoTemporal!!.id) {
+                                            it.copy(cantidad = it.cantidad + cant)
+                                        } else it
+                                    }
+                                } else {
+                                    // Agregar nuevo producto
+                                    productosSeleccionados = productosSeleccionados + ProductoConCantidad(productoTemporal!!, cant)
+                                }
+                                showProductDialog = false
+                                productoTemporal = null
+                                cantidadTemporal = "1"
+                                // Resetear evaluación cuando cambian productos
+                                creditoEvaluado = false
+                                sujetoCredito = false
+                            } else {
+                                toastHelper.showError("Cantidad inválida")
+                            }
+                        }
+                    },
+                    enabled = productoTemporal != null
+                ) {
+                    Text("AGREGAR")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { 
+                    showProductDialog = false
+                    productoTemporal = null
+                    cantidadTemporal = "1"
+                }) {
                     Text("Cerrar", fontWeight = FontWeight.Bold)
                 }
             }
@@ -700,8 +807,9 @@ fun FacturarScreen(
                         Text("Monto máximo disponible:", fontWeight = FontWeight.Bold)
                         Text("$${String.format("%.2f", montoMaximo)}", fontSize = 24.sp, color = Color(0xFF388E3C))
                         
-                        val cant = cantidad.toIntOrNull() ?: 1
-                        val montoSolicitado = productoSeleccionado?.precioVenta?.multiply(BigDecimal(cant)) ?: BigDecimal.ZERO
+                        val montoSolicitado = productosSeleccionados.sumOf { 
+                            (it.producto.precioVenta.toDouble() * it.cantidad)
+                        }.toBigDecimal()
                         
                         if (montoSolicitado > montoMaximo) {
                             Spacer(modifier = Modifier.height(8.dp))

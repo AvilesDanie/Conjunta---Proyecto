@@ -94,7 +94,7 @@ public class CuotasFrame extends JFrame {
         contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Tabla
-        String[] columnNames = {"ID", "Número", "Monto", "Estado", "Fecha Vencimiento", "Fecha Pago", "Acciones"};
+        String[] columnNames = {"ID", "Número", "Monto", "Estado", "Fecha Vencimiento", "Acciones"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -154,14 +154,13 @@ public class CuotasFrame extends JFrame {
         });
         table.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
         
-        // Configurar ancho de columnas
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        table.getColumnModel().getColumn(1).setPreferredWidth(80);
-        table.getColumnModel().getColumn(2).setPreferredWidth(120);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100);
-        table.getColumnModel().getColumn(4).setPreferredWidth(140);
-        table.getColumnModel().getColumn(5).setPreferredWidth(140);
-        table.getColumnModel().getColumn(6).setPreferredWidth(150);
+        // Configurar ancho de columnas (ahora son 6 columnas: 0-5)
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);   // ID
+        table.getColumnModel().getColumn(1).setPreferredWidth(80);   // Número
+        table.getColumnModel().getColumn(2).setPreferredWidth(120);  // Monto
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);  // Estado
+        table.getColumnModel().getColumn(4).setPreferredWidth(140);  // Fecha Vencimiento
+        table.getColumnModel().getColumn(5).setPreferredWidth(150);  // Acciones
         
         // Renderizador para monto
         table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
@@ -203,8 +202,8 @@ public class CuotasFrame extends JFrame {
             }
         });
         
-        // Renderizador para acciones
-        table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
+        // Renderizador para acciones (columna 5, no 6)
+        table.getColumnModel().getColumn(5).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -246,7 +245,7 @@ public class CuotasFrame extends JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int row = table.rowAtPoint(evt.getPoint());
                 int col = table.columnAtPoint(evt.getPoint());
-                if (row >= 0 && col == 6) {
+                if (row >= 0 && col == 5) { // Columna 5 es Acciones
                     String id = table.getValueAt(row, 0).toString();
                     String estado = table.getValueAt(row, 3).toString();
                     
@@ -301,7 +300,6 @@ public class CuotasFrame extends JFrame {
                 String.format("$%.2f", cuota.valorCuota != null ? cuota.valorCuota : 0.0),
                 cuota.estado != null ? cuota.estado : "PENDIENTE",
                 cuota.fechaVencimiento != null ? cuota.fechaVencimiento : "-",
-                cuota.fechaPago != null ? cuota.fechaPago : "-",
                 "Acciones"
             });
         }

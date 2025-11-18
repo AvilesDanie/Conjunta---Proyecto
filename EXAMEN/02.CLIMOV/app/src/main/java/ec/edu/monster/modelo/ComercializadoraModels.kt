@@ -14,15 +14,22 @@ data class ElectrodomesticoResponse(
     val id: Long,
     val codigo: String,
     val nombre: String,
-    val precioVenta: BigDecimal
+    val precioVenta: BigDecimal,
+    val imagenUrl: String?
 )
 
 // ============ FACTURA ============
+data class DetalleProductoRequest(
+    val idElectrodomestico: Long,
+    val cantidad: Int
+)
+
 data class FacturaRequest(
     val cedulaCliente: String,
     val nombreCliente: String,
-    val idElectrodomestico: Long,
-    val cantidad: Int,
+    val idElectrodomestico: Long? = null, // Formato antiguo (retrocompatible)
+    val cantidad: Int? = null, // Formato antiguo (retrocompatible)
+    val productos: List<DetalleProductoRequest>? = null, // Formato nuevo (múltiples productos)
     val formaPago: String, // EFECTIVO o CREDITO
     val plazoMeses: Int? = null,
     val numCuentaCredito: String? = null

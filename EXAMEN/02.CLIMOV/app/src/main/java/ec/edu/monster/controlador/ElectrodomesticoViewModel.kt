@@ -1,5 +1,6 @@
 package ec.edu.monster.controlador
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ec.edu.monster.modelo.*
@@ -8,6 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import java.math.BigDecimal
 
 sealed class ElectrodomesticoState {
     object Idle : ElectrodomesticoState()
@@ -39,9 +46,28 @@ class ElectrodomesticoViewModel : ViewModel() {
         }
     }
     
-    suspend fun crearElectrodomestico(request: ElectrodomesticoRequest): Result<ElectrodomesticoResponse> {
+    suspend fun crearElectrodomestico(
+        codigo: String,
+        nombre: String,
+        precioVenta: BigDecimal,
+        imagenFile: File?
+    ): Result<ElectrodomesticoResponse> {
         return try {
-            val response = RetrofitClient.comercializadoraApi.crearElectrodomestico(request)
+            val codigoBody = codigo.toRequestBody("text/plain".toMediaTypeOrNull())
+            val nombreBody = nombre.toRequestBody("text/plain".toMediaTypeOrNull())
+            val precioBody = precioVenta.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            
+            val imagenPart = imagenFile?.let {
+                val requestFile = it.asRequestBody("image/*".toMediaTypeOrNull())
+                MultipartBody.Part.createFormData("imagen", it.name, requestFile)
+            }
+            
+            val response = RetrofitClient.comercializadoraApi.crearElectrodomestico(
+                codigoBody,
+                nombreBody,
+                precioBody,
+                imagenPart
+            )
             
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)

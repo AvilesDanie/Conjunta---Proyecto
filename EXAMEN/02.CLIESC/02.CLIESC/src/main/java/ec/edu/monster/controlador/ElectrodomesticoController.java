@@ -2,8 +2,12 @@ package ec.edu.monster.controlador;
 
 import ec.edu.monster.modelo.ComercializadoraModels.*;
 import ec.edu.monster.util.ApiClient;
+import okhttp3.*;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
 
 /**
  * Controlador para gestión de Electrodomésticos
@@ -11,9 +15,11 @@ import java.io.IOException;
 public class ElectrodomesticoController {
     
     private final ApiClient apiClient;
+    private final OkHttpClient httpClient;
     
     public ElectrodomesticoController() {
         this.apiClient = new ApiClient(ApiClient.BASE_URL_COMERCIALIZADORA);
+        this.httpClient = new OkHttpClient();
     }
     
     /**
@@ -63,4 +69,74 @@ public class ElectrodomesticoController {
     public void eliminarElectrodomestico(String codigo) throws IOException {
         apiClient.delete("electrodomesticos/" + codigo);
     }
+    
+    /**
+     * Crear electrodoméstico con imagen usando multipart/form-data
+     */
+    public ElectrodomesticoResponse crearElectrodomesticoConImagen(
+            String codigo, String nombre, double precioVenta, File imagenFile) throws IOException {
+        
+        // Crear el cuerpo multipart con OkHttp
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("codigo", codigo)
+                .addFormDataPart("nombre", nombre)
+                .addFormDataPart("precioVenta", String.valueOf(precioVenta))
+                .addFormDataPart("imagen", imagenFile.getName(),
+                        RequestBody.create(imagenFile, MediaType.parse("image/*")))
+                .build();
+        
+        // Construir la request
+        Request request = new Request.Builder()
+                .url(ApiClient.BASE_URL_COMERCIALIZADORA + "electrodomesticos")
+                .post(requestBody)
+                .build();
+        
+        // Ejecutar la petición
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                String errorBody = response.body() != null ? response.body().string() : "Sin respuesta";
+                throw new IOException("Error al crear electrodoméstico. Código: " + response.code() + " - " + errorBody);
+            }
+            
+            String responseBody = response.body().string();
+            return apiClient.parseJson(responseBody, ElectrodomesticoResponse.class);
+        }
+    }
+    
+    /**
+     * Actualizar electrodoméstico con imagen usando multipart/form-data
+     */
+    public ElectrodomesticoResponse actualizarElectrodomesticoConImagen(
+            String codigo, String nombre, double precioVenta, File imagenFile) throws IOException {
+        
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("nombre", nombre)
+                .addFormDataPart("precioVenta", String.valueOf(precioVenta));
+        
+        // Solo añadir imagen si se proporciona
+        if (imagenFile != null) {
+            builder.addFormDataPart("imagen", imagenFile.getName(),
+                    RequestBody.create(imagenFile, MediaType.parse("image/*")));
+        }
+        
+        RequestBody requestBody = builder.build();
+        
+        Request request = new Request.Builder()
+                .url(ApiClient.BASE_URL_COMERCIALIZADORA + "electrodomesticos/" + codigo)
+                .put(requestBody)
+                .build();
+        
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                String errorBody = response.body() != null ? response.body().string() : "Sin respuesta";
+                throw new IOException("Error al actualizar electrodoméstico. Código: " + response.code() + " - " + errorBody);
+            }
+            
+            String responseBody = response.body().string();
+            return apiClient.parseJson(responseBody, ElectrodomesticoResponse.class);
+        }
+    }
 }
+

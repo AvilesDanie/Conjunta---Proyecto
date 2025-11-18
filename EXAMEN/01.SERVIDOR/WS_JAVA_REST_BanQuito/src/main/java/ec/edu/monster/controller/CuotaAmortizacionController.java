@@ -175,6 +175,11 @@ public class CuotaAmortizacionController {
 
             if (dto.estado != null && !dto.estado.isBlank()) {
                 cuota.setEstado(dto.estado.toUpperCase());
+                
+                // Si se marca como PAGADA, verificar si todas las cuotas del crédito están pagadas
+                if (dto.estado.toUpperCase().equals("PAGADA")) {
+                    verificarYActualizarEstadoCredito(em, cuota.getCredito().getId());
+                }
             }
 
             // Si luego agregas campo fechaPago en la entidad:
@@ -236,6 +241,28 @@ public class CuotaAmortizacionController {
             throw e;
         } finally {
             em.close();
+        }
+    }
+    
+    // ====== MÉTODO PRIVADO: Verificar si todas las cuotas están pagadas y actualizar estado del crédito ======
+    
+    private void verificarYActualizarEstadoCredito(EntityManager em, Long idCredito) {
+        // Contar cuotas pendientes del crédito
+        TypedQuery<Long> qPendientes = em.createQuery(
+                "SELECT COUNT(c) FROM CuotaAmortizacion c " +
+                "WHERE c.credito.id = :id AND c.estado = 'PENDIENTE'",
+                Long.class
+        );
+        qPendientes.setParameter("id", idCredito);
+        Long cuotasPendientes = qPendientes.getSingleResult();
+        
+        // Si no hay cuotas pendientes, actualizar el crédito a PAGADO
+        if (cuotasPendientes == 0) {
+            ec.edu.monster.model.Credito credito = em.find(ec.edu.monster.model.Credito.class, idCredito);
+            if (credito != null && !credito.getEstado().equals("CANCELADO")) {
+                credito.setEstado("PAGADO");
+                em.merge(credito);
+            }
         }
     }
 }

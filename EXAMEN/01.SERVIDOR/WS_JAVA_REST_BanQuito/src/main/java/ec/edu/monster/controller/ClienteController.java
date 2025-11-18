@@ -46,6 +46,7 @@ public class ClienteController {
         public String fechaNacimiento;   // yyyy-MM-dd
         public String estadoCivil;
         public String tipoCuentaInicial; // nueva
+        public java.math.BigDecimal saldoInicial; // saldo inicial de la cuenta
     }
     
     @Schema(name = "ClienteRequest")
@@ -215,7 +216,8 @@ public class ClienteController {
             cuenta.setNumCuenta(numCuentaGenerado);
             cuenta.setCliente(c);
             cuenta.setTipoCuenta(req.tipoCuentaInicial.toUpperCase());
-            cuenta.setSaldo(java.math.BigDecimal.ZERO);
+            // Usar saldoInicial del request, o 0 si no viene
+            cuenta.setSaldo(req.saldoInicial != null ? req.saldoInicial : java.math.BigDecimal.ZERO);
 
             em.persist(cuenta);
 

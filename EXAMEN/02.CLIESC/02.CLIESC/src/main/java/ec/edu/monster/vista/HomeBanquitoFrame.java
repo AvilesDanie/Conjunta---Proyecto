@@ -51,7 +51,7 @@ public class HomeBanquitoFrame extends JFrame {
         }));
         
         contentPanel.add(createMenuCard("💳", "Créditos", ColorPalette.AZUL_PRIMARIO, () -> {
-            new CreditosFrame().setVisible(true);
+            new EvaluarCreditoFrame().setVisible(true);
             dispose();
         }));
         

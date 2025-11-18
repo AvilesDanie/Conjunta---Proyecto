@@ -3,6 +3,7 @@ package ec.edu.monster.vista;
 import ec.edu.monster.controlador.FacturaController;
 import ec.edu.monster.controlador.MovimientoController;
 import ec.edu.monster.controlador.ElectrodomesticoController;
+import ec.edu.monster.controlador.CreditoController;
 import ec.edu.monster.modelo.ComercializadoraModels.*;
 import ec.edu.monster.modelo.BanquitoModels.*;
 import ec.edu.monster.util.ColorPalette;
@@ -11,6 +12,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import javax.imageio.ImageIO;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class FacturarFrame extends JFrame {
     private final FacturaController facturaController;
     private final MovimientoController movimientoController;
     private final ElectrodomesticoController electroController;
+    private final CreditoController creditoController;
     
     private JTextField cedulaField, nombreField;
     private JTextField plazoField, cuentaBanquitoField;
@@ -56,6 +61,7 @@ public class FacturarFrame extends JFrame {
         this.facturaController = new FacturaController();
         this.movimientoController = new MovimientoController();
         this.electroController = new ElectrodomesticoController();
+        this.creditoController = new CreditoController();
         this.productosSeleccionados = new ArrayList<>();
         initComponents();
         cargarElectrodomesticos();
@@ -222,15 +228,22 @@ public class FacturarFrame extends JFrame {
             BorderFactory.createLineBorder(ColorPalette.AZUL_PRIMARIO, 1),
             BorderFactory.createEmptyBorder(12, 12, 12, 12)
         ));
-        creditoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        creditoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 180));
         creditoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JLabel creditoInfo = new JLabel("Pago a crédito con BanQuito");
-        creditoInfo.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        JLabel creditoInfo = new JLabel("💳 Pago a Crédito con BanQuito");
+        creditoInfo.setFont(new Font("Segoe UI", Font.BOLD, 13));
         creditoInfo.setForeground(ColorPalette.AZUL_PRIMARIO);
         creditoInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
         creditoPanel.add(creditoInfo);
-        creditoPanel.add(Box.createVerticalStrut(8));
+        creditoPanel.add(Box.createVerticalStrut(10));
+        
+        JLabel infoLabel = new JLabel("<html><small>Se evaluará su crédito antes de facturar</small></html>");
+        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        infoLabel.setForeground(new Color(100, 100, 100));
+        infoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        creditoPanel.add(infoLabel);
+        creditoPanel.add(Box.createVerticalStrut(10));
         
         creditoPanel.add(createFieldLabel("Plazo (meses):"));
         plazoField = createTextField();
@@ -265,11 +278,11 @@ public class FacturarFrame extends JFrame {
         tableTitle.setForeground(ColorPalette.TEXTO_PRINCIPAL_NEGRO);
         tablePanel.add(tableTitle, BorderLayout.NORTH);
         
-        String[] columnNames = {"Producto", "Precio Unit.", "Cantidad", "Subtotal", ""};
+        String[] columnNames = {"Imagen", "Producto", "Precio Unit.", "Cantidad", "Subtotal", ""};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 4; // Solo el botón eliminar
+                return column == 5; // Solo el botón eliminar
             }
         };
         
@@ -281,11 +294,12 @@ public class FacturarFrame extends JFrame {
         tablaProductos.setSelectionBackground(new Color(227, 242, 253));
         
         // Configurar anchos de columnas
-        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(200);
-        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(100);
-        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(80);
-        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(80);
+        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(80);
+        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(80);
         
         // Header
         tablaProductos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -305,18 +319,34 @@ public class FacturarFrame extends JFrame {
             }
         });
         
+        // Renderizador para imagen
+        tablaProductos.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (value instanceof ImageIcon) {
+                    setIcon((ImageIcon) value);
+                    setText("");
+                } else {
+                    setIcon(null);
+                    setText(value != null ? value.toString() : "");
+                }
+                setHorizontalAlignment(SwingConstants.CENTER);
+                return this;
+            }
+        });
+        
         // Renderizador para alineación
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        tablaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tablaProductos.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-        tablaProductos.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
-        tablaProductos.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+        tablaProductos.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+        tablaProductos.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
         
         // Botón eliminar en cada fila
-        tablaProductos.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+        tablaProductos.getColumnModel().getColumn(5).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JButton btn = new JButton("Eliminar");
@@ -334,7 +364,7 @@ public class FacturarFrame extends JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int column = tablaProductos.columnAtPoint(evt.getPoint());
                 int row = tablaProductos.rowAtPoint(evt.getPoint());
-                if (column == 4 && row >= 0) {
+                if (column == 5 && row >= 0) {
                     eliminarProducto(row);
                 }
             }
@@ -483,8 +513,12 @@ public class FacturarFrame extends JFrame {
         ProductoFactura producto = new ProductoFactura(electro, cantidad);
         productosSeleccionados.add(producto);
         
+        // Cargar imagen del producto
+        ImageIcon iconoImagen = cargarImagenProducto(electro.imagenUrl);
+        
         // Agregar a la tabla
         tableModel.addRow(new Object[]{
+            iconoImagen,
             electro.nombre,
             String.format("$%.2f", electro.precioVenta),
             cantidad,
@@ -559,6 +593,18 @@ public class FacturarFrame extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
+            // Evaluar crédito antes de facturar
+            try {
+                int plazo = Integer.parseInt(plazoStr);
+                evaluarYGenerarCredito(cedula, nombre, cuenta, plazo);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                    "El plazo debe ser un número válido",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+            return;
         }
         
         guardarBtn.setEnabled(false);
@@ -625,5 +671,182 @@ public class FacturarFrame extends JFrame {
             }
         };
         worker.execute();
+    }
+    
+    private void evaluarYGenerarCredito(String cedula, String nombre, String cuenta, int plazo) {
+        guardarBtn.setEnabled(false);
+        guardarBtn.setText("Evaluando crédito...");
+        
+        SwingWorker<ResultadoEvaluacion, Void> worker = new SwingWorker<>() {
+            @Override
+            protected ResultadoEvaluacion doInBackground() throws Exception {
+                // Calcular total
+                double totalBruto = 0.0;
+                for (ProductoFactura pf : productosSeleccionados) {
+                    totalBruto += pf.subtotal;
+                }
+                
+                // Crear solicitud de crédito
+                SolicitudCredito solicitud = new SolicitudCredito();
+                solicitud.cedula = cedula;
+                solicitud.precioProducto = BigDecimal.valueOf(totalBruto);
+                solicitud.plazoMeses = plazo;
+                solicitud.numCuentaCredito = cuenta;
+                
+                return creditoController.evaluarCredito(solicitud);
+            }
+            
+            @Override
+            protected void done() {
+                try {
+                    ResultadoEvaluacion resultado = get();
+                    mostrarResultadoEvaluacion(resultado, cedula, nombre, cuenta, plazo);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(FacturarFrame.this,
+                        "Error al evaluar crédito: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    guardarBtn.setEnabled(true);
+                    guardarBtn.setText("Generar Factura");
+                }
+            }
+        };
+        worker.execute();
+    }
+    
+    private void mostrarResultadoEvaluacion(ResultadoEvaluacion resultado, String cedula, String nombre, String cuenta, int plazo) {
+        if (resultado.aprobado) {
+            String mensaje = String.format(
+                "✅ CRÉDITO APROBADO\n\n" +
+                "Cliente: %s\n" +
+                "Cédula: %s\n" +
+                "Monto Total: $%.2f\n" +
+                "Plazo: %d meses\n\n" +
+                "¿Desea generar la factura y crear el crédito?",
+                nombre, cedula, resultado.montoMaximo.doubleValue(), plazo
+            );
+            
+            int opcion = JOptionPane.showConfirmDialog(
+                this,
+                mensaje,
+                "Crédito Aprobado",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            
+            if (opcion == JOptionPane.YES_OPTION) {
+                crearCreditoYFacturar(cedula, nombre, cuenta, plazo, resultado.montoMaximo.doubleValue());
+            } else {
+                guardarBtn.setEnabled(true);
+                guardarBtn.setText("Generar Factura");
+            }
+        } else {
+            String mensaje = String.format(
+                "❌ CRÉDITO DENEGADO\n\n" +
+                "Motivo: %s\n\n" +
+                "No se puede procesar el pago a crédito.",
+                resultado.motivo != null ? resultado.motivo : "No cumple con los requisitos"
+            );
+            
+            JOptionPane.showMessageDialog(
+                this,
+                mensaje,
+                "Crédito Denegado",
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            guardarBtn.setEnabled(true);
+            guardarBtn.setText("Generar Factura");
+        }
+    }
+    
+    private void crearCreditoYFacturar(String cedula, String nombre, String cuenta, int plazo, double monto) {
+        guardarBtn.setText("Generando factura...");
+        
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // NOTA: El crédito ya fue creado por la evaluación
+                // Solo crear facturas y movimiento
+                
+                // Crear facturas
+                for (ProductoFactura pf : productosSeleccionados) {
+                    FacturaRequest request = new FacturaRequest();
+                    request.cedulaCliente = cedula;
+                    request.nombreCliente = nombre;
+                    request.idElectrodomestico = pf.electro.id;
+                    request.cantidad = pf.cantidad;
+                    request.formaPago = "CREDITO";
+                    request.plazoMeses = plazo;
+                    request.numCuentaCredito = cuenta;
+                    
+                    facturaController.crearFactura(request);
+                }
+                
+                // Registrar retiro en BanQuito
+                MovimientoRequest movReq = new MovimientoRequest();
+                movReq.numCuenta = cuenta;
+                movReq.tipo = "RET";
+                movReq.tipoMovimiento = "RET";
+                movReq.valor = new BigDecimal(monto);
+                
+                movimientoController.registrarMovimiento(movReq);
+                
+                return null;
+            }
+            
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    JOptionPane.showMessageDialog(FacturarFrame.this,
+                        "✅ Factura generada exitosamente\n" +
+                        "El crédito ha sido aprobado y se realizó el débito automático.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    new FacturasFrame().setVisible(true);
+                    dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(FacturarFrame.this,
+                        "Error al generar factura: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    guardarBtn.setEnabled(true);
+                    guardarBtn.setText("Generar Factura");
+                }
+            }
+        };
+        worker.execute();
+    }
+    
+    private ImageIcon cargarImagenProducto(String imagenUrl) {
+        if (imagenUrl == null || imagenUrl.isEmpty()) {
+            return crearImagenPorDefecto();
+        }
+        
+        try {
+            String baseUrl = "http://192.168.100.17:8080/WS_JAVA_REST_Comercializadora";
+            URL url = new URL(baseUrl + imagenUrl);
+            BufferedImage img = ImageIO.read(url);
+            if (img != null) {
+                Image scaledImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImg);
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen: " + e.getMessage());
+        }
+        
+        return crearImagenPorDefecto();
+    }
+    
+    private ImageIcon crearImagenPorDefecto() {
+        BufferedImage img = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = img.createGraphics();
+        g2d.setColor(new Color(220, 220, 220));
+        g2d.fillRect(0, 0, 50, 50);
+        g2d.setColor(new Color(150, 150, 150));
+        g2d.drawRect(0, 0, 49, 49);
+        g2d.dispose();
+        return new ImageIcon(img);
     }
 }

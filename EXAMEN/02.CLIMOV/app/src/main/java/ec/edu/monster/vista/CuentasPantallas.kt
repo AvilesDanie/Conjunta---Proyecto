@@ -283,6 +283,7 @@ fun CrearCuentaScreen(
     val scope = rememberCoroutineScope()
     
     var tipoCuenta by remember { mutableStateOf("AHORROS") }
+    var saldoInicial by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     
     Scaffold(
@@ -363,7 +364,25 @@ fun CrearCuentaScreen(
                         )
                     }
                     
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    OutlinedTextField(
+                        value = saldoInicial,
+                        onValueChange = { saldoInicial = it },
+                        label = { Text("Saldo Inicial (Opcional)") },
+                        leadingIcon = { Icon(Icons.Default.AttachMoney, null) },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color(0xFF212121),
+                            unfocusedTextColor = Color(0xFF212121),
+                            focusedLabelColor = Color(0xFF1565C0),
+                            unfocusedLabelColor = Color(0xFF757575)
+                        )
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
                     
                     Text(
                         "El número de cuenta se generará automáticamente.",
@@ -377,9 +396,12 @@ fun CrearCuentaScreen(
                 onClick = {
                     isLoading = true
                     scope.launch {
+                        val saldoInicialValue = saldoInicial.toBigDecimalOrNull()
+                        
                         val request = CuentaRequest(
                             cedulaCliente = cedula,
-                            tipoCuenta = tipoCuenta
+                            tipoCuenta = tipoCuenta,
+                            saldoInicial = saldoInicialValue
                         )
                         
                         val result = cuentaViewModel.crearCuenta(request)

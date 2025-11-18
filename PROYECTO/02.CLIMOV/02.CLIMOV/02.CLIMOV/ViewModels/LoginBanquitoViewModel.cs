@@ -64,21 +64,34 @@ namespace _02.CLIMOV.ViewModels
             IsLoading = true;
             try
             {
-                var result = await _service.LoginAsync(new UsuarioRequest
+                // Enviar contraseña en texto plano (el servidor hace el hash)
+                System.Diagnostics.Debug.WriteLine($"[LOGIN] Usuario: {Username}");
+                System.Diagnostics.Debug.WriteLine($"[LOGIN] Password length: {Password?.Length}");
+                
+                var result = await _service.LoginAsync(new LoginRequest
                 {
                     Username = Username,
-                    Password = Password
+                    Password = Password  // Enviar contraseña en texto plano
                 });
 
-                if (result != null && result.Activo)
+                if (result != null && result.Id > 0 && result.Activo)
                 {
                     SessionManager.SetSession(result.Username, result.Rol, "BANQUITO");
                     await ToastHelper.ShowSuccess($"Bienvenido {result.Username}");
-                    await Shell.Current.GoToAsync("//home_banquito");
+                    // Navegar reemplazando toda la pila
+                    await Shell.Current.GoToAsync($"//app_selection/home_banquito");
+                }
+                else if (result != null && result.Id == 0)
+                {
+                    await ToastHelper.ShowError("Usuario no encontrado o contraseña incorrecta");
+                }
+                else if (result != null && !result.Activo)
+                {
+                    await ToastHelper.ShowError("Usuario inactivo - Contacte al administrador");
                 }
                 else
                 {
-                    await ToastHelper.ShowError("Credenciales incorrectas o usuario inactivo");
+                    await ToastHelper.ShowError("Error en la respuesta del servidor");
                 }
             }
             catch (Exception ex)

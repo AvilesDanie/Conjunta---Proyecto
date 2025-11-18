@@ -51,6 +51,7 @@ public class ComercializadoraModels {
         public String codigo;
         public String nombre;
         public BigDecimal precioVenta;
+        public String imagenUrl;  // URL de la imagen desde el servidor
     }
     
     // ========== FACTURA ==========

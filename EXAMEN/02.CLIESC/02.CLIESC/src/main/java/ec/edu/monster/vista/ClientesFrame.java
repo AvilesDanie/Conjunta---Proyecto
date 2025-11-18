@@ -3,6 +3,7 @@ package ec.edu.monster.vista;
 import ec.edu.monster.controlador.ClienteController;
 import ec.edu.monster.modelo.BanquitoModels.ClienteResponse;
 import ec.edu.monster.util.ColorPalette;
+import ec.edu.monster.util.ModernTableRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -94,13 +95,14 @@ public class ClientesFrame extends JFrame {
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         
-        JButton newBtn = new JButton("➕ Nuevo Cliente");
+        JButton newBtn = new JButton("+ Nuevo Cliente");
+        newBtn.putClientProperty("FlatLaf.style", "arc: 10; borderWidth: 0; font: bold +0");
         newBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         newBtn.setForeground(Color.WHITE);
         newBtn.setBackground(ColorPalette.VERDE_EXITO);
         newBtn.setFocusPainted(false);
         newBtn.setBorderPainted(false);
-        newBtn.setPreferredSize(new Dimension(160, 40));
+        newBtn.setPreferredSize(new Dimension(160, 42));
         newBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         newBtn.addActionListener(e -> {
             new CrearClienteFrame().setVisible(true);
@@ -115,47 +117,31 @@ public class ClientesFrame extends JFrame {
     }
     
     private JPanel createSearchPanel() {
-        JPanel panel = new JPanel(new BorderLayout(10, 0));
+        JPanel panel = new JPanel(new BorderLayout(15, 0));
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 1),
-            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+            BorderFactory.createLineBorder(new Color(66, 133, 244), 2),
+            BorderFactory.createEmptyBorder(12, 18, 12, 18)
         ));
         
-        JLabel searchIcon = new JLabel("");
-        searchIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 20));
+        // Icono de búsqueda más visible
+        JLabel searchIcon = new JLabel("🔍");
+        searchIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
         
         searchField = new JTextField();
-        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        searchField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        searchField.setOpaque(true);
-        searchField.setBackground(Color.WHITE);
+        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        searchField.putClientProperty("JTextField.placeholderText", "Buscar por nombre o cédula...");
+        searchField.putClientProperty("JTextField.showClearButton", true);
+        searchField.putClientProperty("JTextField.leadingIcon", new javax.swing.ImageIcon(new java.awt.image.BufferedImage(20, 20, java.awt.image.BufferedImage.TYPE_INT_ARGB)));
         searchField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 filtrarClientes();
             }
         });
         
-        JLabel placeholder = new JLabel("Buscar por nombre o cédula...");
-        placeholder.setFont(new Font("Segoe UI", Font.ITALIC, 14));
-        placeholder.setForeground(ColorPalette.TEXTO_GRIS_MEDIO);
-        
-        searchField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                placeholder.setVisible(false);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                placeholder.setVisible(searchField.getText().isEmpty());
-            }
-        });
-        
-        JPanel fieldPanel = new JPanel(new BorderLayout());
-        fieldPanel.setOpaque(false);
-        fieldPanel.add(searchField, BorderLayout.CENTER);
-        
         JButton clearBtn = new JButton("✕");
         clearBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        clearBtn.setForeground(ColorPalette.TEXTO_GRIS_MEDIO);
+        clearBtn.setForeground(new Color(150, 150, 150));
         clearBtn.setFocusPainted(false);
         clearBtn.setBorderPainted(false);
         clearBtn.setContentAreaFilled(false);
@@ -174,7 +160,7 @@ public class ClientesFrame extends JFrame {
         });
         
         panel.add(searchIcon, BorderLayout.WEST);
-        panel.add(fieldPanel, BorderLayout.CENTER);
+        panel.add(searchField, BorderLayout.CENTER);
         panel.add(clearBtn, BorderLayout.EAST);
         
         return panel;
@@ -183,7 +169,10 @@ public class ClientesFrame extends JFrame {
     private JPanel createTablePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(66, 133, 244), 1),
+            BorderFactory.createEmptyBorder(1, 1, 1, 1)
+        ));
         
         String[] columnNames = {"Cédula", "Nombre", "Fecha Nac.", "Estado Civil", "Tipo Cuenta", "Acciones"};
         tableModel = new DefaultTableModel(columnNames, 0) {
@@ -198,20 +187,22 @@ public class ClientesFrame extends JFrame {
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
                 
-                // Filas alternadas para mejor legibilidad
+                // Filas alternadas con colores más vibrantes
                 if (!isRowSelected(row)) {
                     if (row % 2 == 0) {
-                        c.setBackground(Color.WHITE);
+                        c.setBackground(new Color(248, 250, 252));
                     } else {
-                        c.setBackground(new Color(245, 248, 250));
+                        c.setBackground(new Color(237, 242, 250));
                     }
                 } else {
-                    c.setBackground(new Color(227, 242, 253));
+                    c.setBackground(new Color(187, 222, 251));
                 }
                 
                 // Texto más oscuro para mejor contraste
                 if (!isRowSelected(row)) {
                     c.setForeground(new Color(33, 33, 33));
+                } else {
+                    c.setForeground(new Color(13, 60, 108));
                 }
                 
                 return c;
@@ -219,35 +210,36 @@ public class ClientesFrame extends JFrame {
         };
         
         tablaClientes.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tablaClientes.setRowHeight(50);
+        tablaClientes.setRowHeight(55);
         tablaClientes.setShowGrid(true);
-        tablaClientes.setGridColor(new Color(230, 230, 230));
+        tablaClientes.setGridColor(new Color(200, 215, 230));
         tablaClientes.setIntercellSpacing(new Dimension(1, 1));
         
-        // Configurar header de la tabla
+        // Configurar header de la tabla con degradado visual
         tablaClientes.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        tablaClientes.getTableHeader().setBackground(ColorPalette.AZUL_PRIMARIO);
+        tablaClientes.getTableHeader().setBackground(new Color(66, 133, 244));
         tablaClientes.getTableHeader().setForeground(Color.WHITE);
-        tablaClientes.getTableHeader().setPreferredSize(new Dimension(0, 45));
+        tablaClientes.getTableHeader().setPreferredSize(new Dimension(0, 52));
         tablaClientes.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
         tablaClientes.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                c.setBackground(ColorPalette.AZUL_PRIMARIO);
-                c.setForeground(Color.WHITE);
-                c.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                ((JLabel)c).setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE),
-                    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+                JLabel label = new JLabel(value.toString());
+                label.setOpaque(true);
+                label.setBackground(new Color(66, 133, 244));
+                label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                label.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 3, 0, new Color(25, 103, 210)),
+                    BorderFactory.createEmptyBorder(8, 15, 8, 15)
                 ));
-                ((JLabel)c).setHorizontalAlignment(SwingConstants.CENTER);
-                return c;
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                return label;
             }
         });
         
-        tablaClientes.setSelectionBackground(new Color(227, 242, 253));
-        tablaClientes.setSelectionForeground(new Color(33, 33, 33));
+        tablaClientes.setSelectionBackground(new Color(187, 222, 251));
+        tablaClientes.setSelectionForeground(new Color(13, 60, 108));
         
         // Configurar ancho de columnas
         tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(110);
@@ -257,14 +249,15 @@ public class ClientesFrame extends JFrame {
         tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(120);
         tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(140);
         
-        // Botón Ver en la columna Acciones
+        // Botón Ver en la columna Acciones con estilo mejorado
         tablaClientes.getColumnModel().getColumn(5).setCellRenderer((table, value, isSelected, hasFocus, row, column) -> {
             JButton btn = new JButton("Ver Detalles");
-            btn.setBackground(ColorPalette.AZUL_PRIMARIO);
+            btn.putClientProperty("FlatLaf.style", "arc: 8; borderWidth: 0");
+            btn.setBackground(new Color(66, 133, 244));
             btn.setForeground(Color.WHITE);
             btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
             btn.setFocusPainted(false);
-            btn.setBorderPainted(false);
+            btn.setBorder(BorderFactory.createEmptyBorder(10, 18, 10, 18));
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             return btn;
         });
@@ -282,7 +275,12 @@ public class ClientesFrame extends JFrame {
         });
         
         JScrollPane scrollPane = new JScrollPane(tablaClientes);
-        scrollPane.setBorder(null);
+        scrollPane.putClientProperty("FlatLaf.style", "arc: 12");
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(220, 225, 230), 1),
+            BorderFactory.createEmptyBorder(2, 2, 2, 2)
+        ));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         panel.add(scrollPane, BorderLayout.CENTER);
         
         return panel;

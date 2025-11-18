@@ -14,12 +14,14 @@
         
         <!-- TopBar -->
         <Grid Grid.Row="0" BackgroundColor="{StaticResource AzulPrimarioMedio}" Padding="16" ColumnDefinitions="Auto,*">
-            <ImageButton Grid.Column="0"
-                        Source="arrow_back.png"
-                        BackgroundColor="Transparent"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        Clicked="OnBackClicked"/>
+            <Button Grid.Column="0"
+                    Text="⬅️"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Clicked="OnBackClicked"/>
             <Label Grid.Column="1"
                    Text="Lista de Clientes"
                    TextColor="{StaticResource TextoBlanco}"

@@ -139,15 +139,16 @@ public class ClienteDetalleFrame extends JFrame {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(Color.WHITE);
+        card.putClientProperty("FlatLaf.style", "arc: 12");
         card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 1),
-            BorderFactory.createEmptyBorder(25, 30, 25, 30)
+            BorderFactory.createLineBorder(new Color(66, 133, 244), 2),
+            BorderFactory.createEmptyBorder(30, 35, 30, 35)
         ));
-        card.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+        card.setMaximumSize(new Dimension(650, Integer.MAX_VALUE));
         
         // Icono header
-        JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
-        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 64));
+        JLabel iconLabel = new JLabel("👤", SwingConstants.CENTER);
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 72));
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         card.add(iconLabel);
         card.add(Box.createVerticalStrut(20));
@@ -170,13 +171,14 @@ public class ClienteDetalleFrame extends JFrame {
         buttonsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JButton editarBtn = new JButton("Editar");
+        editarBtn.putClientProperty("FlatLaf.style", "arc: 8; borderWidth: 2");
         editarBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         editarBtn.setForeground(ColorPalette.AZUL_PRIMARIO);
         editarBtn.setBackground(Color.WHITE);
         editarBtn.setFocusPainted(false);
         editarBtn.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(ColorPalette.AZUL_PRIMARIO, 2),
-            BorderFactory.createEmptyBorder(8, 15, 8, 15)
+            BorderFactory.createEmptyBorder(10, 18, 10, 18)
         ));
         editarBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         editarBtn.addActionListener(e -> {
@@ -185,18 +187,20 @@ public class ClienteDetalleFrame extends JFrame {
         });
         
         JButton eliminarBtn = new JButton("Eliminar");
+        eliminarBtn.putClientProperty("FlatLaf.style", "arc: 8; borderWidth: 2");
         eliminarBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         eliminarBtn.setForeground(ColorPalette.ROJO_ERROR);
         eliminarBtn.setBackground(Color.WHITE);
         eliminarBtn.setFocusPainted(false);
         eliminarBtn.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(ColorPalette.ROJO_ERROR, 2),
-            BorderFactory.createEmptyBorder(8, 15, 8, 15)
+            BorderFactory.createEmptyBorder(10, 18, 10, 18)
         ));
         eliminarBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         eliminarBtn.addActionListener(e -> eliminarCliente());
         
         JButton verCuentasBtn = new JButton("Ver Cuentas");
+        verCuentasBtn.putClientProperty("FlatLaf.style", "arc: 8; borderWidth: 0");
         verCuentasBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         verCuentasBtn.setForeground(Color.WHITE);
         verCuentasBtn.setBackground(ColorPalette.VERDE_EXITO);
@@ -226,25 +230,27 @@ public class ClienteDetalleFrame extends JFrame {
     private JPanel createInfoRow(String emoji, String label, String value) {
         JPanel row = new JPanel(new BorderLayout(15, 0));
         row.setOpaque(false);
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 65));
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JLabel iconLabel = new JLabel(emoji);
-        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 28));
+        iconLabel.setPreferredSize(new Dimension(40, 40));
         
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
         textPanel.setOpaque(false);
         
         JLabel labelText = new JLabel(label);
-        labelText.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        labelText.setForeground(ColorPalette.TEXTO_GRIS_MEDIO);
+        labelText.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        labelText.setForeground(new Color(100, 100, 100));
         
-        JLabel valueText = new JLabel(value);
-        valueText.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        JLabel valueText = new JLabel(value != null ? value : "N/A");
+        valueText.setFont(new Font("Segoe UI", Font.BOLD, 17));
         valueText.setForeground(ColorPalette.TEXTO_PRINCIPAL_NEGRO);
         
         textPanel.add(labelText);
+        textPanel.add(Box.createVerticalStrut(3));
         textPanel.add(valueText);
         
         row.add(iconLabel, BorderLayout.WEST);

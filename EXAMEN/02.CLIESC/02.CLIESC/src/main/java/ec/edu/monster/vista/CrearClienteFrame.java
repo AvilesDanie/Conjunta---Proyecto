@@ -132,8 +132,9 @@ public class CrearClienteFrame extends JFrame {
         panel.add(createFieldLabel("Estado Civil *"));
         String[] estadosCiviles = {"SOLTERO", "CASADO", "DIVORCIADO", "VIUDO"};
         estadoCivilCombo = new JComboBox<>(estadosCiviles);
+        estadoCivilCombo.putClientProperty("FlatLaf.style", "arc: 8");
         estadoCivilCombo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        estadoCivilCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        estadoCivilCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         estadoCivilCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(estadoCivilCombo);
         panel.add(Box.createVerticalStrut(15));
@@ -142,8 +143,9 @@ public class CrearClienteFrame extends JFrame {
         panel.add(createFieldLabel("Tipo de Cuenta Inicial *"));
         String[] tiposCuenta = {"AHORROS", "CORRIENTE"};
         tipoCuentaCombo = new JComboBox<>(tiposCuenta);
+        tipoCuentaCombo.putClientProperty("FlatLaf.style", "arc: 8");
         tipoCuentaCombo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tipoCuentaCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        tipoCuentaCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         tipoCuentaCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(tipoCuentaCombo);
         panel.add(Box.createVerticalStrut(15));
@@ -162,7 +164,8 @@ public class CrearClienteFrame extends JFrame {
         panel.add(Box.createVerticalStrut(25));
         
         // Botón Guardar
-        guardarBtn = new JButton("💾 Guardar Cliente");
+        guardarBtn = new JButton("✓ Crear Cliente");
+        guardarBtn.putClientProperty("FlatLaf.style", "arc: 10; borderWidth: 0; font: bold +1");
         guardarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         guardarBtn.setForeground(Color.WHITE);
         guardarBtn.setBackground(ColorPalette.VERDE_EXITO);
@@ -187,11 +190,12 @@ public class CrearClienteFrame extends JFrame {
     
     private JTextField createTextField() {
         JTextField field = new JTextField();
+        field.putClientProperty("FlatLaf.style", "arc: 8");
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         field.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(ColorPalette.GRIS_BORDES, 1),
-            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+            BorderFactory.createEmptyBorder(10, 12, 10, 12)
         ));
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
         return field;

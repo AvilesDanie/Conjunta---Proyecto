@@ -174,7 +174,7 @@ namespace _02.CLIMOV.ViewModels
             try
             {
                 var resultado = await _service.AnularCuotaAsync(idCuota);
-                if (!string.IsNullOrEmpty(resultado))
+                if (resultado)
                 {
                     await ToastHelper.ShowSuccess("Cuota anulada exitosamente");
                     return true;

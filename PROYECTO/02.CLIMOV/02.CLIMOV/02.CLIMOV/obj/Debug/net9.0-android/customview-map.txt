@@ -28,8 +28,6 @@ com.google.android.material.appbar.AppBarLayout;C:\Users\DETPC\OneDrive\Document
 com.google.android.material.appbar.AppBarLayout;C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\PROYECTO\02.CLIMOV\02.CLIMOV\02.CLIMOV\obj\Debug\net9.0-android\lp\161\jl\res\layout\shellcontent.xml
 com.google.android.material.appbar.AppBarLayout;C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\PROYECTO\02.CLIMOV\02.CLIMOV\02.CLIMOV\obj\Debug\net9.0-android\lp\163\jl\res\layout\navigationlayout.xml
 declare-styleable;C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\PROYECTO\02.CLIMOV\02.CLIMOV\02.CLIMOV\obj\Debug\net9.0-android\lp\163\jl\res\values\attr.xml
-domain;obj\Debug\net9.0-android\res\xml\network_security_config.xml
-domain-config;obj\Debug\net9.0-android\res\xml\network_security_config.xml
 external-cache-path;C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\PROYECTO\02.CLIMOV\02.CLIMOV\02.CLIMOV\obj\Debug\net9.0-android\lp\164\jl\res\xml\microsoft_maui_essentials_fileprovider_file_paths.xml
 external-path;C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\PROYECTO\02.CLIMOV\02.CLIMOV\02.CLIMOV\obj\Debug\net9.0-android\lp\164\jl\res\xml\microsoft_maui_essentials_fileprovider_file_paths.xml
 foreground;obj\Debug\net9.0-android\resizetizer\r\mipmap-anydpi-v26\appicon.xml

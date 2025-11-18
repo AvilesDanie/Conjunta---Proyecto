@@ -49,8 +49,14 @@ namespace _02.CLIMOV.Services
 
     public class ComercializadoraSoapService
     {
-        // URL base del servidor SOAP de Comercializadora
-        private const string BaseUrl = "http://192.168.100.53:62997";
+        // URL BASE DEL SERVICIO — SIN ESPACIOS, SIN SALTOS, SIN CADENAS ROTAS
+        private const string BaseUrl = "http://10.40.25.70:62997";
+
+        // NOMBRE DEL SERVICIO EXACTO SEGÚN TU .svc
+        private const string ServicePath = "/ComercializadoraService.svc";
+
+        // URL COMPLETA FINAL
+        private string ServiceUrl => $"{BaseUrl}{ServicePath}";
 
         private static ChannelFactory<T> CreateChannel<T>(string serviceName)
         {
@@ -67,7 +73,7 @@ namespace _02.CLIMOV.Services
             // Permitir HTTP sin seguridad
             binding.Security.Mode = BasicHttpSecurityMode.None;
 
-            var endpoint = new EndpointAddress($"{BaseUrl}/ComercializadoraService.svc");
+            var endpoint = new EndpointAddress(new ComercializadoraSoapService().ServiceUrl);
             
             System.Diagnostics.Debug.WriteLine($"[SOAP] Creando canal para: {endpoint.Uri}");
             

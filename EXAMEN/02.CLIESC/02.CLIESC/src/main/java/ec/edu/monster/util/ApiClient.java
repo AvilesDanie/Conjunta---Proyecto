@@ -142,4 +142,11 @@ public class ApiClient {
             return gson.fromJson(responseBody, arrayClass);
         }
     }
+    
+    /**
+     * Parsear JSON string a objeto
+     */
+    public <T> T parseJson(String json, Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
 }

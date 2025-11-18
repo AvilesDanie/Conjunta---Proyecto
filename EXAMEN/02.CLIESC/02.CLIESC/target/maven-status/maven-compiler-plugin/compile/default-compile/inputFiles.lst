@@ -11,6 +11,7 @@ C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\0
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\modelo\ComercializadoraModels.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\util\ApiClient.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\util\ColorPalette.java
+C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\util\ModernTableRenderer.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\util\SessionManager.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\util\ToastNotification.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\AppSelectionFrame.java
@@ -24,7 +25,6 @@ C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\0
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\CuentasPorClienteFrame.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\CuotasFrame.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\EditarClienteFrame.java
-C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\EditarElectrodomesticoFrame.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\EditarUsuarioFrame.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\ElectrodomesticosFrame.java
 C:\Users\DETPC\OneDrive\Documentos\Github\Conjunta---Proyecto\EXAMEN\02.CLIESC\02.CLIESC\src\main\java\ec\edu\monster\vista\EvaluarCreditoFrame.java
