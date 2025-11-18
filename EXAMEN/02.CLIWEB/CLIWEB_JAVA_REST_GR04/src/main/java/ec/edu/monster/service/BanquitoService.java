@@ -24,7 +24,7 @@ public class BanquitoService {
      */
     public boolean validarLogin(UsuarioLogin credenciales) throws IOException {
 
-        String endpoint = AppConfig.BANQUITO_BASE_URL + AppConfig.BANQUITO_LOGIN_PATH;
+        String endpoint = AppConfig.BANQUITO_API_BASE + "/usuarios/login";
 
         URL url = new URL(endpoint);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

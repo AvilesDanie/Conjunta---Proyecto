@@ -8,6 +8,7 @@ public class ElectrodomesticoDTO {
     private String codigo;
     private String nombre;
     private BigDecimal precioVenta;
+    private String imagenUrl;
 
     public ElectrodomesticoDTO() {
     }
@@ -42,5 +43,13 @@ public class ElectrodomesticoDTO {
 
     public void setPrecioVenta(BigDecimal precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 }

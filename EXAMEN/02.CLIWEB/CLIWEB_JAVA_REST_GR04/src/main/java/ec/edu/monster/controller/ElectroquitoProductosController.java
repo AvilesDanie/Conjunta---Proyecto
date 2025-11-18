@@ -1,5 +1,6 @@
 package ec.edu.monster.controller;
 
+import ec.edu.monster.config.AppConfig;
 import ec.edu.monster.dto.ElectrodomesticoDTO;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -19,18 +20,20 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @WebServlet("/electroquito/productos")
 public class ElectroquitoProductosController extends HttpServlet {
 
-    private static final String BASE_URL =
-            "http://localhost:8080/WS_JAVA_REST_Comercializadora/api";
+    private static final String BASE_URL = AppConfig.COMERCIALIZADORA_API_BASE;
+    private static final String BASE_HOST = AppConfig.COMERCIALIZADORA_HOST_BASE;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Validar sesión (mismo atributo que usaste en login)
+        // Validar sesiÃ³n (mismo atributo que usaste en login)
         Object usuarioSesion = request.getSession().getAttribute("usuarioSesion");
         if (usuarioSesion == null) {
             response.sendRedirect(request.getContextPath() + "/electroquito/login");
@@ -41,8 +44,14 @@ public class ElectroquitoProductosController extends HttpServlet {
 
         try {
             List<ElectrodomesticoDTO> productos = obtenerProductosDesdeAPI(filtro);
+
+            if (filtro != null && !filtro.isBlank()) {
+                productos = filtrarLocalmente(productos, filtro);
+            }
+
             request.setAttribute("productos", productos);
             request.setAttribute("filtro", filtro != null ? filtro : "");
+            request.setAttribute("imagenBaseUrl", BASE_HOST);
 
             RequestDispatcher rd = request.getRequestDispatcher(
                     "/WEB-INF/views/electroquito/electroquitoProductos.jsp");
@@ -53,6 +62,7 @@ public class ElectroquitoProductosController extends HttpServlet {
             request.setAttribute("error",
                     "No se pudo cargar el catálogo de productos. Intente nuevamente.");
             request.setAttribute("productos", List.of());
+            request.setAttribute("imagenBaseUrl", BASE_HOST);
 
             RequestDispatcher rd = request.getRequestDispatcher(
                     "/WEB-INF/views/electroquito/electroquitoProductos.jsp");
@@ -94,4 +104,27 @@ public class ElectroquitoProductosController extends HttpServlet {
             conn.disconnect();
         }
     }
+
+    private List<ElectrodomesticoDTO> filtrarLocalmente(List<ElectrodomesticoDTO> origen,
+                                                        String filtro) {
+        if (origen == null || origen.isEmpty()) {
+            return origen;
+        }
+        String criterio = filtro.toLowerCase(Locale.ROOT).trim();
+        return origen.stream()
+                .filter(p -> {
+                    String nombre = p.getNombre() != null
+                            ? p.getNombre().toLowerCase(Locale.ROOT)
+                            : "";
+                    String codigo = p.getCodigo() != null
+                            ? p.getCodigo().toLowerCase(Locale.ROOT)
+                            : "";
+                    return nombre.contains(criterio) || codigo.contains(criterio);
+                })
+                .collect(Collectors.toList());
+    }
 }
+
+
+
+

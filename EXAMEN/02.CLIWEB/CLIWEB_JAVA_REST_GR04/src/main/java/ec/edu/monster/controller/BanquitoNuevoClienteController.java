@@ -1,5 +1,6 @@
 package ec.edu.monster.controller;
 
+import ec.edu.monster.config.AppConfig;
 import ec.edu.monster.dto.NuevoClienteRequestDTO;
 import ec.edu.monster.dto.ClienteDTO;
 import jakarta.json.bind.Jsonb;
@@ -19,8 +20,7 @@ import java.nio.charset.StandardCharsets;
 @WebServlet("/banquito/clientes/nuevo")
 public class BanquitoNuevoClienteController extends HttpServlet {
 
-    private static final String BASE_URL =
-            "http://localhost:8080/WS_JAVA_REST_BanQuito/api";
+    private static final String BASE_URL = AppConfig.BANQUITO_API_BASE;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

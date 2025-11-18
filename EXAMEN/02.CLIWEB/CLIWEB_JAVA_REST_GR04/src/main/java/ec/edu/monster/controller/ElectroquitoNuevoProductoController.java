@@ -1,13 +1,14 @@
 package ec.edu.monster.controller;
 
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
+import ec.edu.monster.config.AppConfig;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,19 +19,13 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
 @WebServlet("/electroquito/productos/nuevo")
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class ElectroquitoNuevoProductoController extends HttpServlet {
 
-    private static final String BASE_URL =
-            "http://localhost:8080/WS_JAVA_REST_Comercializadora/api";
-
-    // DTO para el POST al servicio REST
-    public static class CrearElectrodomesticoRequest {
-        public String codigo;
-        public String nombre;
-        public BigDecimal precioVenta;
-    }
+    private static final String BASE_URL = AppConfig.COMERCIALIZADORA_API_BASE;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -94,28 +89,31 @@ public class ElectroquitoNuevoProductoController extends HttpServlet {
             return;
         }
 
+        Part imagenPart = request.getPart("imagen");
+        if (imagenPart == null || imagenPart.getSize() == 0) {
+            request.setAttribute("error",
+                    "Selecciona una imagen para el producto (PNG o JPG).");
+            reenviarFormulario(request, response);
+            return;
+        }
+
         try {
-            // Armar request para el servicio REST
-            CrearElectrodomesticoRequest cuerpo = new CrearElectrodomesticoRequest();
-            cuerpo.codigo = codigo.trim();
-            cuerpo.nombre = nombre.trim();
-            cuerpo.precioVenta = precio;
-
-            Jsonb jsonb = JsonbBuilder.create();
-            String json = jsonb.toJson(cuerpo);
-
             String urlStr = BASE_URL + "/electrodomesticos"; // ajusta si tu path es distinto
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+            String boundary = "----EQForm" + System.currentTimeMillis();
+            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
 
-            // Enviar JSON
             try (OutputStream os = conn.getOutputStream()) {
-                byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
-                os.write(bytes);
+                escribirCampo(os, boundary, "codigo", codigo.trim());
+                escribirCampo(os, boundary, "nombre", nombre.trim());
+                escribirCampo(os, boundary, "precioVenta", precio.toPlainString());
+                escribirArchivo(os, boundary, "imagen", imagenPart);
+                os.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
             }
 
             int status = conn.getResponseCode();
@@ -146,7 +144,7 @@ public class ElectroquitoNuevoProductoController extends HttpServlet {
 
                 String msg = "No se pudo guardar el producto (HTTP " + status + ").";
                 if (!body.isEmpty()) {
-                    msg += " Detalle: " + body;
+                    msg += " Detalle: " + limpiarHtml(body.toString());
                 }
                 request.setAttribute("error", msg);
                 reenviarFormulario(request, response);
@@ -166,5 +164,40 @@ public class ElectroquitoNuevoProductoController extends HttpServlet {
         RequestDispatcher rd = request.getRequestDispatcher(
                 "/WEB-INF/views/electroquito/electroquitoNuevoProducto.jsp");
         rd.forward(request, response);
+    }
+
+    private String limpiarHtml(String origen) {
+        return origen.replaceAll("<[^>]+>", "")
+                .replace("&nbsp;", " ")
+                .trim();
+    }
+
+    private void escribirCampo(OutputStream os, String boundary, String nombre, String valor)
+            throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--").append(boundary).append("\r\n");
+        sb.append("Content-Disposition: form-data; name=\"").append(nombre).append("\"\r\n\r\n");
+        sb.append(valor).append("\r\n");
+        os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void escribirArchivo(OutputStream os, String boundary, String nombre, Part part)
+            throws IOException {
+        String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+        String contentType = part.getContentType() != null
+                ? part.getContentType()
+                : "application/octet-stream";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("--").append(boundary).append("\r\n");
+        sb.append("Content-Disposition: form-data; name=\"").append(nombre)
+                .append("\"; filename=\"").append(fileName).append("\"\r\n");
+        sb.append("Content-Type: ").append(contentType).append("\r\n\r\n");
+        os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
+
+        try (InputStream is = part.getInputStream()) {
+            is.transferTo(os);
+        }
+        os.write("\r\n".getBytes(StandardCharsets.UTF_8));
     }
 }

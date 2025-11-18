@@ -1,10 +1,12 @@
 package ec.edu.monster.dto;
 
+import java.math.BigDecimal;
+
 public class CreditoEvaluacionRequestDTO {
-    public String cedulaCliente;
-    public double precioProducto;
+    public String cedula;
+    public BigDecimal precioProducto;
     public int plazoMeses;
-    public String numeroCuentaCredito;
+    public String numCuentaCredito;
 
     public CreditoEvaluacionRequestDTO() {
     }

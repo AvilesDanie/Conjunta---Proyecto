@@ -1,206 +1,141 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page session="false" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>ElectroQuito - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Fuente -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet">
-    <!-- Iconos -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             min-height: 100vh;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(180deg, #f97316 0%, #fbbf24 40%, #ffffff 100%);
+            background: linear-gradient(180deg, #f97316 0%, #ffa228 45%, #ffe3b3 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #111827;
         }
-
-        .login-container {
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-radius: 26px;
-            padding: 32px 28px 28px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        .login-card {
+            width: min(440px, 100%);
+            background: #fff;
+            border-radius: 32px;
+            padding: 36px 32px 34px;
+            box-shadow: 0 32px 70px rgba(134, 65, 4, 0.35);
         }
-
-        .logo-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
+        .brand-hero {
+            text-align: center;
         }
-
-        .logo-circle {
-            width: 46px;
-            height: 46px;
+        .brand-photo {
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            background: #fb923c;
+            margin: 0 auto 18px;
+            background: #fff4e5;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            font-size: 26px;
+            overflow: hidden;
+        }
+        .brand-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-title {
+            margin: 0;
+            font-size: 2rem;
             font-weight: 700;
+            color: #bf360c;
         }
-
-        .app-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1f2933;
+        .brand-subtitle {
+            margin: 4px 0 20px;
+            font-size: 0.95rem;
+            color: #6b4b35;
         }
-
-        .subtitle {
-            margin-top: 0;
-            font-size: 13px;
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-
         .field-label {
-            font-size: 13px;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: #6b7280;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
-
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 16px;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-            font-size: 20px;
-        }
-
         .text-input {
             width: 100%;
+            border-radius: 18px;
+            border: 1px solid #d9d6f2;
+            padding: 12px 16px;
+            font-size: 1rem;
             font-family: inherit;
-            border-radius: 999px;
-            padding: 10px 16px 10px 42px;
-            border: 1px solid #d1d5db;
-            font-size: 14px;
+            margin-bottom: 16px;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-
         .text-input:focus {
-            border-color: #fb923c;
-            box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.25);
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
         }
-
         .btn-login {
-            margin-top: 12px;
             width: 100%;
             border: none;
             border-radius: 999px;
-            padding: 12px 16px;
-            background: #2563eb;
-            color: #ffffff;
+            padding: 14px;
+            background: linear-gradient(90deg, #2563eb, #1d4ed8);
+            color: #fff;
+            font-size: 1rem;
             font-weight: 600;
-            font-size: 15px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.35);
+            box-shadow: 0 18px 28px rgba(29, 78, 216, 0.35);
         }
-
-        .btn-login:hover {
-            filter: brightness(1.05);
-        }
-
-        .error-box {
-            margin-top: 16px;
-            border-radius: 16px;
-            padding: 10px 12px;
+        .alert-error {
             background: #fef2f2;
-            color: #991b1b;
-            font-size: 13px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
+            color: #b91c1c;
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
         }
-
-        .error-icon {
-            font-size: 18px;
-        }
-
         .helper-text {
             margin-top: 14px;
-            font-size: 12px;
-            color: #9ca3af;
             text-align: center;
+            font-size: 0.85rem;
+            color: #a16207;
         }
     </style>
 </head>
 <body>
-
-<div class="login-container">
-    <div class="logo-row">
-        <div class="logo-circle">EQ</div>
-        <div class="app-name">ElectroQuito</div>
+<div class="login-card">
+    <div class="brand-hero">
+        <div class="brand-photo">
+            <img src="<c:url value='/assets/img/electroquito.jpg'/>" alt="ElectroQuito">
+        </div>
+        <p class="brand-title">ElectroQuito</p>
+        <p class="brand-subtitle">Comercializadora de electrodomésticos</p>
     </div>
-    <p class="subtitle">Inicie sesión para gestionar productos y facturas.</p>
 
-    <form method="post"
-          action="${pageContext.request.contextPath}/electroquito/login">
-
-        <div class="field-label">Usuario</div>
-        <div class="input-wrapper">
-            <span class="material-icons input-icon">person</span>
-            <!-- aquí ya no usamos fn:escapeXml -->
-            <input type="text"
-                   name="username"
-                   class="text-input"
-                   value="${username}"
-                   placeholder="Ej: MONSTER">
-        </div>
-
-        <div class="field-label">Contraseña</div>
-        <div class="input-wrapper">
-            <span class="material-icons input-icon">lock</span>
-            <input type="password"
-                   name="password"
-                   class="text-input"
-                   placeholder="••••••••">
-        </div>
-
-        <button type="submit" class="btn-login">
-            <span class="material-icons">login</span>
-            <span>Ingresar</span>
-        </button>
-
+    <form method="post" action="${pageContext.request.contextPath}/electroquito/login">
         <% if (request.getAttribute("error") != null) { %>
-        <div class="error-box">
-            <span class="material-icons error-icon">error_outline</span>
-            <span><%= request.getAttribute("error") %></span>
-        </div>
+        <div class="alert-error"><%= request.getAttribute("error") %></div>
         <% } %>
 
-        <p class="helper-text">
-            Usuario demo: <strong>MONSTER</strong> / <strong>MONSTER9</strong>
-        </p>
+        <label class="field-label" for="username">Usuario</label>
+        <input type="text"
+               id="username"
+               name="username"
+               class="text-input"
+               value="${username}"
+               placeholder="Ej: MONSTER">
+
+        <label class="field-label" for="password">Contraseña</label>
+        <input type="password"
+               id="password"
+               name="password"
+               class="text-input"
+               placeholder="••••••••">
+
+        <button type="submit" class="btn-login">Ingresar</button>
+        <p class="helper-text">Usuario demo: <strong>MONSTER</strong> / <strong>MONSTER9</strong></p>
     </form>
 </div>
-
 </body>
 </html>

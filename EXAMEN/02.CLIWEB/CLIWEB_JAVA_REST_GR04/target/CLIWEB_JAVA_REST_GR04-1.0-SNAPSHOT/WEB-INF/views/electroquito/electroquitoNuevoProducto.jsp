@@ -146,6 +146,29 @@
             color: #d1d5db;
         }
 
+        .eq-upload-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px dashed #f97316;
+            background: rgba(255,255,255,0.7);
+        }
+
+        .eq-upload-box span {
+            font-size: 13px;
+            color: var(--eq-text-muted);
+        }
+
+        .eq-upload-input {
+            flex: 0 0 auto;
+            border: none;
+            font-size: 13px;
+        }
+
         /* Botón guardar */
         .eq-actions {
             margin-top: 16px;
@@ -209,7 +232,9 @@
                     </div>
                 </c:if>
 
-                <form method="post" action="${pageContext.request.contextPath}/electroquito/productos/nuevo">
+                <form method="post"
+                      action="${pageContext.request.contextPath}/electroquito/productos/nuevo"
+                      enctype="multipart/form-data">
 
                     <!-- Código -->
                     <div class="eq-field-group">
@@ -253,6 +278,19 @@
                                    value="${precio != null ? precio : ''}"
                                    required>
                         </div>
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="eq-field-group">
+                        <div class="eq-field-label">Imagen del Producto *</div>
+                        <label class="eq-upload-box">
+                            <span>Selecciona una imagen (PNG o JPG)</span>
+                            <input type="file"
+                                   name="imagen"
+                                   accept="image/*"
+                                   class="eq-upload-input"
+                                   required>
+                        </label>
                     </div>
 
                     <!-- Botón -->

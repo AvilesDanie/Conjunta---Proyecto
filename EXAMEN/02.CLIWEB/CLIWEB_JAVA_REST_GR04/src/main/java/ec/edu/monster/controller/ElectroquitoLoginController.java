@@ -1,5 +1,6 @@
 package ec.edu.monster.controller;
 
+import ec.edu.monster.config.AppConfig;
 import ec.edu.monster.dto.UsuarioDTO;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -22,9 +23,7 @@ import java.nio.charset.StandardCharsets;
 @WebServlet("/electroquito/login")
 public class ElectroquitoLoginController extends HttpServlet {
 
-    // Base del servidor REST de Comercializadora
-    private static final String BASE_URL =
-            "http://localhost:8080/WS_JAVA_REST_Comercializadora/api";
+    private static final String BASE_URL = AppConfig.COMERCIALIZADORA_API_BASE;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

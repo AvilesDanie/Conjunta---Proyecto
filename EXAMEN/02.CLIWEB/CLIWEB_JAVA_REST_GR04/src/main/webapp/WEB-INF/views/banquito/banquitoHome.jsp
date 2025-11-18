@@ -1,4 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -51,8 +52,8 @@
         }
 
         .avatar-circle {
-            width: 44px;
-            height: 44px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: #fff;
             display: flex;
@@ -62,10 +63,10 @@
             overflow: hidden;
         }
 
-        .avatar-circle span {
-            font-weight: 700;
-            color: #0d5adf;
-            font-size: 22px;
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .top-text {
@@ -260,10 +261,12 @@
 
         .footer-logo {
             margin-top: 18px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            font-size: 13px;
-            color: #2b3f93;
+        }
+
+        .footer-logo img {
+            width: 120px;
+            height: auto;
+            opacity: 0.9;
         }
 
         @media (max-width: 768px) {
@@ -289,8 +292,7 @@
     <header class="top-bar">
         <div class="top-left">
             <div class="avatar-circle">
-                <!-- Puedes reemplazar la letra por una imagen <img> -->
-                <span>B</span>
+                <img src="<c:url value='/assets/img/monster.jpg'/>" alt="Usuario">
             </div>
             <div class="top-text">
                 <div class="top-text-title">BanQuito</div>
@@ -397,7 +399,7 @@
 
                     <!-- CRÉDITOS -->
                     <a class="module-card mod-creditos"
-                       href="<%= request.getContextPath() %>/banquito/creditos/evaluar">
+                       href="${pageContext.request.contextPath}/banquito/creditos">
                         <div class="module-top">
                             <div class="module-icon">&#x1F4B3;</div>
                             <div>
@@ -415,7 +417,7 @@
 
                     <!-- CUOTAS -->
                     <a class="module-card mod-cuotas"
-                       href="<%= request.getContextPath() %>/banquito/creditos/cuotas">
+                       href="${pageContext.request.contextPath}/banquito/creditos">
                         <div class="module-top">
                             <div class="module-icon">&#x1F4DD;</div>
                             <div>
@@ -434,7 +436,9 @@
 
                 <div class="footer">
                     © 2025 BanQuito &amp; ElectroQuito
-                    <div class="footer-logo">BANQUITO</div>
+                    <div class="footer-logo">
+                        <img src="<c:url value='/assets/img/banquito.jpg'/>" alt="BanQuito">
+                    </div>
                 </div>
 
             </div>
@@ -444,3 +448,4 @@
 </div>
 </body>
 </html>
+

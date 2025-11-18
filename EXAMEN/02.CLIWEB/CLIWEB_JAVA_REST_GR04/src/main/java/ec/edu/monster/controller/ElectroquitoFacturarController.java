@@ -1,5 +1,6 @@
 package ec.edu.monster.controller;
 
+import ec.edu.monster.config.AppConfig;
 import ec.edu.monster.dto.ElectrodomesticoDTO;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -25,16 +26,18 @@ import java.util.List;
 @WebServlet("/electroquito/facturacion/nueva")
 public class ElectroquitoFacturarController extends HttpServlet {
 
-    private static final String BASE_URL =
-            "http://localhost:8080/WS_JAVA_REST_Comercializadora/api";
+    private static final String BASE_URL = AppConfig.COMERCIALIZADORA_API_BASE;
+    private static final String BASE_HOST = AppConfig.COMERCIALIZADORA_HOST_BASE;
 
     // DTOs para el POST de factura (solo del lado cliente)
     public static class CrearFacturaRequest {
-        public String cedula;
-        public String nombreCompleto;
-        public Long electrodomesticoId;
+        public String cedulaCliente;
+        public String nombreCliente;
+        public Long idElectrodomestico;
         public int cantidad;
         public String formaPago;
+        public Integer plazoMeses;
+        public String numCuentaCredito;
     }
 
     public static class FacturaResponse {
@@ -62,6 +65,7 @@ public class ElectroquitoFacturarController extends HttpServlet {
         try {
             List<ElectrodomesticoDTO> productos = obtenerProductosDesdeAPI();
             request.setAttribute("productos", productos);
+            request.setAttribute("imagenBaseUrl", BASE_HOST);
 
             RequestDispatcher rd = request.getRequestDispatcher(
                     "/WEB-INF/views/electroquito/electroquitoFacturar.jsp");
@@ -72,6 +76,7 @@ public class ElectroquitoFacturarController extends HttpServlet {
             request.setAttribute("error",
                     "No se pudo cargar el catálogo de productos. Intente nuevamente.");
             request.setAttribute("productos", List.of());
+            request.setAttribute("imagenBaseUrl", BASE_HOST);
 
             RequestDispatcher rd = request.getRequestDispatcher(
                     "/WEB-INF/views/electroquito/electroquitoFacturar.jsp");
@@ -126,13 +131,13 @@ public class ElectroquitoFacturarController extends HttpServlet {
         }
 
         CrearFacturaRequest facturaReq = new CrearFacturaRequest();
-        facturaReq.cedula = cedula.trim();
-        facturaReq.nombreCompleto = nombreCompleto.trim();
-        facturaReq.electrodomesticoId = productoId;
+        facturaReq.cedulaCliente = cedula.trim();
+        facturaReq.nombreCliente = nombreCompleto.trim();
+        facturaReq.idElectrodomestico = productoId;
         facturaReq.cantidad = cantidad;
         facturaReq.formaPago = (formaPago == null || formaPago.isBlank())
                 ? "EFECTIVO"
-                : formaPago;
+                : formaPago.trim().toUpperCase();
 
         Jsonb jsonb = JsonbBuilder.create();
 

@@ -1,5 +1,6 @@
 package ec.edu.monster.controller;
 
+import ec.edu.monster.config.AppConfig;
 import ec.edu.monster.dto.CreditoEvaluacionRequestDTO;
 import ec.edu.monster.dto.CreditoEvaluacionResponseDTO;
 import jakarta.json.bind.Jsonb;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -23,8 +25,7 @@ import java.nio.charset.StandardCharsets;
 @WebServlet("/banquito/creditos/evaluar")
 public class BanquitoEvaluarCreditoController extends HttpServlet {
 
-    private static final String BASE_URL =
-            "http://localhost:8080/WS_JAVA_REST_BanQuito/api";
+    private static final String BASE_URL = AppConfig.BANQUITO_API_BASE;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,13 +55,13 @@ public class BanquitoEvaluarCreditoController extends HttpServlet {
         }
 
         String cedula       = request.getParameter("cedula");
-        String precioStr    = request.getParameter("precio");
+        String precioStr    = request.getParameter("precioProducto");
         String plazoStr     = request.getParameter("plazoMeses");
         String numeroCuenta = request.getParameter("numeroCuenta");
 
         // Volver a pintar los valores en el form si hay error
         request.setAttribute("cedula", cedula);
-        request.setAttribute("precio", precioStr);
+        request.setAttribute("precioProducto", precioStr);
         request.setAttribute("plazoMeses", plazoStr);
         request.setAttribute("numeroCuenta", numeroCuenta);
 
@@ -93,10 +94,10 @@ public class BanquitoEvaluarCreditoController extends HttpServlet {
 
         // Armar DTO para la API
         CreditoEvaluacionRequestDTO dto = new CreditoEvaluacionRequestDTO();
-        dto.cedulaCliente = cedula;
-        dto.precioProducto = precio;
+        dto.cedula = cedula;
+        dto.precioProducto = BigDecimal.valueOf(precio);
         dto.plazoMeses = plazoMeses;
-        dto.numeroCuentaCredito = numeroCuenta;
+        dto.numCuentaCredito = numeroCuenta;
 
         Jsonb jsonb = JsonbBuilder.create();
         String jsonBody = jsonb.toJson(dto);

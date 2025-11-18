@@ -24,7 +24,7 @@ public class ElectroquitoService {
      */
     public boolean validarLogin(UsuarioLogin credenciales) throws IOException {
 
-        String endpoint = AppConfig.ELECTRO_BASE_URL + AppConfig.ELECTRO_LOGIN_PATH;
+        String endpoint = AppConfig.COMERCIALIZADORA_API_BASE + "/usuarios/login";
 
         URL url = new URL(endpoint);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

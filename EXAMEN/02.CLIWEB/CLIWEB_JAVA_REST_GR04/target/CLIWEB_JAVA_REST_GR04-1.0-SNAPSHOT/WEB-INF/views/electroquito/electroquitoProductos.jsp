@@ -1,4 +1,4 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -6,16 +6,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ElectroQuito – Productos</title>
+    <title>ElectroQuito â€“ Productos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Fuente similar a la del móvil -->
+    <!-- Fuente similar a la del mÃ³vil -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet">
 
-    <style>
+        <style>
         :root {
             --eq-orange: #f97316;
             --eq-orange-dark: #ea580c;
@@ -45,7 +45,6 @@
             flex-direction: column;
         }
 
-        /* Barra superior – similar a la app */
         .eq-topbar {
             display: flex;
             align-items: center;
@@ -107,51 +106,63 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
         }
 
-        /* Contenido principal */
         .eq-main {
             flex: 1;
             display: flex;
             justify-content: center;
-            padding: 12px 16px 64px;
+            padding: 32px 36px 80px;
         }
 
         .eq-main-inner {
             width: 100%;
-            max-width: 540px;
+            max-width: 1100px;
         }
 
         .eq-surface-card {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.96);
             border-radius: var(--eq-card-radius);
-            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.22);
-            padding: 22px 20px 26px;
+            box-shadow: 0 28px 60px rgba(15, 23, 42, 0.25);
+            padding: 36px 42px;
         }
 
         .eq-section-title {
-            font-size: 24px;
+            font-size: clamp(1.9rem, 3vw, 2.4rem);
             font-weight: 700;
-            margin: 0 0 4px;
+            margin: 0 0 6px;
         }
 
         .eq-section-subtitle {
-            margin: 0 0 18px;
-            font-size: 13px;
+            margin: 0 0 22px;
+            font-size: 1rem;
             color: #6b7280;
         }
 
-        /* Buscador */
+        .eq-products-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .eq-meta-count {
+            font-weight: 600;
+            color: var(--eq-orange-dark);
+        }
+
         .eq-search-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 16px;
         }
 
         .eq-search-input {
             flex: 1;
-            border-radius: 999px;
+            border-radius: 18px;
             border: 1px solid #e5e7eb;
-            padding: 10px 14px;
-            font-size: 13px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
             outline: none;
         }
 
@@ -161,20 +172,21 @@
         }
 
         .eq-search-btn {
-            border-radius: 999px;
+            border-radius: 14px;
             border: none;
             background: var(--eq-orange-dark);
             color: #ffffff;
-            padding: 0 18px;
-            font-size: 13px;
+            padding: 0 22px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
+            box-shadow: 0 12px 20px rgba(234, 88, 12, 0.25);
         }
 
         .eq-error-message {
             margin: 0 0 12px;
-            font-size: 13px;
+            font-size: 0.9rem;
             padding: 10px 12px;
             border-radius: 14px;
             background: #fee2e2;
@@ -190,100 +202,103 @@
 
         .eq-empty {
             margin: 8px 0 0;
-            font-size: 13px;
+            font-size: 0.95rem;
             color: #6b7280;
         }
 
-        /* Lista de productos */
         .eq-products-list {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
         }
 
         .eq-product-card {
             display: flex;
             align-items: center;
-            padding: 14px 16px;
-            border-radius: 22px;
-            background: linear-gradient(135deg, #fff7ed, #ffffff);
-            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+            gap: 18px;
+            padding: 18px 20px;
+            border-radius: 26px;
+            background: linear-gradient(130deg, #ffffff, #fff6eb 65%, rgba(255,255,255,0.95));
+            box-shadow: 0 22px 40px rgba(15, 23, 42, 0.18);
         }
 
-        .eq-product-icon {
-            flex: 0 0 56px;
-            height: 56px;
-            border-radius: 999px;
-            margin-right: 14px;
+        .eq-product-thumb {
+            flex: 0 0 72px;
+            height: 72px;
+            border-radius: 24px;
             background: radial-gradient(circle at 30% 20%, #fed7aa, #ffedd5);
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .eq-product-icon span {
+        .eq-product-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .eq-thumb-placeholder {
             font-size: 26px;
             color: var(--eq-orange-dark);
         }
 
-        .eq-product-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .eq-product-name {
+        .eq-product-info h2 {
             margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--eq-text-main);
+            font-size: 1.05rem;
         }
 
         .eq-product-code {
-            margin: 4px 0 0;
-            font-size: 13px;
-            color: var(--eq-text-muted);
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 2px;
         }
 
         .eq-product-price {
-            margin-left: 10px;
-            font-size: 18px;
+            margin-left: auto;
             font-weight: 700;
             color: var(--eq-green);
-            white-space: nowrap;
+            font-size: 1.15rem;
         }
 
-        /* FAB – botón flotante "+" similar al móvil */
         .eq-fab {
             position: fixed;
             right: 26px;
-            bottom: 26px;
-            width: 64px;
-            height: 64px;
+            bottom: 24px;
+            width: 56px;
+            height: 56px;
             border-radius: 999px;
-            background: var(--eq-orange);
+            background: linear-gradient(135deg, var(--eq-orange), var(--eq-orange-dark));
             color: #ffffff;
-            font-size: 32px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            box-shadow: 0 18px 40px rgba(248, 113, 22, 0.75);
-            border: none;
+            font-size: 26px;
+            box-shadow: 0 20px 35px rgba(249, 115, 22, 0.35);
         }
 
-        .eq-fab:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 22px 50px rgba(248, 113, 22, 0.9);
+        @media (max-width: 900px) {
+            .eq-main {
+                padding: 22px 18px 64px;
+            }
+            .eq-surface-card {
+                padding: 26px;
+            }
+            .eq-products-list {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* Responsive */
         @media (max-width: 640px) {
             .eq-topbar {
                 padding-inline: 18px;
             }
             .eq-main {
-                padding-inline: 10px;
+                padding: 20px 14px 60px;
             }
         }
 
@@ -297,8 +312,8 @@
         <div class="eq-topbar-left">
             <a class="eq-back-btn"
                href="${pageContext.request.contextPath}/electroquito/home"
-               title="Atrás">
-                ←
+               title="AtrÃ¡s">
+                â†
             </a>
             <div class="eq-app-title">ElectroQuito</div>
         </div>
@@ -313,14 +328,14 @@
                         </strong>
                     </c:when>
                     <c:otherwise>
-                        Sesión
+                        SesiÃ³n
                     </c:otherwise>
                 </c:choose>
             </div>
             <a class="eq-logout-btn"
                href="${pageContext.request.contextPath}/electroquito/logout"
                title="Salir">
-                ⇨
+                â‡¨
             </a>
         </div>
     </header>
@@ -332,23 +347,31 @@
 
                 <h1 class="eq-section-title">Productos</h1>
                 <p class="eq-section-subtitle">
-                    Consulta y administra el catálogo de electrodomésticos.
+                    Consulta y administra el catÃ¡logo de electrodomÃ©sticos.
                 </p>
+
+                <c:set var="totalProductos" value="${fn:length(productos)}"/>
+                <div class="eq-products-meta">
+                    <span class="eq-meta-label">Catálogo general</span>
+                    <span class="eq-meta-count">
+                        <strong><c:out value="${totalProductos}"/></strong> disponibles
+                    </span>
+                </div>
 
                 <!-- Buscador -->
                 <form method="get" class="eq-search-row">
                     <input type="text"
                            name="q"
                            class="eq-search-input"
-                           placeholder="Buscar por nombre o código"
+                           placeholder="Buscar por nombre o cÃ³digo"
                            value="${fn:escapeXml(filtro)}">
                     <button type="submit" class="eq-search-btn">Buscar</button>
                 </form>
 
-                <!-- Mensaje de error si algo falló -->
+                <!-- Mensaje de error si algo fallÃ³ -->
                 <c:if test="${not empty error}">
                     <div class="eq-error-message">
-                        <span class="eq-error-icon">⚠</span>
+                        <span class="eq-error-icon">âš </span>
                         <span><c:out value="${error}"/></span>
                     </div>
                 </c:if>
@@ -364,16 +387,34 @@
                         <div class="eq-products-list">
                             <fmt:setLocale value="es_EC"/>
                             <c:forEach var="p" items="${productos}">
+                                <c:choose>
+                                    <c:when test="${empty p.imagenUrl}">
+                                        <c:set var="imagenSrc" value=""/>
+                                    </c:when>
+                                    <c:when test="${fn:startsWith(p.imagenUrl, 'http')}">
+                                        <c:set var="imagenSrc" value="${p.imagenUrl}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="imagenSrc" value="${imagenBaseUrl.concat(p.imagenUrl)}"/>
+                                    </c:otherwise>
+                                </c:choose>
                                 <article class="eq-product-card">
-                                    <div class="eq-product-icon">
-                                        <span>🖥</span>
+                                    <div class="eq-product-thumb">
+                                        <c:choose>
+                                            <c:when test="${not empty imagenSrc}">
+                                                <img src="${imagenSrc}" alt="${p.nombre}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="eq-thumb-placeholder">&#128722;</span>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <div class="eq-product-info">
                                         <h2 class="eq-product-name">
                                             <c:out value="${p.nombre}"/>
                                         </h2>
                                         <div class="eq-product-code">
-                                            Código:
+                                            CÃ³digo:
                                             <c:out value="${p.codigo}"/>
                                         </div>
                                     </div>
@@ -404,3 +445,5 @@
 </div>
 </body>
 </html>
+
+

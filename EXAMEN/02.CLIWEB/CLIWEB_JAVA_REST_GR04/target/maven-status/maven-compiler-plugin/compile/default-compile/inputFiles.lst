@@ -1,7 +1,11 @@
+C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\ElectroquitoFacturasController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\dto\CreditoEvaluacionRequestDTO.java
+C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\dto\NuevaCuentaRequestDTO.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\service\ElectroquitoService.java
+C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoCreditosController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoClientesController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\dto\ElectrodomesticoDTO.java
+C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\dto\MovimientoCrearRequestDTO.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoCuentasClienteController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoMovimientosController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoNuevoClienteController.java
@@ -24,6 +28,7 @@ C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\E
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoCuentasController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\BanquitoHomeController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\dto\ClienteDTO.java
+C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\dto\FacturaDTO.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\ElectroQuitoLogoutController.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\model\UsuarioLogin.java
 C:\Users\Marcelo Echeverría Y\Desktop\ARQUITECTURA\EXAMEN\Conjunta---Proyecto\EXAMEN\02.CLIWEB\CLIWEB_JAVA_REST_GR04\src\main\java\ec\edu\monster\controller\ElectroQuitoHomeController.java

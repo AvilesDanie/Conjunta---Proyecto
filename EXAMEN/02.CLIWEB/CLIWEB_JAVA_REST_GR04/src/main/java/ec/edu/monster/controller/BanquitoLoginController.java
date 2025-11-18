@@ -1,5 +1,7 @@
 package ec.edu.monster.controller;
 
+import ec.edu.monster.config.AppConfig;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 public class BanquitoLoginController extends HttpServlet {
 
     private static final String LOGIN_API_URL =
-            "http://localhost:8080/WS_JAVA_REST_BanQuito/api/usuarios/login";
+            AppConfig.BANQUITO_API_BASE + "/usuarios/login";
 
     @Override
     protected void doGet(HttpServletRequest request,
