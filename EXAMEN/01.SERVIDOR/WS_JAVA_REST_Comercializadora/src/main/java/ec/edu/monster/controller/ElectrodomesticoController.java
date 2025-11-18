@@ -30,14 +30,15 @@ public class ElectrodomesticoController {
     private static final String RELATIVE_IMG_DIR = "imagenes/electrodomesticos";
 
     // Carpeta física en el servidor donde realmente se guardan los archivos
-    private static final java.nio.file.Path UPLOAD_ROOT =
-            Paths.get(System.getProperty("user.dir"), "uploads", RELATIVE_IMG_DIR);
+    private static final java.nio.file.Path UPLOAD_ROOT
+            = Paths.get(System.getProperty("user.dir"), "uploads", RELATIVE_IMG_DIR);
 
     // Ajusta esto si tu @ApplicationPath es distinto
     // Ej: @ApplicationPath("/api")
     private static final String API_BASE_PATH = "/api";
 
     public static class ElectroResponseDTO {
+
         public Long id;
         public String codigo;
         public String nombre;
@@ -47,6 +48,7 @@ public class ElectrodomesticoController {
 
     // DTO solo para describir el multipart en Swagger
     public static class ElectroMultipartRequest {
+
         @Schema(type = "string", description = "Código del electrodoméstico")
         public String codigo;
 
@@ -82,7 +84,7 @@ public class ElectrodomesticoController {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             List<Electrodomestico> lista = em
-                    .createQuery("SELECT e FROM Electrodomestico e", Electrodomestico.class)
+                    .createQuery("SELECT e FROM Electrodomestico e WHERE e.activo = true", Electrodomestico.class)
                     .getResultList();
             return lista.stream().map(this::toDTO).collect(Collectors.toList());
         } finally {
@@ -168,8 +170,8 @@ public class ElectrodomesticoController {
             em.getTransaction().begin();
 
             Long count = em.createQuery(
-                            "SELECT COUNT(e) FROM Electrodomestico e WHERE e.codigo = :cod",
-                            Long.class)
+                    "SELECT COUNT(e) FROM Electrodomestico e WHERE e.codigo = :cod",
+                    Long.class)
                     .setParameter("cod", codigo)
                     .getSingleResult();
             if (count > 0) {
@@ -181,7 +183,6 @@ public class ElectrodomesticoController {
             }
 
             // === Guardar imagen en carpeta física del servidor ===
-
             if (!Files.exists(UPLOAD_ROOT)) {
                 Files.createDirectories(UPLOAD_ROOT);
             }
@@ -215,7 +216,9 @@ public class ElectrodomesticoController {
             return Response.status(Response.Status.CREATED).entity(toDTO(e)).build();
         } catch (Exception ex) {
             ex.printStackTrace();  // mira el log del servidor para ver exactamente qué pasa
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("{\"error\":\"Error interno al crear el electrodoméstico\"}")
                     .type(MediaType.APPLICATION_JSON)
@@ -224,4 +227,166 @@ public class ElectrodomesticoController {
             em.close();
         }
     }
+
+    @DELETE
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarLogico(@PathParam("id") Long id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            Electrodomestico e = em.find(Electrodomestico.class, id);
+            if (e == null || Boolean.FALSE.equals(e.getActivo())) {
+                em.getTransaction().rollback();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Electrodoméstico no encontrado\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            e.setActivo(false);
+            em.merge(e);
+            em.getTransaction().commit();
+
+            return Response.noContent().build(); // 204 sin body
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\":\"Error interno al eliminar el electrodoméstico\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } finally {
+            em.close();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+            summary = "Actualizar electrodoméstico",
+            description = "Actualiza datos de un electrodoméstico y opcionalmente su imagen"
+    )
+    @RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = MediaType.MULTIPART_FORM_DATA,
+                    schema = @Schema(implementation = ElectroMultipartRequest.class)
+            )
+    )
+    public Response actualizar(
+            @PathParam("id") Long id,
+            @FormDataParam("codigo") String codigo,
+            @FormDataParam("nombre") String nombre,
+            @FormDataParam("precioVenta") BigDecimal precioVenta,
+            @FormDataParam("imagen") java.io.InputStream imagenStream,
+            @FormDataParam("imagen") FormDataContentDisposition imagenDetail
+    ) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            Electrodomestico e = em.find(Electrodomestico.class, id);
+            if (e == null || Boolean.FALSE.equals(e.getActivo())) {
+                em.getTransaction().rollback();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Electrodoméstico no encontrado\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            // Validaciones básicas (puedes ajustarlas a tu gusto)
+            if (codigo == null || nombre == null || precioVenta == null) {
+                em.getTransaction().rollback();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\":\"codigo, nombre y precioVenta son obligatorios\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            if (precioVenta.compareTo(BigDecimal.ZERO) <= 0) {
+                em.getTransaction().rollback();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\":\"precioVenta debe ser mayor a 0\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            // Validar que el código sea único (excepto para el mismo registro)
+            Long count = em.createQuery(
+                    "SELECT COUNT(e) FROM Electrodomestico e WHERE e.codigo = :cod AND e.id <> :id",
+                    Long.class)
+                    .setParameter("cod", codigo)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            if (count > 0) {
+                em.getTransaction().rollback();
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("{\"error\":\"Ya existe un electrodoméstico con ese código\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            // Actualizar campos simples
+            e.setCodigo(codigo);
+            e.setNombre(nombre);
+            e.setPrecioVenta(precioVenta);
+
+            // Manejar imagen nueva (opcional)
+            if (imagenStream != null && imagenDetail != null && imagenDetail.getFileName() != null) {
+
+                if (!Files.exists(UPLOAD_ROOT)) {
+                    Files.createDirectories(UPLOAD_ROOT);
+                }
+
+                String nombreOriginal = imagenDetail.getFileName();
+                String extension = "";
+                int idx = nombreOriginal.lastIndexOf('.');
+                if (idx >= 0) {
+                    extension = nombreOriginal.substring(idx);
+                }
+
+                String nombreUnico = UUID.randomUUID().toString() + extension;
+                java.nio.file.Path destino = UPLOAD_ROOT.resolve(nombreUnico);
+
+                Files.copy(imagenStream, destino);
+
+                // Opcional: eliminar la imagen anterior del disco
+                if (e.getImagenUrl() != null) {
+                    java.nio.file.Path anterior = UPLOAD_ROOT.resolve(e.getImagenUrl());
+                    try {
+                        Files.deleteIfExists(anterior);
+                    } catch (Exception exDel) {
+                        exDel.printStackTrace();
+                        // no es crítico, solo logueamos
+                    }
+                }
+
+                // Guardar solo el nombre del archivo en BD
+                e.setImagenUrl(nombreUnico);
+            }
+
+            em.merge(e);
+            em.getTransaction().commit();
+
+            return Response.ok(toDTO(e)).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\":\"Error interno al actualizar el electrodoméstico\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } finally {
+            em.close();
+        }
+    }
+
 }

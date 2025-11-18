@@ -32,7 +32,8 @@ public class Electrodomestico {
     @Column(name = "imagen_url", length = 255)
     private String imagenUrl;
 
-    
+    @Column(nullable = false)
+    private Boolean activo = true;
 
     // getters & setters
     public Long getId() { return id; }
@@ -49,4 +50,7 @@ public class Electrodomestico {
     
     public String getImagenUrl() { return imagenUrl; }
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+    
+    public Boolean getActivo() { return activo; }
+    public void setActivo(Boolean activo) { this.activo = activo; }
 }
