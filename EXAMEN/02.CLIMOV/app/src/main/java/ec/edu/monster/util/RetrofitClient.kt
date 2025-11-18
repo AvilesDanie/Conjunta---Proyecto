@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
     
     // URLs de los servidores (ajustar según tu configuración)
-    private const val BANQUITO_BASE_URL = "http://192.168.100.17:8080/WS_JAVA_REST_BanQuito/api/"
-    const val BASE_URL_COMERCIALIZADORA = "http://192.168.100.17:8080/WS_JAVA_REST_Comercializadora"
+    private const val BANQUITO_BASE_URL = "http://10.40.18.255:8080/WS_JAVA_REST_BanQuito/api/"
+    const val BASE_URL_COMERCIALIZADORA = "http://10.40.18.255:8080/WS_JAVA_REST_Comercializadora"
     private const val COMERCIALIZADORA_BASE_URL = "$BASE_URL_COMERCIALIZADORA/api/"
     
     // Logging interceptor para debug
