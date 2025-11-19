@@ -30,7 +30,9 @@ public class TodasCuentasFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Todas las Cuentas - BanQuito");
-        setSize(950, 650);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         

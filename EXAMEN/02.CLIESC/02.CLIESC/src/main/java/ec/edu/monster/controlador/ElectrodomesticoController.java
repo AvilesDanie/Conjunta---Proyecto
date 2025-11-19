@@ -1,6 +1,6 @@
 package ec.edu.monster.controlador;
 
-import ec.edu.monster.modelo.ComercializadoraModels.*;
+import ec.edu.monster.modelo.ComercializadoraDTOs.*;
 import ec.edu.monster.util.ApiClient;
 import okhttp3.*;
 
@@ -57,14 +57,28 @@ public class ElectrodomesticoController {
     }
     
     /**
-     * Actualizar electrodoméstico
+     * Actualizar electrodoméstico por ID
+     */
+    public ElectrodomesticoResponse actualizarElectrodomestico(Long id, ElectrodomesticoRequest request) throws IOException {
+        return apiClient.put("electrodomesticos/" + id, request, ElectrodomesticoResponse.class);
+    }
+    
+    /**
+     * Actualizar electrodoméstico por código (compatibilidad)
      */
     public ElectrodomesticoResponse actualizarElectrodomestico(String codigo, ElectrodomesticoRequest request) throws IOException {
         return apiClient.put("electrodomesticos/" + codigo, request, ElectrodomesticoResponse.class);
     }
     
     /**
-     * Eliminar electrodoméstico
+     * Eliminar electrodoméstico por ID
+     */
+    public void eliminarElectrodomestico(Long id) throws IOException {
+        apiClient.delete("electrodomesticos/" + id);
+    }
+    
+    /**
+     * Eliminar electrodoméstico por código (compatibilidad)
      */
     public void eliminarElectrodomestico(String codigo) throws IOException {
         apiClient.delete("electrodomesticos/" + codigo);
@@ -105,7 +119,43 @@ public class ElectrodomesticoController {
     }
     
     /**
-     * Actualizar electrodoméstico con imagen usando multipart/form-data
+     * Actualizar electrodoméstico con imagen usando multipart/form-data (por ID)
+     */
+    public ElectrodomesticoResponse actualizarElectrodomesticoConImagen(
+            Long id, String codigo, String nombre, double precioVenta, File imagenFile) throws IOException {
+        
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("codigo", codigo)
+                .addFormDataPart("nombre", nombre)
+                .addFormDataPart("precioVenta", String.valueOf(precioVenta));
+        
+        // Solo añadir imagen si se proporciona
+        if (imagenFile != null) {
+            builder.addFormDataPart("imagen", imagenFile.getName(),
+                    RequestBody.create(imagenFile, MediaType.parse("image/*")));
+        }
+        
+        RequestBody requestBody = builder.build();
+        
+        Request request = new Request.Builder()
+                .url(ApiClient.BASE_URL_COMERCIALIZADORA + "electrodomesticos/" + id)
+                .put(requestBody)
+                .build();
+        
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                String errorBody = response.body() != null ? response.body().string() : "Sin respuesta";
+                throw new IOException("Error al actualizar electrodoméstico. Código: " + response.code() + " - " + errorBody);
+            }
+            
+            String responseBody = response.body().string();
+            return apiClient.parseJson(responseBody, ElectrodomesticoResponse.class);
+        }
+    }
+    
+    /**
+     * Actualizar electrodoméstico con imagen usando multipart/form-data (por código, compatibilidad)
      */
     public ElectrodomesticoResponse actualizarElectrodomesticoConImagen(
             String codigo, String nombre, double precioVenta, File imagenFile) throws IOException {

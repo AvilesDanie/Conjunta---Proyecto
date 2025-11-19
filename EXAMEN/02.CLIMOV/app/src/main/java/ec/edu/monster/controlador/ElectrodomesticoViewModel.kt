@@ -78,4 +78,55 @@ class ElectrodomesticoViewModel : ViewModel() {
             Result.failure(e)
         }
     }
+    
+    suspend fun actualizarElectrodomestico(
+        id: Long,
+        codigo: String,
+        nombre: String,
+        precioVenta: BigDecimal,
+        imagenFile: File?
+    ): Result<ElectrodomesticoResponse> {
+        return try {
+            val codigoBody = codigo.toRequestBody("text/plain".toMediaTypeOrNull())
+            val nombreBody = nombre.toRequestBody("text/plain".toMediaTypeOrNull())
+            val precioBody = precioVenta.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            
+            val imagenPart = imagenFile?.let {
+                val requestFile = it.asRequestBody("image/*".toMediaTypeOrNull())
+                MultipartBody.Part.createFormData("imagen", it.name, requestFile)
+            }
+            
+            val response = RetrofitClient.comercializadoraApi.actualizarElectrodomestico(
+                id,
+                codigoBody,
+                nombreBody,
+                precioBody,
+                imagenPart
+            )
+            
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Result.failure(Exception(errorBody ?: "Error al actualizar electrodoméstico"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun eliminarElectrodomestico(id: Long): Result<Unit> {
+        return try {
+            val response = RetrofitClient.comercializadoraApi.eliminarElectrodomestico(id)
+            
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Result.failure(Exception(errorBody ?: "Error al eliminar electrodoméstico"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

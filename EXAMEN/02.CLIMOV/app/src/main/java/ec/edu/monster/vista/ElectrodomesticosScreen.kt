@@ -27,6 +27,7 @@ import ec.edu.monster.controlador.ElectrodomesticoState
 import ec.edu.monster.controlador.ElectrodomesticoViewModel
 import ec.edu.monster.modelo.ElectrodomesticoResponse
 import ec.edu.monster.util.RetrofitClient
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +115,13 @@ fun ElectrodomesticosScreen(
                             items(state.electrodomesticos) { electro ->
                                 ElectrodomesticoCard(
                                     electrodomestico = electro,
-                                    onClick = { /* Detalle si se requiere */ }
+                                    onEdit = { 
+                                        navController.navigate(Screen.EditarElectrodomestico.createRoute(electro.id))
+                                    },
+                                    onDelete = {
+                                        // Implementar diálogo de confirmación
+                                    },
+                                    viewModel = viewModel
                                 )
                             }
                         }
@@ -152,8 +159,14 @@ fun ElectrodomesticosScreen(
 @Composable
 fun ElectrodomesticoCard(
     electrodomestico: ElectrodomesticoResponse,
-    onClick: () -> Unit
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    viewModel: ElectrodomesticoViewModel
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var isDeleting by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -183,7 +196,6 @@ fun ElectrodomesticoCard(
                 contentAlignment = Alignment.Center
             ) {
                 if (!electrodomestico.imagenUrl.isNullOrBlank()) {
-                    // Construir URL completa para la imagen
                     val imageUrl = "${RetrofitClient.BASE_URL_COMERCIALIZADORA}${electrodomestico.imagenUrl}"
                     Image(
                         painter = rememberAsyncImagePainter(imageUrl),
@@ -224,6 +236,83 @@ fun ElectrodomesticoCard(
                     color = Color(0xFF388E3C)
                 )
             }
+            
+            // Botones de acción
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Botón Editar
+                IconButton(
+                    onClick = onEdit,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = "Editar",
+                        tint = Color(0xFF1976D2)
+                    )
+                }
+                
+                // Botón Eliminar
+                IconButton(
+                    onClick = { showDeleteDialog = true },
+                    modifier = Modifier.size(40.dp),
+                    enabled = !isDeleting
+                ) {
+                    if (isDeleting) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = Color(0xFFD32F2F),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "Eliminar",
+                            tint = Color(0xFFD32F2F)
+                        )
+                    }
+                }
+            }
         }
+    }
+    
+    // Diálogo de confirmación para eliminar
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Confirmar eliminación") },
+            text = { 
+                Text("¿Está seguro que desea eliminar el producto '${electrodomestico.nombre}'? Esta acción no se puede deshacer.")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        isDeleting = true
+                        showDeleteDialog = false
+                        scope.launch {
+                            val result = viewModel.eliminarElectrodomestico(electrodomestico.id)
+                            result.fold(
+                                onSuccess = {
+                                    viewModel.cargarElectrodomesticos()
+                                },
+                                onFailure = { error ->
+                                    // Mostrar error
+                                }
+                            )
+                            isDeleting = false
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(Color(0xFFD32F2F))
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

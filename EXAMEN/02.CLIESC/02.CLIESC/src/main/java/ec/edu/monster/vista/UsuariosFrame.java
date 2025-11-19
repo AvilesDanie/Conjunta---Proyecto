@@ -30,7 +30,9 @@ public class UsuariosFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Gestión de Usuarios - BanQuito");
-        setSize(950, 650);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -230,7 +232,7 @@ public class UsuariosFrame extends JFrame {
                 JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 panel.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 248, 250));
                 
-                JButton editarBtn = new JButton("✏️ Editar");
+                JButton editarBtn = new JButton("Editar");
                 editarBtn.setFont(new Font("Segoe UI", Font.BOLD, 11));
                 editarBtn.setForeground(ColorPalette.AZUL_PRIMARIO_MEDIO);
                 editarBtn.setBackground(Color.WHITE);
@@ -241,7 +243,7 @@ public class UsuariosFrame extends JFrame {
                 editarBtn.setFocusPainted(false);
                 editarBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 
-                JButton eliminarBtn = new JButton("🗑️ Eliminar");
+                JButton eliminarBtn = new JButton("Eliminar");
                 eliminarBtn.setFont(new Font("Segoe UI", Font.BOLD, 11));
                 eliminarBtn.setForeground(ColorPalette.ROJO_ERROR);
                 eliminarBtn.setBackground(Color.WHITE);

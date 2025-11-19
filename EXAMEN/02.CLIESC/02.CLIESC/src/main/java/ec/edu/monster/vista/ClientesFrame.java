@@ -32,7 +32,9 @@ public class ClientesFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Lista de Clientes - BanQuito");
-        setSize(1000, 650);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -301,6 +303,8 @@ public class ClientesFrame extends JFrame {
                     for (ClienteResponse cliente : clientes) {
                         todosClientes.add(cliente);
                     }
+                    // Ordenar de forma descendente por cédula (más recientes primero)
+                    todosClientes.sort((c1, c2) -> c2.cedula.compareTo(c1.cedula));
                     actualizarTabla(todosClientes);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(ClientesFrame.this,

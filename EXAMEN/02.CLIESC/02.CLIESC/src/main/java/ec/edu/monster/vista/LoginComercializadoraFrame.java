@@ -1,7 +1,7 @@
 package ec.edu.monster.vista;
 
 import ec.edu.monster.controlador.LoginComercializadoraController;
-import ec.edu.monster.modelo.ComercializadoraModels.UsuarioResponse;
+import ec.edu.monster.modelo.ComercializadoraDTOs.UsuarioResponse;
 import ec.edu.monster.util.ColorPalette;
 import ec.edu.monster.util.SessionManager;
 import ec.edu.monster.util.ToastNotification;
@@ -27,9 +27,10 @@ public class LoginComercializadoraFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Login - ElectroQuito");
-        setSize(600, 750);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         // Panel principal con gradiente naranja
         JPanel mainPanel = new JPanel() {
@@ -112,7 +113,22 @@ public class LoginComercializadoraFrame extends JFrame {
         containerPanel.add(Box.createVerticalStrut(30), gbc);
         
         // Logo sin fondo circular
-        JPanel logoPanel = new JPanel();
+        JPanel logoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Dibujar el círculo blanco centrado
+                int diameter = Math.min(getWidth(), getHeight()) - 20;
+                int x = (getWidth() - diameter) / 2;
+                int y = (getHeight() - diameter) / 2;
+                g2.setColor(Color.WHITE);
+                g2.fillOval(x, y, diameter, diameter);
+                g2.dispose();
+            }
+        };
         logoPanel.setOpaque(false);
         logoPanel.setPreferredSize(new Dimension(180, 180));
         logoPanel.setMaximumSize(new Dimension(180, 180));
@@ -124,7 +140,7 @@ public class LoginComercializadoraFrame extends JFrame {
             java.net.URL imageURL = getClass().getClassLoader().getResource("images/logoPerfilElectroQuito.png");
             if (imageURL != null) {
                 ImageIcon icon = new ImageIcon(imageURL);
-                Image img = icon.getImage().getScaledInstance(160, 160, Image.SCALE_SMOOTH);
+                Image img = icon.getImage().getScaledInstance(140, 140, Image.SCALE_SMOOTH);
                 logoLabel.setIcon(new ImageIcon(img));
                 logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 logoLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -145,7 +161,7 @@ public class LoginComercializadoraFrame extends JFrame {
             logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         }
         logoPanel.add(logoLabel);
-        
+
         gbc.gridy++;
         containerPanel.add(logoPanel, gbc);
         

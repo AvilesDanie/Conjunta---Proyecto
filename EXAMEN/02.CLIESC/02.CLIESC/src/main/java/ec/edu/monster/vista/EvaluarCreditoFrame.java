@@ -29,6 +29,10 @@ public class EvaluarCreditoFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
+        // Configurar la ventana para pantalla completa
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
+        
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(ColorPalette.FONDO_CLARO);
         
@@ -149,7 +153,7 @@ public class EvaluarCreditoFrame extends JFrame {
         formPanel.add(Box.createVerticalStrut(35));
         
         // Botón Evaluar con estilo moderno
-        evaluarBtn = new JButton("💳 EVALUAR CRÉDITO");
+        evaluarBtn = new JButton("EVALUAR CRÉDITO");
         evaluarBtn.putClientProperty("FlatLaf.style", "arc: 12; borderWidth: 0; font: bold +2");
         evaluarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         evaluarBtn.setForeground(Color.WHITE);
@@ -282,7 +286,7 @@ public class EvaluarCreditoFrame extends JFrame {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
                     evaluarBtn.setEnabled(true);
-                    evaluarBtn.setText("💳 EVALUAR CRÉDITO");
+                    evaluarBtn.setText("EVALUAR CRÉDITO");
                 }
             }
         };
@@ -325,7 +329,7 @@ public class EvaluarCreditoFrame extends JFrame {
             JOptionPane.showMessageDialog(this, mensaje, "Crédito No Aprobado", JOptionPane.WARNING_MESSAGE);
             
             evaluarBtn.setEnabled(true);
-            evaluarBtn.setText("💳 EVALUAR CRÉDITO");
+            evaluarBtn.setText("EVALUAR CRÉDITO");
         }
     }
     
@@ -380,7 +384,7 @@ public class EvaluarCreditoFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE
                     );
                     evaluarBtn.setEnabled(true);
-                    evaluarBtn.setText("💳 EVALUAR CRÉDITO");
+                    evaluarBtn.setText("EVALUAR CRÉDITO");
                 }
             }
         };

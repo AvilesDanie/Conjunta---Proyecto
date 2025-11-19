@@ -1,6 +1,6 @@
 package ec.edu.monster.controlador;
 
-import ec.edu.monster.modelo.ComercializadoraModels.*;
+import ec.edu.monster.modelo.ComercializadoraDTOs.*;
 import ec.edu.monster.util.ApiClient;
 
 import java.io.IOException;

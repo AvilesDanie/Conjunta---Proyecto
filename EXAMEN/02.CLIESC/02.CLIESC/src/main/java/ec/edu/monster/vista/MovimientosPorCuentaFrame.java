@@ -30,7 +30,9 @@ public class MovimientosPorCuentaFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Movimientos de Cuenta - BanQuito");
-        setSize(1000, 650);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -96,7 +98,7 @@ public class MovimientosPorCuentaFrame extends JFrame {
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         actionPanel.setBackground(ColorPalette.FONDO_CLARO);
         
-        JButton registrarBtn = new JButton("+ Registrar Movimiento");
+        JButton registrarBtn = new JButton("Registrar Movimiento");
         registrarBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         registrarBtn.setForeground(Color.WHITE);
         registrarBtn.setBackground(ColorPalette.VERDE_EXITO);
@@ -224,7 +226,10 @@ public class MovimientosPorCuentaFrame extends JFrame {
         SwingWorker<List<MovimientoResponse>, Void> worker = new SwingWorker<>() {
             @Override
             protected List<MovimientoResponse> doInBackground() throws Exception {
-                return java.util.Arrays.asList(movimientoController.listarMovimientosPorCuenta(numCuenta));
+                List<MovimientoResponse> movimientos = java.util.Arrays.asList(movimientoController.listarMovimientosPorCuenta(numCuenta));
+                // Ordenar de forma descendente por ID (más recientes primero)
+                movimientos.sort((m1, m2) -> Long.compare(m2.id, m1.id));
+                return movimientos;
             }
             
             @Override

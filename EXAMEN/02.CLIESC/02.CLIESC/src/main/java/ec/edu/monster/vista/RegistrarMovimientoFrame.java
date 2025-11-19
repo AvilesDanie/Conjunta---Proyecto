@@ -133,7 +133,7 @@ public class RegistrarMovimientoFrame extends JFrame {
         formPanel.add(Box.createVerticalStrut(25));
         
         // Botón Registrar
-        registrarBtn = new JButton("✓ Registrar Movimiento");
+        registrarBtn = new JButton("Registrar Movimiento");
         registrarBtn.putClientProperty("FlatLaf.style", "arc: 10; borderWidth: 0; font: bold +1");
         registrarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         registrarBtn.setForeground(Color.WHITE);

@@ -29,7 +29,9 @@ public class CreditosFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Gestión de Créditos - BanQuito");
-        setSize(1050, 650);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         

@@ -30,7 +30,9 @@ public class TablaAmortizacionFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Tabla de Amortización - BanQuito");
-        setSize(1150, 700);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         

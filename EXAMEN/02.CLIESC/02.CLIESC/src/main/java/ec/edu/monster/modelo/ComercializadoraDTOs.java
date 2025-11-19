@@ -7,7 +7,7 @@ import java.util.List;
  * Modelos de datos para Comercializadora
  * DTOs que mapean las respuestas y peticiones de la API REST
  */
-public class ComercializadoraModels {
+public class ComercializadoraDTOs {
     
     // ========== USUARIO ==========
     
@@ -56,6 +56,13 @@ public class ComercializadoraModels {
     
     // ========== FACTURA ==========
     
+    public static class DetalleFacturaRequest {
+        public int idElectrodomestico;
+        public int cantidad;
+        
+        public DetalleFacturaRequest() {}
+    }
+    
     public static class FacturaRequest {
         public String cedulaCliente;
         public String nombreCliente;
@@ -66,6 +73,9 @@ public class ComercializadoraModels {
         // Solo si formaPago = CREDITO
         public Integer plazoMeses;
         public String numCuentaCredito;
+        
+        // Lista de productos para múltiples productos
+        public List<DetalleFacturaRequest> productos;
         
         public FacturaRequest() {}
     }

@@ -1,7 +1,8 @@
 package ec.edu.monster.vista;
 
 import ec.edu.monster.controlador.ElectrodomesticoController;
-import ec.edu.monster.modelo.ComercializadoraModels.*;
+import ec.edu.monster.modelo.ComercializadoraDTOs.*;
+import ec.edu.monster.util.ApiClient;
 import ec.edu.monster.util.ColorPalette;
 import ec.edu.monster.util.ModernTableRenderer;
 import ec.edu.monster.util.ToastNotification;
@@ -38,6 +39,10 @@ public class ElectrodomesticosFrame extends JFrame {
         setSize(950, 650);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        // Configurar la ventana para pantalla completa
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(ColorPalette.FONDO_CLARO);
@@ -81,7 +86,7 @@ public class ElectrodomesticosFrame extends JFrame {
             dispose();
         });
         
-        JLabel titleLabel = new JLabel("📱 Electr odomésticos");
+        JLabel titleLabel = new JLabel("Electrodomésticos");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -129,7 +134,7 @@ public class ElectrodomesticosFrame extends JFrame {
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         actionPanel.setBackground(ColorPalette.FONDO_CLARO);
         
-        JButton crearBtn = new JButton("📦 Nuevo Electrodoméstico");
+        JButton crearBtn = new JButton("Nuevo Electrodoméstico");
         crearBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         crearBtn.setForeground(Color.WHITE);
         crearBtn.setBackground(ColorPalette.NARANJA_ELECTRO);
@@ -149,7 +154,7 @@ public class ElectrodomesticosFrame extends JFrame {
         contentPanel.add(topPanel, BorderLayout.NORTH);
         
         // Tabla
-        String[] columnNames = {"ID", "Imagen", "Código", "Nombre", "Precio Venta"};
+        String[] columnNames = {"ID", "Imagen", "Código", "Nombre", "Precio Venta", "Acciones"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -194,9 +199,10 @@ public class ElectrodomesticosFrame extends JFrame {
         // Ajustar anchos de columna
         table.getColumnModel().getColumn(0).setPreferredWidth(60);   // ID
         table.getColumnModel().getColumn(1).setPreferredWidth(100);  // Imagen
-        table.getColumnModel().getColumn(2).setPreferredWidth(150);  // Código
-        table.getColumnModel().getColumn(3).setPreferredWidth(350);  // Nombre
-        table.getColumnModel().getColumn(4).setPreferredWidth(180);  // Precio
+        table.getColumnModel().getColumn(2).setPreferredWidth(120);  // Código
+        table.getColumnModel().getColumn(3).setPreferredWidth(280);  // Nombre
+        table.getColumnModel().getColumn(4).setPreferredWidth(150);  // Precio
+        table.getColumnModel().getColumn(5).setPreferredWidth(180);  // Acciones
         
         // Aplicar ModernTableRenderer a columnas 0, 2 con centramiento
         ModernTableRenderer modernRendererCenter = new ModernTableRenderer();
@@ -278,6 +284,108 @@ public class ElectrodomesticosFrame extends JFrame {
             }
         });
         
+        // Renderizador para la columna de Acciones con botones y efecto hover
+        table.getColumnModel().getColumn(5).setCellRenderer(new javax.swing.table.TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+                panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 235, 242)));
+                
+                if (isSelected) {
+                    panel.setBackground(new Color(187, 224, 251));
+                } else {
+                    panel.setBackground(row % 2 == 0 ? Color.WHITE : new Color(248, 250, 252));
+                }
+                
+                // Botón Editar
+                JButton editBtn = new JButton("Editar");
+                editBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+                editBtn.setForeground(Color.WHITE);
+                editBtn.setBackground(new Color(52, 152, 219));
+                editBtn.setFocusPainted(false);
+                editBtn.setBorderPainted(false);
+                editBtn.setPreferredSize(new Dimension(95, 38));
+                editBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                // Botón Eliminar
+                JButton deleteBtn = new JButton("Eliminar");
+                deleteBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+                deleteBtn.setForeground(Color.WHITE);
+                deleteBtn.setBackground(new Color(231, 76, 60));
+                deleteBtn.setFocusPainted(false);
+                deleteBtn.setBorderPainted(false);
+                deleteBtn.setPreferredSize(new Dimension(95, 38));
+                deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                
+                panel.add(editBtn);
+                panel.add(deleteBtn);
+                
+                return panel;
+            }
+        });
+        
+        // Listener para clicks y hover
+        table.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            private int lastHoverRow = -1;
+            private String lastHoverZone = "";
+            
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                int row = table.rowAtPoint(evt.getPoint());
+                int column = table.columnAtPoint(evt.getPoint());
+                
+                if (row >= 0 && column == 5) {
+                    java.awt.Rectangle cellRect = table.getCellRect(row, column, false);
+                    int relativeX = evt.getX() - cellRect.x;
+                    int centerX = cellRect.width / 2;
+                    
+                    String zone = relativeX < centerX ? "EDITAR" : "ELIMINAR";
+                    
+                    if (row != lastHoverRow || !zone.equals(lastHoverZone)) {
+                        lastHoverRow = row;
+                        lastHoverZone = zone;
+                        
+                        // Cambiar cursor y tooltip
+                        table.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        if (zone.equals("EDITAR")) {
+                            table.setToolTipText("Click para editar este electrodoméstico");
+                        } else {
+                            table.setToolTipText("Click para eliminar este electrodoméstico");
+                        }
+                    }
+                } else {
+                    table.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    table.setToolTipText(null);
+                    lastHoverRow = -1;
+                    lastHoverZone = "";
+                }
+            }
+        });
+        
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = table.rowAtPoint(evt.getPoint());
+                int column = table.columnAtPoint(evt.getPoint());
+                
+                if (row >= 0 && column == 5) {
+                    Long id = (Long) table.getValueAt(row, 0);
+                    java.awt.Rectangle cellRect = table.getCellRect(row, column, false);
+                    int relativeX = evt.getX() - cellRect.x;
+                    int centerX = cellRect.width / 2;
+                    
+                    if (relativeX < centerX) {
+                        // Click en Editar (mitad izquierda)
+                        new EditarElectrodomesticoFrame(id).setVisible(true);
+                        dispose();
+                    } else {
+                        // Click en Eliminar (mitad derecha)
+                        eliminarElectrodomestico(id);
+                    }
+                }
+            }
+        });
+        
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.putClientProperty("FlatLaf.style", "arc: 12");
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
@@ -294,7 +402,10 @@ public class ElectrodomesticosFrame extends JFrame {
         SwingWorker<List<ElectrodomesticoResponse>, Void> worker = new SwingWorker<>() {
             @Override
             protected List<ElectrodomesticoResponse> doInBackground() throws Exception {
-                return java.util.Arrays.asList(electroController.listarElectrodomesticos());
+                List<ElectrodomesticoResponse> electros = java.util.Arrays.asList(electroController.listarElectrodomesticos());
+                // Ordenar de forma descendente por ID (más recientes primero)
+                electros.sort((e1, e2) -> Long.compare(e2.id, e1.id));
+                return electros;
             }
             
             @Override
@@ -323,7 +434,8 @@ public class ElectrodomesticosFrame extends JFrame {
                 iconoImagen,
                 electro.codigo,
                 electro.nombre,
-                String.format("$%.2f", electro.precioVenta)
+                String.format("$%.2f", electro.precioVenta),
+                "" // Columna de acciones (botones se renderizan con el renderer)
             });
         }
     }
@@ -335,8 +447,7 @@ public class ElectrodomesticosFrame extends JFrame {
         
         try {
             // La URL ya viene completa desde el servidor: "/api/electrodomesticos/imagen/archivo.jpg"
-            String baseUrl = "http://localhost:8080/WS_JAVA_REST_Comercializadora";
-            String urlCompleta = baseUrl + imagenUrl;
+            String urlCompleta = ApiClient.BASE_URL_COMERCIALIZADORA_ROOT + imagenUrl;
             
             System.out.println("Intentando cargar imagen desde: " + urlCompleta);
             
@@ -394,17 +505,18 @@ public class ElectrodomesticosFrame extends JFrame {
         }
     }
     
-    private void eliminarElectrodomestico(String codigo) {
+    private void eliminarElectrodomestico(Long id) {
         int confirm = JOptionPane.showConfirmDialog(this,
             "¿Está seguro de eliminar este electrodoméstico?",
             "Confirmar Eliminación",
-            JOptionPane.YES_NO_OPTION);
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
         
         if (confirm == JOptionPane.YES_OPTION) {
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    electroController.eliminarElectrodomestico(codigo);
+                    electroController.eliminarElectrodomestico(id);
                     return null;
                 }
                 

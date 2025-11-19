@@ -147,6 +147,14 @@ fun AppNavigation() {
             CrearElectrodomesticoScreen(navController)
         }
         
+        composable(
+            route = Screen.EditarElectrodomestico.route,
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id") ?: 0L
+            EditarElectrodomesticoScreen(navController, id)
+        }
+        
         composable(Screen.Facturar.route) {
             FacturarScreen(navController)
         }

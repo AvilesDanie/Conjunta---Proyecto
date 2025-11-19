@@ -163,8 +163,10 @@ public class CrearClienteFrame extends JFrame {
         panel.add(saldoField);
         panel.add(Box.createVerticalStrut(25));
         
-        // Botón Guardar
-        guardarBtn = new JButton("✓ Crear Cliente");
+        // Botón Guardar con ícono predeterminado
+        guardarBtn = new JButton("Crear Cliente"); // Eliminado el uso de íconos externos
+        guardarBtn.setHorizontalTextPosition(SwingConstants.RIGHT); // Ajusta la posición del texto
+        guardarBtn.setVerticalTextPosition(SwingConstants.CENTER);
         guardarBtn.putClientProperty("FlatLaf.style", "arc: 10; borderWidth: 0; font: bold +1");
         guardarBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         guardarBtn.setForeground(Color.WHITE);

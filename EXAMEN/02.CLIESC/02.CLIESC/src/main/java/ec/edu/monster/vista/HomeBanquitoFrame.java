@@ -17,9 +17,10 @@ public class HomeBanquitoFrame extends JFrame {
     
     private void initComponents() {
         setTitle("BanQuito - Sistema Bancario");
-        setSize(1000, 700);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout());

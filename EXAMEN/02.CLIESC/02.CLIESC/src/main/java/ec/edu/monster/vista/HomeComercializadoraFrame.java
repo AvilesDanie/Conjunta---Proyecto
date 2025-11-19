@@ -17,9 +17,10 @@ public class HomeComercializadoraFrame extends JFrame {
     
     private void initComponents() {
         setTitle("ElectroQuito - Comercializadora");
-        setSize(900, 600);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(ColorPalette.FONDO_CLARO);
@@ -48,7 +49,7 @@ public class HomeComercializadoraFrame extends JFrame {
             dispose();
         }));
         
-        contentPanel.add(createMenuCard("", "Facturas", ColorPalette.CYAN_OSCURO, () -> {
+        contentPanel.add(createMenuCard("🧾", "Facturas", ColorPalette.CYAN_OSCURO, () -> {
             new FacturasFrame().setVisible(true);
             dispose();
         }));

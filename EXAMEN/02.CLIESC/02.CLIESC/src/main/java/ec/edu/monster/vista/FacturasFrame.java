@@ -1,7 +1,7 @@
 package ec.edu.monster.vista;
 
 import ec.edu.monster.controlador.FacturaController;
-import ec.edu.monster.modelo.ComercializadoraModels.*;
+import ec.edu.monster.modelo.ComercializadoraDTOs.*;
 import ec.edu.monster.util.ColorPalette;
 import ec.edu.monster.util.ToastNotification;
 
@@ -30,7 +30,9 @@ public class FacturasFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Facturas - ElectroQuito");
-        setSize(1050, 650);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -76,7 +78,7 @@ public class FacturasFrame extends JFrame {
             dispose();
         });
         
-        JLabel titleLabel = new JLabel("🧾 Facturas");
+        JLabel titleLabel = new JLabel("Facturas");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -260,7 +262,10 @@ public class FacturasFrame extends JFrame {
         SwingWorker<List<FacturaResponse>, Void> worker = new SwingWorker<>() {
             @Override
             protected List<FacturaResponse> doInBackground() throws Exception {
-                return java.util.Arrays.asList(facturaController.listarFacturas());
+                List<FacturaResponse> facturas = java.util.Arrays.asList(facturaController.listarFacturas());
+                // Ordenar de forma descendente por ID (más recientes primero)
+                facturas.sort((f1, f2) -> Long.compare(f2.id, f1.id));
+                return facturas;
             }
             
             @Override
@@ -309,50 +314,7 @@ public class FacturasFrame extends JFrame {
     }
     
     private void mostrarDetalle(int idFactura) {
-        SwingWorker<FacturaResponse, Void> worker = new SwingWorker<>() {
-            @Override
-            protected FacturaResponse doInBackground() throws Exception {
-                return facturaController.obtenerFactura((long) idFactura);
-            }
-            
-            @Override
-            protected void done() {
-                try {
-                    FacturaResponse factura = get();
-                    StringBuilder detalle = new StringBuilder();
-                    detalle.append("FACTURA #").append(factura.id).append("\n\n");
-                    detalle.append("Fecha: ").append(factura.fecha).append("\n");
-                    detalle.append("Forma de Pago: ").append(factura.formaPago).append("\n\n");
-                    detalle.append("DETALLE:\n");
-                    detalle.append("─".repeat(40)).append("\n");
-                    
-                    for (DetalleFacturaResponse item : factura.detalles) {
-                        detalle.append(item.nombreElectro != null ? item.nombreElectro : "Producto")
-                               .append(" - Cantidad: ").append(item.cantidad)
-                               .append(" - Precio: $").append(item.precioUnitario != null ? String.format("%.2f", item.precioUnitario) : "0.00")
-                               .append(" - Subtotal: $").append(item.subtotal != null ? String.format("%.2f", item.subtotal) : "0.00")
-                               .append("\n");
-                    }
-                    
-                    detalle.append("─".repeat(40)).append("\n");
-                    detalle.append("Total Bruto: $").append(factura.totalBruto != null ? String.format("%.2f", factura.totalBruto) : "0.00").append("\n");
-                    detalle.append("Descuento: $").append(factura.descuento != null ? String.format("%.2f", factura.descuento) : "0.00").append("\n");
-                    detalle.append("Total Final: $").append(factura.totalNeto != null ? String.format("%.2f", factura.totalNeto) : "0.00");
-                    
-                    JOptionPane.showMessageDialog(FacturasFrame.this,
-                        detalle.toString(),
-                        "Detalle de Factura",
-                        JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    ToastNotification.showToast(
-                        FacturasFrame.this,
-                        "Error al cargar detalle: " + ex.getMessage(),
-                        ToastNotification.ERROR
-                    );
-                }
-            }
-        };
-        worker.execute();
+        new DetalleFacturaFrame(idFactura).setVisible(true);
     }
 }
 

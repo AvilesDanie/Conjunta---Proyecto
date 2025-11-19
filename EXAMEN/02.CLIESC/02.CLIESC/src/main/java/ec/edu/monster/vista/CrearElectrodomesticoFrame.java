@@ -1,7 +1,7 @@
 package ec.edu.monster.vista;
 
 import ec.edu.monster.controlador.ElectrodomesticoController;
-import ec.edu.monster.modelo.ComercializadoraModels.*;
+import ec.edu.monster.modelo.ComercializadoraDTOs.*;
 import ec.edu.monster.util.ColorPalette;
 
 import javax.swing.*;
@@ -136,7 +136,7 @@ public class CrearElectrodomesticoFrame extends JFrame {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setOpaque(false);
         
-        seleccionarImagenBtn = new JButton("📁 Seleccionar Imagen");
+        seleccionarImagenBtn = new JButton("Seleccionar Imagen");
         seleccionarImagenBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
         seleccionarImagenBtn.setForeground(Color.WHITE);
         seleccionarImagenBtn.setBackground(ColorPalette.NARANJA_ELECTRO);

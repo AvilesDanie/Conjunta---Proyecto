@@ -27,9 +27,10 @@ public class LoginBanquitoFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Login - BanQuito");
-        setSize(600, 750);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         // Panel principal con gradiente
         JPanel mainPanel = new JPanel() {
@@ -113,7 +114,23 @@ public class LoginBanquitoFrame extends JFrame {
         containerPanel.add(Box.createVerticalStrut(30), gbc);
         
         // Logo sin fondo circular
-        JPanel logoPanel = new JPanel();
+        // Panel personalizado para el logo circular
+        JPanel logoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Dibujar el círculo blanco centrado
+                int diameter = Math.min(getWidth(), getHeight()) - 20;
+                int x = (getWidth() - diameter) / 2;
+                int y = (getHeight() - diameter) / 2;
+                g2.setColor(Color.WHITE);
+                g2.fillOval(x, y, diameter, diameter);
+                g2.dispose();
+            }
+        };
         logoPanel.setOpaque(false);
         logoPanel.setPreferredSize(new Dimension(180, 180));
         logoPanel.setMaximumSize(new Dimension(180, 180));
@@ -125,7 +142,7 @@ public class LoginBanquitoFrame extends JFrame {
             java.net.URL imageURL = getClass().getClassLoader().getResource("images/logoBanquito.png");
             if (imageURL != null) {
                 ImageIcon icon = new ImageIcon(imageURL);
-                Image img = icon.getImage().getScaledInstance(160, 160, Image.SCALE_SMOOTH);
+                Image img = icon.getImage().getScaledInstance(140, 140, Image.SCALE_SMOOTH);
                 logoLabel.setIcon(new ImageIcon(img));
                 logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 logoLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -146,7 +163,7 @@ public class LoginBanquitoFrame extends JFrame {
             logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         }
         logoPanel.add(logoLabel);
-        
+
         gbc.gridy++;
         containerPanel.add(logoPanel, gbc);
         

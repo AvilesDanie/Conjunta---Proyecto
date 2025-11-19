@@ -206,7 +206,7 @@ public class CuentasPorClienteFrame extends JFrame {
                     panel.setBackground(row % 2 == 0 ? Color.WHITE : new Color(248, 250, 252));
                 }
                 
-                JButton button = new JButton("📄 Movimientos") {
+                JButton button = new JButton("Movimientos") {
                     @Override
                     protected void paintComponent(Graphics g) {
                         Graphics2D g2 = (Graphics2D) g.create();

@@ -20,7 +20,9 @@ public class AppSelectionFrame extends JFrame {
     
     private void initComponents() {
         setTitle("Selección de Aplicación");
-        setSize(900, 600);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -116,7 +118,7 @@ public class AppSelectionFrame extends JFrame {
         gbc.gridy = 1;
         centerPanel.add(createAppCard(
             "/images/logoPerfilElectroQuito.png",
-            "ElectroQuuito",
+            "ElectroQuito",
             "Comercializadora Digital",
             new Color(255, 87, 34),
             new Color(255, 87, 34),

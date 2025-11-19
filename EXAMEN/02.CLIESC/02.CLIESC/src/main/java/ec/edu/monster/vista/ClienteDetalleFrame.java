@@ -150,7 +150,13 @@ public class ClienteDetalleFrame extends JFrame {
         JLabel iconLabel = new JLabel("👤", SwingConstants.CENTER);
         iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 72));
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        card.add(iconLabel);
+        
+        // Ajustar el diseño del contenedor para centrar el icono
+        JPanel iconContainer = new JPanel(new GridBagLayout());
+        iconContainer.setOpaque(false);
+        iconContainer.add(iconLabel);
+        card.add(iconContainer, 0); // Agregar el contenedor del icono al inicio del panel
+        
         card.add(Box.createVerticalStrut(20));
         
         // Datos del cliente

@@ -25,7 +25,7 @@ public class ColorPalette {
     public static final Color ROJO_ICONO_ERROR = new Color(255, 107, 107);       // #FF6B6B
     
     // ========== COLORES NARANJA (ElectroQuito) ==========
-    public static final Color NARANJA_ELECTRO = new Color(255, 87, 34);          // #FF5722
+    public static final Color NARANJA_ELECTRO = new Color(255, 138, 101);        // #FF8A65 - Naranja más claro y suave
     
     // ========== COLORES MORADO Y CYAN ==========
     public static final Color MORADO = new Color(106, 27, 154);                  // #6A1B9A

@@ -16,6 +16,9 @@ public class ApiClient {
     public static final String BASE_URL_BANQUITO = "http://192.168.100.17:8080/WS_JAVA_REST_BanQuito/api/";
     public static final String BASE_URL_COMERCIALIZADORA = "http://192.168.100.17:8080/WS_JAVA_REST_Comercializadora/api/";
     
+    // URLs Base sin /api/ para recursos estáticos como imágenes
+    public static final String BASE_URL_COMERCIALIZADORA_ROOT = "http://192.168.100.17:8080/WS_JAVA_REST_Comercializadora";
+    
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     
     private final OkHttpClient client;

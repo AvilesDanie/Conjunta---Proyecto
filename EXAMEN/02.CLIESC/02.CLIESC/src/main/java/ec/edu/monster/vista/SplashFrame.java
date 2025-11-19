@@ -25,7 +25,9 @@ public class SplashFrame extends JFrame {
     
     private void initComponents() {
         setTitle("BanQuito & ElectroQuito");
-        setSize(600, 400);
+        // Configurar pantalla completa y deshabilitar cambio de tamaño
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);

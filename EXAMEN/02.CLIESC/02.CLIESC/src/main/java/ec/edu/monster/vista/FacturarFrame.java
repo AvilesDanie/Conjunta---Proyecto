@@ -4,8 +4,9 @@ import ec.edu.monster.controlador.FacturaController;
 import ec.edu.monster.controlador.MovimientoController;
 import ec.edu.monster.controlador.ElectrodomesticoController;
 import ec.edu.monster.controlador.CreditoController;
-import ec.edu.monster.modelo.ComercializadoraModels.*;
+import ec.edu.monster.modelo.ComercializadoraDTOs.*;
 import ec.edu.monster.modelo.BanquitoModels.*;
+import ec.edu.monster.util.ApiClient;
 import ec.edu.monster.util.ColorPalette;
 
 import javax.swing.*;
@@ -72,6 +73,10 @@ public class FacturarFrame extends JFrame {
         setSize(1000, 750);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        // Configurar la ventana para pantalla completa
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(ColorPalette.FONDO_CLARO);
@@ -231,7 +236,7 @@ public class FacturarFrame extends JFrame {
         creditoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 180));
         creditoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JLabel creditoInfo = new JLabel("💳 Pago a Crédito con BanQuito");
+        JLabel creditoInfo = new JLabel("Pago a Crédito con BanQuito");
         creditoInfo.setFont(new Font("Segoe UI", Font.BOLD, 13));
         creditoInfo.setForeground(ColorPalette.AZUL_PRIMARIO);
         creditoInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -613,58 +618,41 @@ public class FacturarFrame extends JFrame {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                // Nota: La API actual solo acepta UN producto por factura
-                // Si hay múltiples productos, se crea una factura por cada uno
+                // Crear una sola factura con todos los productos
+                FacturaRequest request = new FacturaRequest();
+                request.cedulaCliente = cedula;
+                request.nombreCliente = nombre;
+                request.formaPago = formaPago;
+                
+                request.productos = new ArrayList<>();
                 for (ProductoFactura pf : productosSeleccionados) {
-                    FacturaRequest request = new FacturaRequest();
-                    request.cedulaCliente = cedula;
-                    request.nombreCliente = nombre;
-                    request.idElectrodomestico = pf.electro.id;
-                    request.cantidad = pf.cantidad;
-                    request.formaPago = formaPago;
-                    
-                    if ("CREDITO".equals(formaPago)) {
-                        request.plazoMeses = Integer.parseInt(plazoField.getText().trim());
-                        request.numCuentaCredito = cuentaBanquitoField.getText().trim();
-                    }
-                    
-                    facturaController.crearFactura(request);
+                    DetalleFacturaRequest producto = new DetalleFacturaRequest();
+                    producto.idElectrodomestico = pf.electro.id.intValue();
+                    producto.cantidad = pf.cantidad;
+                    request.productos.add(producto);
                 }
                 
-                // Si es CREDITO, registrar retiro total en BanQuito
-                if ("CREDITO".equals(formaPago)) {
-                    double totalBruto = 0.0;
-                    for (ProductoFactura pf : productosSeleccionados) {
-                        totalBruto += pf.subtotal;
-                    }
-                    
-                    MovimientoRequest movReq = new MovimientoRequest();
-                    movReq.numCuenta = cuentaBanquitoField.getText().trim();
-                    movReq.tipo = "RETIRO";
-                    movReq.valor = new BigDecimal(totalBruto);
-                    
-                    movimientoController.registrarMovimiento(movReq);
-                }
-                
+                facturaController.crearFactura(request);
+
                 return null;
             }
-            
+
             @Override
             protected void done() {
                 try {
                     get();
-                    int numProductos = productosSeleccionados.size();
                     JOptionPane.showMessageDialog(FacturarFrame.this,
-                        "Factura(s) generada(s) exitosamente\n" + numProductos + " producto(s) facturado(s)",
+                        "Factura generada exitosamente",
                         "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
                     new FacturasFrame().setVisible(true);
                     dispose();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(FacturarFrame.this,
-                        "Error al generar factura: " + ex.getMessage(),
+                        "Error al generar la factura: " + ex.getMessage(),
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
+                } finally {
                     guardarBtn.setEnabled(true);
                     guardarBtn.setText("Generar Factura");
                 }
@@ -762,46 +750,38 @@ public class FacturarFrame extends JFrame {
     
     private void crearCreditoYFacturar(String cedula, String nombre, String cuenta, int plazo, double monto) {
         guardarBtn.setText("Generando factura...");
-        
+
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                // NOTA: El crédito ya fue creado por la evaluación
-                // Solo crear facturas y movimiento
-                
-                // Crear facturas
+
+                // Crear una sola factura con todos los productos
+                FacturaRequest request = new FacturaRequest();
+                request.cedulaCliente = cedula;
+                request.nombreCliente = nombre;
+                request.formaPago = "CREDITO";
+                request.plazoMeses = plazo;
+                request.numCuentaCredito = cuenta;
+
+                request.productos = new ArrayList<>();
                 for (ProductoFactura pf : productosSeleccionados) {
-                    FacturaRequest request = new FacturaRequest();
-                    request.cedulaCliente = cedula;
-                    request.nombreCliente = nombre;
-                    request.idElectrodomestico = pf.electro.id;
-                    request.cantidad = pf.cantidad;
-                    request.formaPago = "CREDITO";
-                    request.plazoMeses = plazo;
-                    request.numCuentaCredito = cuenta;
-                    
-                    facturaController.crearFactura(request);
+                    DetalleFacturaRequest producto = new DetalleFacturaRequest();
+                    producto.idElectrodomestico = pf.electro.id.intValue();
+                    producto.cantidad = pf.cantidad;
+                    request.productos.add(producto);
                 }
-                
-                // Registrar retiro en BanQuito
-                MovimientoRequest movReq = new MovimientoRequest();
-                movReq.numCuenta = cuenta;
-                movReq.tipo = "RET";
-                movReq.tipoMovimiento = "RET";
-                movReq.valor = new BigDecimal(monto);
-                
-                movimientoController.registrarMovimiento(movReq);
-                
+
+                facturaController.crearFactura(request);
+
                 return null;
             }
-            
+
             @Override
             protected void done() {
                 try {
                     get();
                     JOptionPane.showMessageDialog(FacturarFrame.this,
-                        "✅ Factura generada exitosamente\n" +
-                        "El crédito ha sido aprobado y se realizó el débito automático.",
+                        "Factura y crédito generados correctamente.",
                         "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
                     new FacturasFrame().setVisible(true);
@@ -825,8 +805,7 @@ public class FacturarFrame extends JFrame {
         }
         
         try {
-            String baseUrl = "http://192.168.100.17:8080/WS_JAVA_REST_Comercializadora";
-            URL url = new URL(baseUrl + imagenUrl);
+            URL url = new URL(ApiClient.BASE_URL_COMERCIALIZADORA_ROOT + imagenUrl);
             BufferedImage img = ImageIO.read(url);
             if (img != null) {
                 Image scaledImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);

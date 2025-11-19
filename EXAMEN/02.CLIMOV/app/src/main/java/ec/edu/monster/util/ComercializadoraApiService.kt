@@ -28,6 +28,19 @@ interface ComercializadoraApiService {
     @GET("electrodomesticos/imagen/{nombreArchivo}")
     suspend fun obtenerImagen(@Path("nombreArchivo") nombreArchivo: String): Response<okhttp3.ResponseBody>
     
+    @Multipart
+    @PUT("electrodomesticos/{id}")
+    suspend fun actualizarElectrodomestico(
+        @Path("id") id: Long,
+        @Part("codigo") codigo: RequestBody,
+        @Part("nombre") nombre: RequestBody,
+        @Part("precioVenta") precioVenta: RequestBody,
+        @Part imagen: MultipartBody.Part?
+    ): Response<ElectrodomesticoResponse>
+    
+    @DELETE("electrodomesticos/{id}")
+    suspend fun eliminarElectrodomestico(@Path("id") id: Long): Response<Unit>
+    
     // ========== FACTURAS ==========
     @GET("facturas")
     suspend fun listarFacturas(): Response<List<FacturaResponse>>
