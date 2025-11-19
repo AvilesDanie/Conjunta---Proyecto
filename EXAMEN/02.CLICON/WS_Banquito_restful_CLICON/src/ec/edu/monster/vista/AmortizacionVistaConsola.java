@@ -1,80 +1,128 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ec.edu.monster.vista;
 
-import ec.edu.monster.controlador.ConsultarAmortizacionController;
-import ec.edu.monster.modelo.Amortizacion;
+import ec.edu.monster.controlador.CuotasControlador;
+import ec.edu.monster.modelo.CuotaAmortizacionModelo;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- *
- * @author ckan1
- */
 public class AmortizacionVistaConsola {
-    private final Scanner scanner = new Scanner(System.in);
-    private final ConsultarAmortizacionController controller = new ConsultarAmortizacionController();
+
+    private final Scanner scanner;
+    private final CuotasControlador controlador;
+
+    public AmortizacionVistaConsola() {
+        this.scanner = new Scanner(System.in);
+        this.controlador = new CuotasControlador();
+    }
 
     public void mostrarMenu() {
-        System.out.println("\n╔══════════════════════════════════════════╗");
-        System.out.println("║     CONSULTAR TABLA DE AMORTIZACIÓN      ║");
-        System.out.println("╚══════════════════════════════════════════╝");
-        
-        System.out.print("➤ Ingrese el ID del crédito: ");
-        String inputCredito = scanner.nextLine().trim();
+        while (true) {
+            limpiarPantalla();
+
+            System.out.println("\n");
+            System.out.println("  ╔═══════════════════════════════════════╗");
+            System.out.println("  ║     📊 TABLA DE AMORTIZACIÓN         ║");
+            System.out.println("  ╚═══════════════════════════════════════╝");
+            System.out.println("  1. Ver tabla por ID de crédito");
+            System.out.println("  0. Volver al menú principal");
+
+            System.out.print("\n  ➤ Seleccione una opción [0-1]: ");
+            String linea = scanner.nextLine();
+            int opcion;
+            try {
+                opcion = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ❌ Debe ingresar un número.");
+                presionarEnter();
+                continue;
+            }
+
+            if (opcion == 0) {
+                return;
+            } else if (opcion == 1) {
+                mostrarTablaPorCredito();
+            } else {
+                System.out.println("\n  ❌ Opción inválida.");
+                presionarEnter();
+            }
+        }
+    }
+
+    private void mostrarTablaPorCredito() {
+        limpiarPantalla();
+        System.out.println("\n  📊 TABLA DE AMORTIZACIÓN POR CRÉDITO");
+        System.out.println("  -------------------------------------");
+
+        System.out.print("  ID del crédito: ");
+        String txtId = scanner.nextLine().trim();
+        Long idCredito;
+        try {
+            idCredito = Long.parseLong(txtId);
+        } catch (NumberFormatException e) {
+            System.out.println("\n  ❌ ID inválido.");
+            presionarEnter();
+            return;
+        }
 
         try {
-            Long idCredito = Long.parseLong(inputCredito);
-            
-            System.out.println("\n⏳ Consultando tabla de amortización...");
-            List<Amortizacion> tablaAmortizacion = controller.consultarAmortizacion(idCredito);
-            
-            if (tablaAmortizacion == null || tablaAmortizacion.isEmpty()) {
-                System.out.println("❌ No se encontró información de amortización para este crédito.");
+            List<CuotaAmortizacionModelo> cuotas = controlador.listarPorCredito(idCredito);
+            if (cuotas.isEmpty()) {
+                System.out.println("\n  (No se encontraron cuotas para este crédito)");
+                presionarEnter();
                 return;
             }
-            
-            // Mostrar tabla
-            System.out.println("\n┌──────────────────────────────────────────────────────────────────────────────────────┐");
-            System.out.println("│                        TABLA DE AMORTIZACIÓN                                         │");
-            System.out.println("└──────────────────────────────────────────────────────────────────────────────────────┘");
-            System.out.println(String.format("%-8s %-15s %-12s %-12s %-12s %-12s %-12s",
-                "CUOTA", "F.VENCIMIENTO", "V.CUOTA", "CAPITAL", "INTERÉS", "SALDO", "ESTADO"));
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
-            
-            double totalCapital = 0;
-            double totalInteres = 0;
-            double totalCuota = 0;
-            
-            for (Amortizacion a : tablaAmortizacion) {
-                System.out.printf("%-8d %-15s $%-11.2f $%-11.2f $%-11.2f $%-11.2f %-12s\n",
-                    a.getNumeroCuota(),
-                    a.getFechaVencimiento(),
-                    a.getValorCuota(),
-                    a.getCapitalPagado(),
-                    a.getInteresPagado(),
-                    a.getSaldo(),
-                    a.getEstado());
-                
-                totalCapital += a.getCapitalPagado();
-                totalInteres += a.getInteresPagado();
-                totalCuota += a.getValorCuota();
+
+            System.out.println();
+            System.out.printf("  %-5s %-12s %-12s %-12s %-12s %-12s %-10s%n",
+                    "N°", "Vencimiento", "Cuota", "Interés", "Capital", "Saldo", "Estado");
+            System.out.println("  ---------------------------------------------------------------------------");
+
+            for (CuotaAmortizacionModelo c : cuotas) {
+                System.out.printf("  %-5d %-12s %-12s %-12s %-12s %-12s %-10s%n",
+                        c.getNumeroCuota(),
+                        nulo(c.getFechaVencimiento()),
+                        money(c.getValorCuota()),
+                        money(c.getInteresPagado()),
+                        money(c.getCapitalPagado()),
+                        money(c.getSaldo()),
+                        nulo(c.getEstado()));
             }
-            
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
-            System.out.printf("%-24s TOTALES: $%-11.2f $%-11.2f $%-11.2f\n",
-                "", totalCuota, totalCapital, totalInteres);
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
-            System.out.println("Total de cuotas: " + tablaAmortizacion.size());
-            
-        } catch (NumberFormatException e) {
-            System.out.println("❌ El ID del crédito debe ser un número válido.");
-        } catch (Exception e) {
-            System.out.println("❌ Error al consultar la amortización: " + e.getMessage());
-            e.printStackTrace();
+
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al obtener la tabla.");
+            System.out.println("     Detalle: " + e.getMessage());
         }
+
+        presionarEnter();
+    }
+
+    private String nulo(String s) {
+        return (s == null || s.trim().isEmpty()) ? "-" : s;
+    }
+
+    private String money(java.math.BigDecimal b) {
+        return b == null ? "-" : b.toPlainString();
+    }
+
+    private void limpiarPantalla() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 3; i++) {
+                System.out.println();
+            }
+        }
+    }
+
+    private void presionarEnter() {
+        System.out.print("\n  Presione ENTER para continuar...");
+        scanner.nextLine();
     }
 }

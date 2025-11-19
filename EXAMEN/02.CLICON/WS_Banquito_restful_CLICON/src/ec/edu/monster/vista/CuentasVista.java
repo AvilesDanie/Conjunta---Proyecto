@@ -1,158 +1,217 @@
 package ec.edu.monster.vista;
 
-import ec.edu.monster.controlador.CuentaController;
-import ec.edu.monster.modelo.Cuenta;
+import ec.edu.monster.controlador.CuentasControlador;
+import ec.edu.monster.modelo.CuentaCrearRequest;
+import ec.edu.monster.modelo.CuentaModelo;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Vista de consola para gestión de cuentas bancarias
- * @author CLICON
- */
 public class CuentasVista {
-    private final Scanner scanner = new Scanner(System.in);
-    private final CuentaController controller = new CuentaController();
+
+    private final Scanner scanner;
+    private final CuentasControlador controlador;
+
+    public CuentasVista() {
+        this.scanner = new Scanner(System.in);
+        this.controlador = new CuentasControlador();
+    }
 
     public void mostrarMenu() {
         while (true) {
-            ConsolaUtil.limpiarPantalla();
-            System.out.println("\n╔═══════════════════════════════════════╗");
-            System.out.println("║      📋 GESTIÓN DE CUENTAS           ║");
-            System.out.println("╠═══════════════════════════════════════╣");
-            System.out.println("║  1. Listar todas las cuentas         ║");
-            System.out.println("║  2. Buscar cuenta por número         ║");
-            System.out.println("║  3. Ver cuentas de un cliente        ║");
-            System.out.println("║  4. Crear nueva cuenta               ║");
-            System.out.println("║  5. Volver al menú principal         ║");
-            System.out.println("╚═══════════════════════════════════════╝");
-            System.out.print("➤ Seleccione una opción: ");
+            limpiarPantalla();
 
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println("\n");
+            System.out.println("  ╔═══════════════════════════════════════╗");
+            System.out.println("  ║           💳 GESTIÓN DE CUENTAS      ║");
+            System.out.println("  ╚═══════════════════════════════════════╝");
+            System.out.println("  1. Listar todas las cuentas");
+            System.out.println("  2. Buscar cuenta por número");
+            System.out.println("  3. Listar cuentas por cédula de cliente");
+            System.out.println("  4. Crear nueva cuenta");
+            System.out.println("  0. Volver al menú principal");
 
-            switch (opcion) {
-                case 1:
-                    listarCuentas();
-                    break;
-                case 2:
-                    buscarCuenta();
-                    break;
-                case 3:
-                    verCuentasCliente();
-                    break;
-                case 4:
-                    crearCuenta();
-                    break;
-                case 5:
-                    return;
-                default:
-                    System.out.println("❌ Opción inválida");
+            System.out.print("\n  ➤ Seleccione una opción [0-4]: ");
+            String linea = scanner.nextLine();
+
+            int opcion;
+            try {
+                opcion = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ❌ Debe ingresar un número.");
+                presionarEnter();
+                continue;
             }
-        }
-    }
 
-    private void listarCuentas() {
-        try {
-            List<Cuenta> cuentas = controller.listarCuentas();
-            System.out.println("\n┌─────────────────────────────────────────────────────────────────────┐");
-            System.out.println("│                    📋 LISTADO DE CUENTAS                            │");
-            System.out.println("├─────────────────────────────────────────────────────────────────────┤");
-            
-            if (cuentas.isEmpty()) {
-                System.out.println("│  ⚠️  No hay cuentas registradas                                     │");
-            } else {
-                for (Cuenta c : cuentas) {
-                    System.out.println("├─────────────────────────────────────────────────────────────────────┤");
-                    System.out.printf("│  Número: %-20s │ Cédula: %-15s │%n", c.getNumCuenta(), c.getCedula());
-                    System.out.printf("│  Tipo: %-22s │ Saldo: $%-14.2f │%n", c.getTipoCuenta(), c.getSaldo());
-                    System.out.printf("│  Estado: %-52s │%n", c.getEstado());
+            try {
+                switch (opcion) {
+                    case 1:
+                        listarTodas();
+                        break;
+                    case 2:
+                        buscarPorNumero();
+                        break;
+                    case 3:
+                        listarPorCedulaCliente();
+                        break;
+                    case 4:
+                        crearCuenta();
+                        break;
+                    case 0:
+                        return; // volver al menú principal (HomeBanquitoVista)
+                    default:
+                        System.out.println("\n  ❌ Opción inválida.");
+                        presionarEnter();
+                        break;
                 }
+            } catch (IOException ex) {
+                System.out.println("\n  ❌ Error llamando al servicio: " + ex.getMessage());
+                presionarEnter();
             }
-            System.out.println("└─────────────────────────────────────────────────────────────────────┘");
-        } catch (Exception e) {
-            System.out.println("❌ Error al listar cuentas: " + e.getMessage());
         }
-        ConsolaUtil.presionarEnter();
     }
 
-    private void buscarCuenta() {
-        System.out.print("➤ Ingrese número de cuenta: ");
-        String numCuenta = scanner.nextLine();
+    // ========== Opciones ==========
+
+    private void listarTodas() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  📋 LISTA DE CUENTAS");
+        System.out.println("  --------------------");
+
+        List<CuentaModelo> cuentas = controlador.listarTodas();
+        if (cuentas.isEmpty()) {
+            System.out.println("\n  (No hay cuentas registradas)");
+        } else {
+            for (CuentaModelo c : cuentas) {
+                imprimirCuenta(c);
+                System.out.println("  --------------------------------------------");
+            }
+        }
+        presionarEnter();
+    }
+
+    private void buscarPorNumero() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  🔍 BUSCAR CUENTA POR NÚMERO");
+        System.out.println("  ----------------------------");
+        System.out.print("  ➤ Ingrese número de cuenta: ");
+        String num = scanner.nextLine().trim();
+
+        if (num.isEmpty()) {
+            System.out.println("\n  ❌ El número de cuenta es obligatorio.");
+            presionarEnter();
+            return;
+        }
 
         try {
-            Cuenta cuenta = controller.obtenerCuenta(numCuenta);
-            if (cuenta != null) {
-                System.out.println("\n┌─────────────────────────────────────────────────────┐");
-                System.out.println("│           📄 INFORMACIÓN DE LA CUENTA               │");
-                System.out.println("├─────────────────────────────────────────────────────┤");
-                System.out.printf("│  Número: %-42s │%n", cuenta.getNumCuenta());
-                System.out.printf("│  Cédula: %-42s │%n", cuenta.getCedula());
-                System.out.printf("│  Tipo: %-44s │%n", cuenta.getTipoCuenta());
-                System.out.printf("│  Saldo: $%-41.2f │%n", cuenta.getSaldo());
-                System.out.printf("│  Estado: %-42s │%n", cuenta.getEstado());
-                System.out.println("└─────────────────────────────────────────────────────┘");
-            } else {
-                System.out.println("❌ Cuenta no encontrada");
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Error al buscar cuenta: " + e.getMessage());
+            CuentaModelo c = controlador.obtenerPorNumero(num);
+            System.out.println();
+            imprimirCuenta(c);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ No se pudo encontrar la cuenta.");
+            System.out.println("     Detalle: " + e.getMessage());
         }
+
+        presionarEnter();
     }
 
-    private void verCuentasCliente() {
-        System.out.print("➤ Ingrese cédula del cliente: ");
-        String cedula = scanner.nextLine();
+    private void listarPorCedulaCliente() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  👥 LISTAR CUENTAS POR CLIENTE");
+        System.out.println("  ------------------------------");
+        System.out.print("  ➤ Ingrese cédula del cliente: ");
+        String cedula = scanner.nextLine().trim();
+
+        if (cedula.isEmpty()) {
+            System.out.println("\n  ❌ La cédula es obligatoria.");
+            presionarEnter();
+            return;
+        }
+
+        List<CuentaModelo> cuentas = controlador.listarPorCedulaCliente(cedula);
+        if (cuentas.isEmpty()) {
+            System.out.println("\n  (El cliente no tiene cuentas registradas o no existe)");
+        } else {
+            System.out.println();
+            for (CuentaModelo c : cuentas) {
+                imprimirCuenta(c);
+                System.out.println("  --------------------------------------------");
+            }
+        }
+        presionarEnter();
+    }
+
+    private void crearCuenta() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  ➕ CREAR NUEVA CUENTA");
+        System.out.println("  ----------------------");
+
+        CuentaCrearRequest req = new CuentaCrearRequest();
+
+        System.out.print("  Cédula del cliente: ");
+        req.cedulaCliente = scanner.nextLine().trim();
+
+        System.out.print("  Tipo de cuenta (AHORROS/CORRIENTE/etc.): ");
+        req.tipoCuenta = scanner.nextLine().trim();
+
+        System.out.print("  Saldo inicial [opcional, por defecto 0]: ");
+        String saldoTxt = scanner.nextLine().trim();
+        if (!saldoTxt.isEmpty()) {
+            try {
+                req.saldoInicial = new BigDecimal(saldoTxt);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ⚠ Saldo inválido, se usará 0.");
+                req.saldoInicial = null;
+            }
+        }
 
         try {
-            List<Cuenta> cuentas = controller.listarCuentasPorCliente(cedula);
-            System.out.println("\n┌─────────────────────────────────────────────────────────────────────┐");
-            System.out.printf("│           📋 CUENTAS DEL CLIENTE: %-30s │%n", cedula);
-            System.out.println("├─────────────────────────────────────────────────────────────────────┤");
-            
-            if (cuentas.isEmpty()) {
-                System.out.println("│  ⚠️  Este cliente no tiene cuentas registradas                      │");
+            CuentaModelo creada = controlador.crearCuenta(req);
+            System.out.println("\n  ✅ Cuenta creada correctamente:");
+            imprimirCuenta(creada);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al crear la cuenta.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    // ========== Helpers de impresión ==========
+
+    private void imprimirCuenta(CuentaModelo c) {
+        System.out.println("  Nº Cuenta     : " + nulo(c.getNumCuenta()));
+        System.out.println("  Cédula        : " + nulo(c.getCedulaCliente()));
+        System.out.println("  Cliente       : " + nulo(c.getNombreCliente()));
+        System.out.println("  Tipo Cuenta   : " + nulo(c.getTipoCuenta()));
+        System.out.println("  Saldo         : " + (c.getSaldo() == null ? "-" : c.getSaldo().toPlainString()));
+    }
+
+    private String nulo(String s) {
+        return (s == null || s.trim().isEmpty()) ? "-" : s;
+    }
+
+    // ========== Utilitarios ==========
+
+    private void limpiarPantalla() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
-                for (Cuenta c : cuentas) {
-                    System.out.println("├─────────────────────────────────────────────────────────────────────┤");
-                    System.out.printf("│  Número: %-20s │ Tipo: %-20s │%n", c.getNumCuenta(), c.getTipoCuenta());
-                    System.out.printf("│  Saldo: $%-25.2f │ Estado: %-15s │%n", c.getSaldo(), c.getEstado());
-                }
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
             }
-            System.out.println("└─────────────────────────────────────────────────────────────────────┘");
         } catch (Exception e) {
-            System.out.println("❌ Error al consultar cuentas: " + e.getMessage());
+            for (int i = 0; i < 3; i++) {
+                System.out.println();
+            }
         }
     }
 
-    private void crearCuenta() {
-        System.out.println("\n┌──────────────────────────────────────┐");
-        System.out.println("│      ➕ CREAR NUEVA CUENTA           │");
-        System.out.println("└──────────────────────────────────────┘");
-
-        System.out.print("➤ Cédula del cliente: ");
-        String cedula = scanner.nextLine();
-
-        System.out.print("➤ Tipo de cuenta (AHORROS/CORRIENTE): ");
-        String tipo = scanner.nextLine();
-
-        System.out.print("➤ Saldo inicial: ");
-        double saldo = scanner.nextDouble();
+    private void presionarEnter() {
+        System.out.print("\n  Presione ENTER para continuar...");
         scanner.nextLine();
-
-        Cuenta cuenta = new Cuenta();
-        cuenta.setCedula(cedula);
-        cuenta.setTipoCuenta(tipo);
-        cuenta.setSaldo(saldo);
-        cuenta.setEstado("ACTIVA");
-
-        try {
-            if (controller.crearCuenta(cuenta)) {
-                System.out.println("✅ Cuenta creada exitosamente");
-            } else {
-                System.out.println("❌ No se pudo crear la cuenta");
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Error al crear cuenta: " + e.getMessage());
-        }
     }
 }

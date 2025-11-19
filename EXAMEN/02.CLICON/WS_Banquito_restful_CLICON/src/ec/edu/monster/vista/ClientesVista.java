@@ -1,54 +1,67 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package ec.edu.monster.vista;
 
-import ec.edu.monster.controlador.ClienteController;
-import ec.edu.monster.modelo.Cliente;
+/**
+ *
+ * @author danie
+ */
+import ec.edu.monster.controlador.ClientesControlador;
+import ec.edu.monster.modelo.ClienteModelo;
+import ec.edu.monster.modelo.ClienteCrearRequest;
+import ec.edu.monster.modelo.ClienteActualizarRequest;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Vista para gestión de clientes
- * @author CLICON
- */
 public class ClientesVista {
+
     private final Scanner scanner;
-    private final ClienteController controller;
-    
+    private final ClientesControlador controlador;
+
     public ClientesVista() {
         this.scanner = new Scanner(System.in);
-        this.controller = new ClienteController();
+        this.controlador = new ClientesControlador();
     }
-    
+
     public void mostrarMenu() {
         while (true) {
             limpiarPantalla();
-            
+
             System.out.println("\n");
-            System.out.println("  ╔═══════════════════════════════════════════════════════╗");
-            System.out.println("  ║                                                       ║");
-            System.out.println("  ║              👥 GESTIÓN DE CLIENTES 👥                ║");
-            System.out.println("  ║                                                       ║");
-            System.out.println("  ╚═══════════════════════════════════════════════════════╝");
-            System.out.println();
-            System.out.println("  ┌───────────────────────────────────────────────────────┐");
-            System.out.println("  │  1. 📋 Ver todos los clientes                        │");
-            System.out.println("  │  2. 🔍 Buscar cliente por cédula                     │");
-            System.out.println("  │  3. ➕ Crear nuevo cliente                           │");
-            System.out.println("  │  4. ✏️  Actualizar cliente                            │");
-            System.out.println("  │  5. 🗑️  Eliminar cliente                              │");
-            System.out.println("  ├───────────────────────────────────────────────────────┤");
-            System.out.println("  │  6. 🔙 Volver al menú principal                      │");
-            System.out.println("  └───────────────────────────────────────────────────────┘");
-            
+            System.out.println("  ╔═══════════════════════════════════════╗");
+            System.out.println("  ║          👥 GESTIÓN DE CLIENTES      ║");
+            System.out.println("  ╚═══════════════════════════════════════╝");
+            System.out.println("  1. Listar todos los clientes");
+            System.out.println("  2. Buscar cliente por cédula");
+            System.out.println("  3. Crear nuevo cliente");
+            System.out.println("  4. Actualizar cliente");
+            System.out.println("  5. Eliminar cliente");
+            System.out.println("  0. Volver al menú principal");
+
+            System.out.print("\n  ➤ Seleccione una opción [0-5]: ");
+            String linea = scanner.nextLine();
+
+            int opcion;
             try {
-                System.out.print("\n  ➤ Seleccione una opción [1-6]: ");
-                int opcion = Integer.parseInt(scanner.nextLine());
-                
+                opcion = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ❌ Debe ingresar un número.");
+                presionarEnter();
+                continue;
+            }
+
+            try {
                 switch (opcion) {
                     case 1:
                         listarClientes();
                         break;
                     case 2:
-                        buscarCliente();
+                        buscarPorCedula();
                         break;
                     case 3:
                         crearCliente();
@@ -59,184 +72,184 @@ public class ClientesVista {
                     case 5:
                         eliminarCliente();
                         break;
-                    case 6:
+                    case 0:
+                        // volver al HomeBanquitoVista
                         return;
                     default:
                         System.out.println("\n  ❌ Opción inválida.");
                         presionarEnter();
+                        break;
                 }
-                
-            } catch (NumberFormatException e) {
-                System.out.println("\n  ❌ Por favor ingrese un número válido.");
+            } catch (IOException ex) {
+                System.out.println("\n  ❌ Error llamando al servicio: " + ex.getMessage());
                 presionarEnter();
             }
         }
     }
-    
-    private void listarClientes() {
-        try {
-            List<Cliente> clientes = controller.listarClientes();
-            
-            limpiarPantalla();
-            System.out.println("\n  ╔═══════════════════════════════════════════════════════╗");
-            System.out.println("  ║              📋 LISTA DE CLIENTES                     ║");
-            System.out.println("  ╚═══════════════════════════════════════════════════════╝\n");
-            
-            if (clientes.isEmpty()) {
-                System.out.println("  ⚠️  No hay clientes registrados.\n");
-            } else {
-                for (Cliente c : clientes) {
-                    System.out.println("  ┌───────────────────────────────────────────────────┐");
-                    System.out.printf("  │ 🆔 Cédula: %-38s │\n", c.getCedula());
-                    System.out.printf("  │ 👤 Nombre: %-38s │\n", c.getNombre());
-                    System.out.printf("  │ 📅 F.Nacimiento: %-32s │\n", c.getFechaNacimiento());
-                    System.out.printf("  │ 💍 Estado Civil: %-32s │\n", c.getEstadoCivil());
-                    if (c.getNumCuentaInicial() != null) {
-                        System.out.printf("  │ 🏦 Cuenta Inicial: %-30s │\n", c.getNumCuentaInicial());
-                    }
-                    System.out.println("  └───────────────────────────────────────────────────┘\n");
-                }
-                System.out.println("  Total: " + clientes.size() + " cliente(s)");
-            }
-            
-        } catch (Exception e) {
-            System.out.println("\n  ❌ Error: " + e.getMessage());
-        }
-        presionarEnter();
-    }
-    
-    private void buscarCliente() {
-        System.out.print("\n  📝 Ingrese la cédula: ");
-        String cedula = scanner.nextLine();
-        
-        try {
-            Cliente cliente = controller.obtenerCliente(cedula);
-            
-            if (cliente != null) {
-                System.out.println("\n  ✅ Cliente encontrado:");
-                System.out.println("  ┌───────────────────────────────────────────────────┐");
-                System.out.printf("  │ 🆔 Cédula: %-38s │\n", cliente.getCedula());
-                System.out.printf("  │ 👤 Nombre: %-38s │\n", cliente.getNombre());
-                System.out.printf("  │ 📅 F.Nacimiento: %-32s │\n", cliente.getFechaNacimiento());
-                System.out.printf("  │ 💍 Estado Civil: %-32s │\n", cliente.getEstadoCivil());
-                if (cliente.getNumCuentaInicial() != null) {
-                    System.out.printf("  │ 🏦 Cuenta: %-38s │\n", cliente.getNumCuentaInicial());
-                    System.out.printf("  │ 💳 Tipo Cuenta: %-33s │\n", cliente.getTipoCuentaInicial());
-                }
-                System.out.println("  └───────────────────────────────────────────────────┘");
-            } else {
-                System.out.println("\n  ❌ Cliente no encontrado.");
-            }
-            
-        } catch (Exception e) {
-            System.out.println("\n  ❌ Error: " + e.getMessage());
-        }
-        presionarEnter();
-    }
-    
-    private void crearCliente() {
-        System.out.println("\n  ╔═══════════════════════════════════════════════════════╗");
-        System.out.println("  ║              ➕ CREAR NUEVO CLIENTE                   ║");
-        System.out.println("  ╚═══════════════════════════════════════════════════════╝\n");
-        
-        Cliente cliente = new Cliente();
-        
-        System.out.print("  📝 Cédula: ");
-        cliente.setCedula(scanner.nextLine());
-        
-        System.out.print("  👤 Nombre completo: ");
-        cliente.setNombre(scanner.nextLine());
-        
-        System.out.print("  📅 Fecha nacimiento (YYYY-MM-DD): ");
-        cliente.setFechaNacimiento(scanner.nextLine());
-        
-        System.out.print("  💍 Estado civil (SOLTERO/CASADO/DIVORCIADO/VIUDO): ");
-        cliente.setEstadoCivil(scanner.nextLine().toUpperCase());
-        
-        System.out.print("  💳 Tipo cuenta inicial (AHORROS/CORRIENTE): ");
-        cliente.setTipoCuentaInicial(scanner.nextLine().toUpperCase());
-        
-        System.out.print("  💰 Saldo inicial (opcional, Enter para 0): ");
-        String saldo = scanner.nextLine();
-        cliente.setSaldoInicial(saldo.isEmpty() ? 0.0 : Double.parseDouble(saldo));
-        
-        try {
-            System.out.println("\n  ⏳ Creando cliente...");
-            if (controller.crearCliente(cliente)) {
-                System.out.println("  ✅ Cliente creado exitosamente!");
-            } else {
-                System.out.println("  ❌ Error al crear cliente.");
-            }
-        } catch (Exception e) {
-            System.out.println("\n  ❌ Error: " + e.getMessage());
-        }
-        presionarEnter();
-    }
-    
-    private void actualizarCliente() {
-        System.out.print("\n  📝 Ingrese la cédula del cliente a actualizar: ");
-        String cedula = scanner.nextLine();
-        
-        try {
-            Cliente cliente = controller.obtenerCliente(cedula);
-            if (cliente == null) {
-                System.out.println("\n  ❌ Cliente no encontrado.");
-                presionarEnter();
-                return;
-            }
-            
-            System.out.println("\n  Cliente actual: " + cliente.getNombre());
-            System.out.println("  (Presione Enter para mantener el valor actual)\n");
-            
-            System.out.print("  👤 Nuevo nombre [" + cliente.getNombre() + "]: ");
-            String nombre = scanner.nextLine();
-            if (!nombre.isEmpty()) cliente.setNombre(nombre);
-            
-            System.out.print("  📅 Nueva fecha nacimiento [" + cliente.getFechaNacimiento() + "]: ");
-            String fecha = scanner.nextLine();
-            if (!fecha.isEmpty()) cliente.setFechaNacimiento(fecha);
-            
-            System.out.print("  💍 Nuevo estado civil [" + cliente.getEstadoCivil() + "]: ");
-            String estado = scanner.nextLine();
-            if (!estado.isEmpty()) cliente.setEstadoCivil(estado.toUpperCase());
-            
-            System.out.println("\n  ⏳ Actualizando cliente...");
-            if (controller.actualizarCliente(cedula, cliente)) {
-                System.out.println("  ✅ Cliente actualizado exitosamente!");
-            } else {
-                System.out.println("  ❌ Error al actualizar cliente.");
-            }
-            
-        } catch (Exception e) {
-            System.out.println("\n  ❌ Error: " + e.getMessage());
-        }
-        presionarEnter();
-    }
-    
-    private void eliminarCliente() {
-        System.out.print("\n  📝 Ingrese la cédula del cliente a eliminar: ");
-        String cedula = scanner.nextLine();
-        
-        System.out.print("  ⚠️  ¿Está seguro? (S/N): ");
-        String confirmacion = scanner.nextLine();
-        
-        if (confirmacion.equalsIgnoreCase("S")) {
-            try {
-                System.out.println("\n  ⏳ Eliminando cliente...");
-                if (controller.eliminarCliente(cedula)) {
-                    System.out.println("  ✅ Cliente eliminado exitosamente!");
-                } else {
-                    System.out.println("  ❌ Error al eliminar cliente.");
-                }
-            } catch (Exception e) {
-                System.out.println("\n  ❌ Error: " + e.getMessage());
-            }
+
+    // ==================== Opciones ====================
+    private void listarClientes() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  📋 LISTA DE CLIENTES");
+        System.out.println("  ---------------------");
+
+        List<ClienteModelo> clientes = controlador.listarClientes();
+        if (clientes.isEmpty()) {
+            System.out.println("\n  (No hay clientes registrados)");
         } else {
-            System.out.println("\n  ℹ️  Operación cancelada.");
+            for (ClienteModelo c : clientes) {
+                imprimirCliente(c);
+                System.out.println("  --------------------------------------------");
+            }
         }
         presionarEnter();
     }
-    
+
+    private void buscarPorCedula() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  🔍 BUSCAR CLIENTE POR CÉDULA");
+        System.out.println("  -----------------------------");
+        System.out.print("  ➤ Ingrese cédula (10 dígitos): ");
+        String cedula = scanner.nextLine().trim();
+
+        if (cedula.isEmpty()) {
+            System.out.println("\n  ❌ La cédula es obligatoria.");
+            presionarEnter();
+            return;
+        }
+
+        try {
+            ClienteModelo c = controlador.obtenerCliente(cedula);
+            System.out.println();
+            imprimirCliente(c);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ No se pudo encontrar el cliente.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    private void crearCliente() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  ➕ CREAR NUEVO CLIENTE");
+        System.out.println("  ----------------------");
+
+        ClienteCrearRequest req = new ClienteCrearRequest();
+
+        System.out.print("  Cédula (10 dígitos): ");
+        req.cedula = scanner.nextLine().trim();
+
+        System.out.print("  Nombre completo: ");
+        req.nombre = scanner.nextLine().trim();
+
+        System.out.print("  Fecha de nacimiento (yyyy-MM-dd) [opcional]: ");
+        String fecha = scanner.nextLine().trim();
+        req.fechaNacimiento = fecha.isEmpty() ? null : fecha;
+
+        System.out.print("  Estado civil (SOLTERO, CASADO, etc.) [opcional]: ");
+        String estadoCivil = scanner.nextLine().trim();
+        req.estadoCivil = estadoCivil.isEmpty() ? null : estadoCivil;
+
+        System.out.print("  Tipo de cuenta inicial (AHORROS/CORRIENTE/etc.): ");
+        req.tipoCuentaInicial = scanner.nextLine().trim();
+
+        System.out.print("  Saldo inicial [opcional, por defecto 0]: ");
+        String saldoTxt = scanner.nextLine().trim();
+        if (!saldoTxt.isEmpty()) {
+            try {
+                req.saldoInicial = new BigDecimal(saldoTxt);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ⚠ Saldo inválido, se usará 0.");
+                req.saldoInicial = null;
+            }
+        }
+
+        try {
+            ClienteModelo creado = controlador.crearCliente(req);
+            System.out.println("\n  ✅ Cliente creado correctamente:");
+            imprimirCliente(creado);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al crear el cliente.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    private void actualizarCliente() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  ✏ ACTUALIZAR CLIENTE");
+        System.out.println("  ---------------------");
+
+        System.out.print("  Cédula del cliente a actualizar: ");
+        String cedula = scanner.nextLine().trim();
+
+        ClienteActualizarRequest req = new ClienteActualizarRequest();
+
+        System.out.print("  Nuevo nombre [ENTER para dejar igual]: ");
+        String nombre = scanner.nextLine().trim();
+        req.nombre = nombre.isEmpty() ? null : nombre;
+
+        System.out.print("  Nuevo estado civil [ENTER para dejar igual]: ");
+        String estadoCivil = scanner.nextLine().trim();
+        req.estadoCivil = estadoCivil.isEmpty() ? null : estadoCivil;
+
+        try {
+            ClienteModelo actualizado = controlador.actualizarCliente(cedula, req);
+            System.out.println("\n  ✅ Cliente actualizado:");
+            imprimirCliente(actualizado);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al actualizar el cliente.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    private void eliminarCliente() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  🗑 ELIMINAR CLIENTE");
+        System.out.println("  -------------------");
+
+        System.out.print("  Cédula del cliente a eliminar: ");
+        String cedula = scanner.nextLine().trim();
+
+        System.out.print("\n  ⚠ ¿Está seguro que desea eliminarlo? (s/N): ");
+        String conf = scanner.nextLine().trim().toLowerCase();
+
+        if (!conf.equals("s")) {
+            System.out.println("\n  Operación cancelada.");
+            presionarEnter();
+            return;
+        }
+
+        try {
+            controlador.eliminarCliente(cedula);
+            System.out.println("\n  ✅ Cliente eliminado correctamente.");
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al eliminar el cliente.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    // ==================== Helpers de impresión ====================
+    private void imprimirCliente(ClienteModelo c) {
+        System.out.println("  Cédula        : " + nulo(c.getCedula()));
+        System.out.println("  Nombre        : " + nulo(c.getNombre()));
+        System.out.println("  Fecha Nac.    : " + nulo(c.getFechaNacimiento()));
+        System.out.println("  Estado Civil  : " + nulo(c.getEstadoCivil()));
+        System.out.println("  Nº Cuenta Ini.: " + nulo(c.getNumCuentaInicial()));
+        System.out.println("  Tipo Cuenta   : " + nulo(c.getTipoCuentaInicial()));
+    }
+
+    private String nulo(String s) {
+        return (s == null || s.isBlank()) ? "-" : s;
+    }
+
+    // ==================== Utilitarios ====================
     private void limpiarPantalla() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -251,7 +264,7 @@ public class ClientesVista {
             }
         }
     }
-    
+
     private void presionarEnter() {
         System.out.print("\n  Presione ENTER para continuar...");
         scanner.nextLine();

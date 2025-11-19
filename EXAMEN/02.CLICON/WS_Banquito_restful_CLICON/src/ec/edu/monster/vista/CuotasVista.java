@@ -1,145 +1,250 @@
 package ec.edu.monster.vista;
 
-import ec.edu.monster.controlador.CuotaController;
-import ec.edu.monster.modelo.Cuota;
+import ec.edu.monster.controlador.CuotasControlador;
+import ec.edu.monster.modelo.CuotaAmortizacionModelo;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Vista de consola para gestión de cuotas
- * @author CLICON
- */
 public class CuotasVista {
-    private final Scanner scanner = new Scanner(System.in);
-    private final CuotaController controller = new CuotaController();
+
+    private final Scanner scanner;
+    private final CuotasControlador controlador;
+
+    public CuotasVista() {
+        this.scanner = new Scanner(System.in);
+        this.controlador = new CuotasControlador();
+    }
 
     public void mostrarMenu() {
         while (true) {
-            ConsolaUtil.limpiarPantalla();
-            System.out.println("\n╔═══════════════════════════════════════╗");
-            System.out.println("║      📅 GESTIÓN DE CUOTAS            ║");
-            System.out.println("╠═══════════════════════════════════════╣");
-            System.out.println("║  1. Ver cuotas de un crédito         ║");
-            System.out.println("║  2. Consultar cuota específica       ║");
-            System.out.println("║  3. Pagar cuota                      ║");
-            System.out.println("║  4. Anular cuota                     ║");
-            System.out.println("║  5. Volver al menú principal         ║");
-            System.out.println("╚═══════════════════════════════════════╝");
-            System.out.print("➤ Seleccione una opción: ");
+            limpiarPantalla();
 
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println("\n");
+            System.out.println("  ╔═══════════════════════════════════════╗");
+            System.out.println("  ║        📅 GESTIÓN DE CUOTAS          ║");
+            System.out.println("  ╚═══════════════════════════════════════╝");
+            System.out.println("  1. Listar cuotas por crédito");
+            System.out.println("  2. Ver detalle de una cuota");
+            System.out.println("  3. Actualizar estado de una cuota");
+            System.out.println("  4. Anular cuota");
+            System.out.println("  0. Volver al menú principal");
 
-            switch (opcion) {
-                case 1:
-                    verCuotasCredito();
-                    break;
-                case 2:
-                    consultarCuota();
-                    break;
-                case 3:
-                    pagarCuota();
-                    break;
-                case 4:
-                    anularCuota();
-                    break;
-                case 5:
-                    return;
-                default:
-                    System.out.println("❌ Opción inválida");
-            }
-        }
-    }
-
-    private void verCuotasCredito() {
-        System.out.print("➤ Ingrese ID del crédito: ");
-        Long idCredito = scanner.nextLong();
-        scanner.nextLine();
-
-        try {
-            List<Cuota> cuotas = controller.listarCuotasPorCredito(idCredito);
-            System.out.println("\n┌─────────────────────────────────────────────────────────────────────┐");
-            System.out.printf("│           📅 CUOTAS DEL CRÉDITO: %-33d │%n", idCredito);
-            System.out.println("├─────────────────────────────────────────────────────────────────────┤");
-            
-            if (cuotas.isEmpty()) {
-                System.out.println("│  ⚠️  No hay cuotas registradas para este crédito                    │");
-            } else {
-                for (Cuota c : cuotas) {
-                    System.out.println("├─────────────────────────────────────────────────────────────────────┤");
-                    System.out.printf("│  Cuota #%-3d │ Valor: $%-15.2f │ Estado: %-15s │%n", 
-                        c.getNumeroCuota(), c.getValorCuota(), c.getEstado());
-                    System.out.printf("│  Vencimiento: %-20s │ Saldo: $%-18.2f │%n", 
-                        c.getFechaVencimiento(), c.getSaldoPendiente());
-                }
-            }
-            System.out.println("└─────────────────────────────────────────────────────────────────────┘");
-        } catch (Exception e) {
-            System.out.println("❌ Error al listar cuotas: " + e.getMessage());
-        }
-        ConsolaUtil.presionarEnter();
-    }
-
-    private void consultarCuota() {
-        System.out.print("➤ Ingrese ID de la cuota: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
-
-        try {
-            Cuota cuota = controller.obtenerCuota(id);
-            if (cuota != null) {
-                System.out.println("\n┌─────────────────────────────────────────────────────┐");
-                System.out.println("│           📄 INFORMACIÓN DE LA CUOTA                │");
-                System.out.println("├─────────────────────────────────────────────────────┤");
-                System.out.printf("│  ID: %-46d │%n", cuota.getId());
-                System.out.printf("│  Número de Cuota: %-34d │%n", cuota.getNumeroCuota());
-                System.out.printf("│  Valor: $%-42.2f │%n", cuota.getValorCuota());
-                System.out.printf("│  Fecha Vencimiento: %-30s │%n", cuota.getFechaVencimiento());
-                System.out.printf("│  Estado: %-42s │%n", cuota.getEstado());
-                System.out.printf("│  Saldo Pendiente: $%-32.2f │%n", cuota.getSaldoPendiente());
-                System.out.println("└─────────────────────────────────────────────────────┘");
-            } else {
-                System.out.println("❌ Cuota no encontrada");
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Error al consultar cuota: " + e.getMessage());
-        }
-    }
-
-    private void pagarCuota() {
-        System.out.print("➤ Ingrese ID de la cuota a pagar: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
-
-        try {
-            if (controller.actualizarEstadoCuota(id, "PAGADA")) {
-                System.out.println("✅ Cuota pagada exitosamente");
-            } else {
-                System.out.println("❌ No se pudo procesar el pago");
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Error al pagar cuota: " + e.getMessage());
-        }
-    }
-
-    private void anularCuota() {
-        System.out.print("➤ Ingrese ID de la cuota a anular: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
-
-        System.out.print("⚠️  ¿Está seguro de anular esta cuota? (S/N): ");
-        String confirmacion = scanner.nextLine();
-
-        if (confirmacion.equalsIgnoreCase("S")) {
+            System.out.print("\n  ➤ Seleccione una opción [0-4]: ");
+            String linea = scanner.nextLine();
+            int opcion;
             try {
-                if (controller.anularCuota(id)) {
-                    System.out.println("✅ Cuota anulada exitosamente");
-                } else {
-                    System.out.println("❌ No se pudo anular la cuota");
+                opcion = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ❌ Debe ingresar un número.");
+                presionarEnter();
+                continue;
+            }
+
+            try {
+                switch (opcion) {
+                    case 1:
+                        listarPorCredito();
+                        break;
+                    case 2:
+                        verCuota();
+                        break;
+                    case 3:
+                        actualizarEstadoCuota();
+                        break;
+                    case 4:
+                        anularCuota();
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        System.out.println("\n  ❌ Opción inválida.");
+                        presionarEnter();
+                        break;
                 }
-            } catch (Exception e) {
-                System.out.println("❌ Error al anular cuota: " + e.getMessage());
+            } catch (IOException ex) {
+                System.out.println("\n  ❌ Error llamando al servicio: " + ex.getMessage());
+                presionarEnter();
             }
         }
+    }
+
+    private void listarPorCredito() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  📋 CUOTAS POR CRÉDITO");
+        System.out.println("  ----------------------");
+
+        Long idCredito = leerLong("  ID del crédito: ");
+        if (idCredito == null) {
+            return;
+        }
+
+        List<CuotaAmortizacionModelo> cuotas = controlador.listarPorCredito(idCredito);
+        if (cuotas.isEmpty()) {
+            System.out.println("\n  (No se encontraron cuotas para este crédito)");
+        } else {
+            System.out.println();
+            for (CuotaAmortizacionModelo c : cuotas) {
+                imprimirLineaCuota(c);
+            }
+        }
+
+        presionarEnter();
+    }
+
+    private void verCuota() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  🔍 DETALLE DE CUOTA");
+        System.out.println("  --------------------");
+
+        Long idCuota = leerLong("  ID de la cuota: ");
+        if (idCuota == null) {
+            return;
+        }
+
+        try {
+            CuotaAmortizacionModelo c = controlador.obtenerPorId(idCuota);
+            System.out.println();
+            imprimirDetalleCuota(c);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ No se pudo obtener la cuota.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    private void actualizarEstadoCuota() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  ✏ ACTUALIZAR ESTADO DE CUOTA");
+        System.out.println("  -----------------------------");
+
+        Long idCuota = leerLong("  ID de la cuota: ");
+        if (idCuota == null) {
+            return;
+        }
+
+        System.out.println("\n  Estados posibles: PAGADA, VENCIDA, ANULADA");
+        System.out.print("  Nuevo estado: ");
+        String estado = scanner.nextLine().trim().toUpperCase();
+
+        if (estado.isEmpty()) {
+            System.out.println("\n  ❌ El estado es obligatorio.");
+            presionarEnter();
+            return;
+        }
+
+        // fechaPago opcional
+        System.out.print("  Fecha de pago (yyyy-MM-dd) [ENTER para omitir]: ");
+        String fechaPago = scanner.nextLine().trim();
+        if (fechaPago.isEmpty()) {
+            fechaPago = null;
+        }
+
+        try {
+            CuotaAmortizacionModelo c = controlador.actualizarEstado(idCuota, estado, fechaPago);
+            System.out.println("\n  ✅ Cuota actualizada:");
+            imprimirDetalleCuota(c);
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al actualizar la cuota.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    private void anularCuota() throws IOException {
+        limpiarPantalla();
+        System.out.println("\n  🗑 ANULAR CUOTA");
+        System.out.println("  ---------------");
+
+        Long idCuota = leerLong("  ID de la cuota: ");
+        if (idCuota == null) {
+            return;
+        }
+
+        System.out.print("\n  ⚠ ¿Seguro que desea anular la cuota? (s/N): ");
+        String conf = scanner.nextLine().trim().toLowerCase();
+        if (!"s".equals(conf)) {
+            System.out.println("\n  Operación cancelada.");
+            presionarEnter();
+            return;
+        }
+
+        try {
+            controlador.anular(idCuota);
+            System.out.println("\n  ✅ Cuota anulada correctamente.");
+        } catch (IOException e) {
+            System.out.println("\n  ❌ Error al anular la cuota.");
+            System.out.println("     Detalle: " + e.getMessage());
+        }
+
+        presionarEnter();
+    }
+
+    // ========= Helpers =========
+
+    private Long leerLong(String mensaje) {
+        System.out.print(mensaje);
+        String txt = scanner.nextLine().trim();
+        try {
+            return Long.parseLong(txt);
+        } catch (NumberFormatException e) {
+            System.out.println("\n  ❌ Valor numérico inválido.");
+            presionarEnter();
+            return null;
+        }
+    }
+
+    private void imprimirLineaCuota(CuotaAmortizacionModelo c) {
+        System.out.printf("  ID:%-5d | Credito:%-5d | N°:%-3d | Vence:%-10s | Cuota:%-10s | Saldo:%-10s | Estado:%s%n",
+                c.getId(),
+                c.getIdCredito(),
+                c.getNumeroCuota(),
+                nulo(c.getFechaVencimiento()),
+                money(c.getValorCuota()),
+                money(c.getSaldo()),
+                nulo(c.getEstado()));
+    }
+
+    private void imprimirDetalleCuota(CuotaAmortizacionModelo c) {
+        System.out.println("  ID Cuota        : " + c.getId());
+        System.out.println("  ID Crédito      : " + c.getIdCredito());
+        System.out.println("  Nº Cuota        : " + c.getNumeroCuota());
+        System.out.println("  Valor Cuota     : " + money(c.getValorCuota()));
+        System.out.println("  Interés         : " + money(c.getInteresPagado()));
+        System.out.println("  Capital         : " + money(c.getCapitalPagado()));
+        System.out.println("  Saldo           : " + money(c.getSaldo()));
+        System.out.println("  Vencimiento     : " + nulo(c.getFechaVencimiento()));
+        System.out.println("  Estado          : " + nulo(c.getEstado()));
+    }
+
+    private String nulo(String s) {
+        return (s == null || s.trim().isEmpty()) ? "-" : s;
+    }
+
+    private String money(java.math.BigDecimal b) {
+        return b == null ? "-" : b.toPlainString();
+    }
+
+    private void limpiarPantalla() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 3; i++) {
+                System.out.println();
+            }
+        }
+    }
+
+    private void presionarEnter() {
+        System.out.print("\n  Presione ENTER para continuar...");
+        scanner.nextLine();
     }
 }

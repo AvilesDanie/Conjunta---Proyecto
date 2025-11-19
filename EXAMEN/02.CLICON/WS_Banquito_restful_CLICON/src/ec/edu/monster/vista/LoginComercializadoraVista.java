@@ -1,85 +1,88 @@
 package ec.edu.monster.vista;
 
-import ec.edu.monster.controlador.AuthController;
+import ec.edu.monster.controlador.AuthControlador;
+import ec.edu.monster.modelo.UsuarioModelo;
+
+import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * Vista de login para Comercializadora
- * @author CLICON
- */
 public class LoginComercializadoraVista {
+
     private final Scanner scanner;
-    private final AuthController authController;
-    
+    private final AuthControlador authControlador;
+
     public LoginComercializadoraVista() {
         this.scanner = new Scanner(System.in);
-        this.authController = new AuthController();
+        // 🔴 AJUSTA ESTA URL AL ENDPOINT REAL DE LA COMERCIALIZADORA
+        String loginUrlComercializadora = "http://localhost:8080/WS_JAVA_REST_Comercializadora/api/usuarios/login";
+        this.authControlador = new AuthControlador(loginUrlComercializadora);
     }
-    
+
     /**
-     * Muestra la pantalla de login y valida credenciales
-     * @return true si login exitoso, false si el usuario quiere volver
+     * Muestra el login de la Comercializadora
+     * @return true si el login es exitoso, false si el usuario vuelve/cancela
      */
     public boolean mostrarLogin() {
         while (true) {
             limpiarPantalla();
-            
+
             System.out.println("\n");
             System.out.println("  ╔═══════════════════════════════════════════════════════╗");
-            System.out.println("  ║                                                       ║");
-            System.out.println("  ║              🏪 LOGIN ELECTROQUITO 🏪                 ║");
-            System.out.println("  ║                  Comercializadora                     ║");
-            System.out.println("  ║                                                       ║");
+            System.out.println("  ║            🔐 LOGIN COMERCIALIZADORA                 ║");
             System.out.println("  ╚═══════════════════════════════════════════════════════╝");
-            System.out.println();
-            
-            System.out.print("  👤 Usuario: ");
-            String username = scanner.nextLine().trim();
-            
-            if (username.isEmpty()) {
-                System.out.println("\n  ❌ El usuario no puede estar vacío.");
-                presionarEnter();
-                continue;
-            }
-            
-            // Opción para volver
-            if (username.equalsIgnoreCase("volver") || username.equalsIgnoreCase("back")) {
-                return false;
-            }
-            
-            System.out.print("  🔒 Contraseña: ");
-            String password = scanner.nextLine().trim();
-            
-            if (password.isEmpty()) {
-                System.out.println("\n  ❌ La contraseña no puede estar vacía.");
-                presionarEnter();
-                continue;
-            }
-            
-            System.out.println("\n  ⏳ Validando credenciales...");
-            
+            System.out.println("  1. Iniciar sesión");
+            System.out.println("  0. Volver a selección de aplicación");
+            System.out.print("\n  ➤ Seleccione una opción [0-1]: ");
+
+            String linea = scanner.nextLine();
+            int opcion;
             try {
-                boolean loginExitoso = authController.loginComercializadora(username, password);
-                
-                if (loginExitoso) {
-                    System.out.println("  ✅ ¡Login exitoso! Bienvenido " + username);
+                opcion = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                System.out.println("\n  ❌ Ingrese un número válido.");
+                presionarEnter();
+                continue;
+            }
+
+            if (opcion == 0) {
+                return false; // vuelve a selección
+            } else if (opcion == 1) {
+                System.out.print("\n  Usuario: ");
+                String username = scanner.nextLine().trim();
+
+                System.out.print("  Contraseña: ");
+                String password = scanner.nextLine().trim();
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    System.out.println("\n  ❌ Usuario y contraseña son obligatorios.");
                     presionarEnter();
-                    return true;
-                } else {
-                    System.out.println("\n  ❌ Credenciales inválidas o usuario inactivo.");
-                    System.out.println("     Por favor, intente nuevamente.");
-                    System.out.println("     (Escriba 'volver' para regresar)");
+                    continue;
+                }
+
+                try {
+                    UsuarioModelo usuario = authControlador.login(username, password);
+                    if (usuario == null) {
+                        System.out.println("\n  ❌ Credenciales incorrectas o usuario inactivo.");
+                        presionarEnter();
+                    } else {
+                        System.out.println("\n  ✅ Login exitoso.");
+                        System.out.println("  Usuario: " + usuario.getUsername());
+                        System.out.println("  Rol    : " + usuario.getRol());
+                        presionarEnter();
+                        return true; // el main mostrará HomeComercializadoraVista
+                    }
+                } catch (IOException e) {
+                    System.out.println("\n  ❌ Error al conectar con el servidor.");
+                    System.out.println("     Detalle: " + e.getMessage());
                     presionarEnter();
                 }
-                
-            } catch (Exception e) {
-                System.out.println("\n  ❌ Error de conexión: " + e.getMessage());
-                System.out.println("     Verifique que el servidor esté activo.");
+            } else {
+                System.out.println("\n  ❌ Opción inválida.");
                 presionarEnter();
             }
         }
     }
-    
+
     private void limpiarPantalla() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -94,7 +97,7 @@ public class LoginComercializadoraVista {
             }
         }
     }
-    
+
     private void presionarEnter() {
         System.out.print("\n  Presione ENTER para continuar...");
         scanner.nextLine();
