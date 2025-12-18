@@ -2,6 +2,7 @@ package ec.edu.monster.controller;
 
 import ec.edu.monster.config.AppConfig;
 import ec.edu.monster.dto.FacturaDTO;
+import ec.edu.monster.dto.FacturaDetalleDTO;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.RequestDispatcher;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;

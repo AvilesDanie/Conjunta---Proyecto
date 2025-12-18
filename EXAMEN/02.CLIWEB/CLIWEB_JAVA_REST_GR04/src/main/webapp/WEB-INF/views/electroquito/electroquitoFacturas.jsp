@@ -267,6 +267,185 @@
             font-size: 1.6rem;
         }
 
+        .eq-bill-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+        }
+
+        /* Modal Styles */
+        .eq-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .eq-modal.is-active {
+            display: flex;
+        }
+
+        .eq-modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .eq-modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(120deg, #ff7a14, #ff9330);
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .eq-modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .eq-modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .eq-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .eq-modal-body {
+            padding: 28px;
+        }
+
+        .eq-detail-section {
+            margin-bottom: 24px;
+        }
+
+        .eq-detail-section h3 {
+            margin: 0 0 12px;
+            font-size: 1.1rem;
+            color: var(--eq-orange-strong);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .eq-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .eq-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .eq-detail-label {
+            font-size: 0.85rem;
+            color: var(--eq-text-muted);
+            font-weight: 500;
+        }
+
+        .eq-detail-value {
+            font-size: 1rem;
+            color: var(--eq-text-dark);
+            font-weight: 600;
+        }
+
+        .eq-products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .eq-products-table th {
+            background: #f9fafb;
+            padding: 12px;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--eq-text-dark);
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .eq-products-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .eq-products-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .eq-total-row {
+            background: #fef3e7;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .eq-total-row strong {
+            font-size: 1.3rem;
+            color: var(--eq-green);
+        }
+
+        .eq-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--eq-text-muted);
+        }
+
+        .eq-payment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .eq-payment-badge.efectivo {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .eq-payment-badge.credito {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
         @media (max-width: 640px) {
             .eq-wrapper {
                 padding: 0 16px 42px;
@@ -280,6 +459,19 @@
             .eq-bill-total {
                 justify-content: space-between;
                 width: 100%;
+            }
+
+            .eq-modal-content {
+                max-height: 95vh;
+            }
+
+            .eq-products-table {
+                font-size: 0.85rem;
+            }
+
+            .eq-products-table th,
+            .eq-products-table td {
+                padding: 8px;
             }
         }
     </style>
@@ -354,7 +546,7 @@
             </c:if>
 
             <c:forEach var="factura" items="${facturas}">
-                <article class="eq-bill-card">
+                <article class="eq-bill-card" style="cursor: pointer;" onclick="verDetalleFactura(${factura.id})">
                     <div class="eq-bill-info">
                         <h3>Factura #<c:out value="${factura.id}"/></h3>
                         <p>
@@ -387,6 +579,139 @@
         onclick="document.getElementById('facturaSearch').focus();">
     <span class="material-icons-round">search</span>
 </button>
+
+<!-- Modal de Detalle de Factura -->
+<div class="eq-modal" id="detalleModal">
+    <div class="eq-modal-content">
+        <div class="eq-modal-header">
+            <h2 id="modalTitle">Detalle de Factura</h2>
+            <button type="button" class="eq-modal-close" onclick="cerrarModal()">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        <div class="eq-modal-body" id="modalBody">
+            <div class="eq-loading">
+                <span class="material-icons-round" style="font-size: 48px; color: #ff7a14;">hourglass_empty</span>
+                <p>Cargando detalle...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function verDetalleFactura(id) {
+        const modal = document.getElementById('detalleModal');
+        const modalBody = document.getElementById('modalBody');
+        const modalTitle = document.getElementById('modalTitle');
+        
+        // Mostrar modal con loading
+        modal.classList.add('is-active');
+        modalBody.innerHTML = '<div class="eq-loading"><span class="material-icons-round" style="font-size: 48px; color: #ff7a14;">hourglass_empty</span><p>Cargando detalle...</p></div>';
+        
+        // Hacer petición AJAX
+        fetch('${pageContext.request.contextPath}/electroquito/facturas/detalle?id=' + id)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al obtener el detalle');
+                }
+                return response.json();
+            })
+            .then(data => {
+                modalTitle.textContent = 'Factura #' + data.id;
+                modalBody.innerHTML = generarContenidoDetalle(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                modalBody.innerHTML = '<div class="eq-loading"><span class="material-icons-round" style="font-size: 48px; color: #ef4444;">error</span><p>Error al cargar el detalle de la factura.</p></div>';
+            });
+    }
+    
+    function generarContenidoDetalle(factura) {
+        console.log('Factura recibida:', factura); // Debug
+        
+        // Manejar diferentes nombres de propiedades que puede devolver el API
+        const clienteNombre = factura.clienteNombre || factura.nombreCliente || 'N/A';
+        const clienteCedula = factura.clienteCedula || factura.cedulaCliente || 'N/A';
+        const fechaEmision = factura.fechaEmision || factura.fecha || 'N/A';
+        const formaPago = factura.formaPago || 'EFECTIVO';
+        const total = factura.total || factura.totalNeto || 0;
+        
+        const formaPagoClass = formaPago === 'EFECTIVO' ? 'efectivo' : 'credito';
+        const formaPagoIcon = formaPago === 'EFECTIVO' ? 'attach_money' : 'credit_score';
+        const formaPagoTexto = formaPago === 'EFECTIVO' ? 'Efectivo' : 'Crédito';
+        
+        let creditoInfo = '';
+        if (formaPago === 'CREDITO' && factura.plazoMeses) {
+            creditoInfo = '<div class="eq-detail-item"><span class="eq-detail-label">Plazo</span><span class="eq-detail-value">' + factura.plazoMeses + ' meses</span></div>';
+            if (factura.numCuentaCredito) {
+                creditoInfo += '<div class="eq-detail-item"><span class="eq-detail-label">N° Cuenta</span><span class="eq-detail-value">' + factura.numCuentaCredito + '</span></div>';
+            }
+        }
+        
+        let productosHTML = '';
+        const productos = factura.productos || factura.detalles || [];
+        if (productos && productos.length > 0) {
+            productosHTML = '<table class="eq-products-table"><thead><tr><th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr></thead><tbody>';
+            productos.forEach(prod => {
+                console.log('Producto completo:', prod); // Debug
+                const nombreProducto = prod.nombreElectro || prod.nombreElectrodomestico || prod.nombre || prod.producto || prod.electrodomestico || 'Producto sin nombre';
+                const cantidad = prod.cantidad || 0;
+                const precioUnitario = prod.precioUnitario || prod.precio || prod.precioUnit || 0;
+                const subtotal = prod.subtotal || prod.total || prod.totalProducto || (precioUnitario * cantidad);
+                
+                console.log('Valores:', {nombre: nombreProducto, cantidad: cantidad, precioUnit: precioUnitario, subtotal: subtotal});
+                
+                productosHTML += '<tr>';
+                productosHTML += '<td>' + nombreProducto + '</td>';
+                productosHTML += '<td>' + cantidad + '</td>';
+                productosHTML += '<td>$' + (typeof precioUnitario === 'number' ? precioUnitario.toFixed(2) : '0.00') + '</td>';
+                productosHTML += '<td>$' + (typeof subtotal === 'number' ? subtotal.toFixed(2) : '0.00') + '</td>';
+                productosHTML += '</tr>';
+            });
+            productosHTML += '</tbody></table>';
+        } else {
+            productosHTML = '<p style="color: #6b7280; text-align: center;">No hay productos registrados.</p>';
+        }
+        
+        return '<div class="eq-detail-section">' +
+            '<h3><span class="material-icons-round">person</span>Información del Cliente</h3>' +
+            '<div class="eq-detail-grid">' +
+            '<div class="eq-detail-item"><span class="eq-detail-label">Nombre</span><span class="eq-detail-value">' + clienteNombre + '</span></div>' +
+            '<div class="eq-detail-item"><span class="eq-detail-label">Cédula</span><span class="eq-detail-value">' + clienteCedula + '</span></div>' +
+            '<div class="eq-detail-item"><span class="eq-detail-label">Fecha</span><span class="eq-detail-value">' + fechaEmision + '</span></div>' +
+            '<div class="eq-detail-item"><span class="eq-detail-label">Forma de Pago</span><span class="eq-payment-badge ' + formaPagoClass + '"><span class="material-icons-round" style="font-size: 18px;">' + formaPagoIcon + '</span>' + formaPagoTexto + '</span></div>' +
+            creditoInfo +
+            '</div>' +
+            '</div>' +
+            '<div class="eq-detail-section">' +
+            '<h3><span class="material-icons-round">shopping_cart</span>Productos</h3>' +
+            productosHTML +
+            '</div>' +
+            '<div class="eq-total-row">' +
+            '<span style="font-size: 1.1rem; font-weight: 600;">Total:</span>' +
+            '<strong>$' + (typeof total === 'number' ? total.toFixed(2) : '0.00') + '</strong>' +
+            '</div>';
+    }
+    
+    function cerrarModal() {
+        const modal = document.getElementById('detalleModal');
+        modal.classList.remove('is-active');
+    }
+    
+    // Cerrar modal al hacer clic fuera de él
+    document.getElementById('detalleModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarModal();
+        }
+    });
+    
+    // Cerrar modal con tecla ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarModal();
+        }
+    });
+</script>
 
 </body>
 </html>

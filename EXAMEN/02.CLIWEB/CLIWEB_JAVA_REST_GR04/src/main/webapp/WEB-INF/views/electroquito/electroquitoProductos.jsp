@@ -200,6 +200,22 @@
             font-size: 16px;
         }
 
+        .eq-success-message {
+            margin: 0 0 12px;
+            font-size: 0.9rem;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: #dcfce7;
+            color: #15803d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .eq-success-icon {
+            font-size: 16px;
+        }
+
         .eq-empty {
             margin: 8px 0 0;
             font-size: 0.95rem;
@@ -262,6 +278,48 @@
             font-weight: 700;
             color: var(--eq-green);
             font-size: 1.15rem;
+        }
+
+        .eq-product-right {
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .eq-product-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .eq-action-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .eq-action-edit {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1d4ed8;
+        }
+
+        .eq-action-delete {
+            background: rgba(248, 113, 113, 0.18);
+            color: #b91c1c;
+        }
+
+        .eq-delete-form {
+            margin: 0;
         }
 
         .eq-fab {
@@ -368,6 +426,12 @@
                     <button type="submit" class="eq-search-btn">Buscar</button>
                 </form>
 
+                <c:if test="${not empty mensajeExito}">
+                    <div class="eq-success-message">
+                        <span class="eq-success-icon">&#10003;</span>
+                        <span><c:out value="${mensajeExito}"/></span>
+                    </div>
+                </c:if>
                 <!-- Mensaje de error si algo fallÃ³ -->
                 <c:if test="${not empty error}">
                     <div class="eq-error-message">
@@ -418,12 +482,30 @@
                                             <c:out value="${p.codigo}"/>
                                         </div>
                                     </div>
-                                    <div class="eq-product-price">
-                                        $
-                                        <fmt:formatNumber value="${p.precioVenta}"
-                                                          type="number"
-                                                          minFractionDigits="2"
-                                                          maxFractionDigits="2"/>
+                                    <div class="eq-product-right">
+                                        <div class="eq-product-price">
+                                            $
+                                            <fmt:formatNumber value="${p.precioVenta}"
+                                                              type="number"
+                                                              minFractionDigits="2"
+                                                              maxFractionDigits="2"/>
+                                        </div>
+                                        <div class="eq-product-actions">
+                                            <a class="eq-action-btn eq-action-edit"
+                                               href="${pageContext.request.contextPath}/electroquito/productos/editar?id=${p.id}">
+                                                &#9998; Editar
+                                            </a>
+                                            <form method="post"
+                                                  action="${pageContext.request.contextPath}/electroquito/productos/eliminar"
+                                                  class="eq-delete-form"
+                                                  onsubmit="return confirm('¿Deseas eliminar este producto?');">
+                                                <input type="hidden" name="id" value="${p.id}"/>
+                                                <button type="submit"
+                                                        class="eq-action-btn eq-action-delete">
+                                                    &#10005; Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </article>
                             </c:forEach>
@@ -445,5 +527,7 @@
 </div>
 </body>
 </html>
+
+
 
 

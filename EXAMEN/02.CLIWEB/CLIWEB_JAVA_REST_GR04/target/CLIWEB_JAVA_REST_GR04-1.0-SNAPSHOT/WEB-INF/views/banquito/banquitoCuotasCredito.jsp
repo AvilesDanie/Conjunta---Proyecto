@@ -8,6 +8,47 @@
     <meta charset="UTF-8">
     <title>Tabla de Amortizaci&oacute;n - BanQuito</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <style>
+        .alert-success {
+            margin-bottom: 18px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .cuota-actions {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cuota-actions form {
+            margin: 0;
+        }
+
+        .cuota-action-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .cuota-action-btn.pay {
+            background: #16a34a;
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
+        }
+
+        .cuota-action-btn.cancel {
+            background: #dc2626;
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+        }
+    </style>
 </head>
 <body class="bg-gradient">
 <fmt:setLocale value="es_EC"/>
@@ -20,6 +61,12 @@
     <header class="page-header">
         <h1 class="page-title">Tabla de Amortizaci&oacute;n</h1>
     </header>
+
+    <c:if test="${not empty mensajeExito}">
+        <div class="alert-success">
+            <c:out value="${mensajeExito}"/>
+        </div>
+    </c:if>
 
     <c:if test="${not empty error}">
         <div class="alert-error">
@@ -89,7 +136,8 @@
                     </strong>
                 </p>
             </article>
-
+            <c:set var="creditoActualId"
+                   value="${not empty idCreditoResumen ? idCreditoResumen : idCredito}"/>
             <div class="cuotas-list">
                 <c:forEach var="cuota" items="${cuotas}">
                     <c:set var="estadoActual"
@@ -151,6 +199,32 @@
                                                       maxFractionDigits="2"/>
                                 </strong>
                             </p>
+                            <div class="cuota-actions">
+                                <c:if test="${estadoActual eq 'PENDIENTE' and not empty cuota.id}">
+                                    <form method="post"
+                                          action="${pageContext.request.contextPath}/banquito/creditos/cuotas/pagar"
+                                          onsubmit="return confirm('¿Marcar como pagada la cuota #${cuota.numeroCuota}?');">
+                                        <input type="hidden" name="idCredito" value="${creditoActualId}"/>
+                                        <input type="hidden" name="idCuota" value="${cuota.id}"/>
+                                        <input type="hidden" name="numeroCuota" value="${cuota.numeroCuota}"/>
+                                        <button type="submit" class="cuota-action-btn pay">
+                                            Pagar cuota
+                                        </button>
+                                    </form>
+                                </c:if>
+                                <c:if test="${estadoActual eq 'PAGADA' and not empty cuota.id}">
+                                    <form method="post"
+                                          action="${pageContext.request.contextPath}/banquito/creditos/cuotas/anular"
+                                          onsubmit="return confirm('¿Anular el pago de la cuota #${cuota.numeroCuota}?');">
+                                        <input type="hidden" name="idCredito" value="${creditoActualId}"/>
+                                        <input type="hidden" name="idCuota" value="${cuota.id}"/>
+                                        <input type="hidden" name="numeroCuota" value="${cuota.numeroCuota}"/>
+                                        <button type="submit" class="cuota-action-btn cancel">
+                                            Anular pago
+                                        </button>
+                                    </form>
+                                </c:if>
+                            </div>
                         </div>
                     </article>
                 </c:forEach>

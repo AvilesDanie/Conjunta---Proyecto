@@ -13,14 +13,14 @@ public final class AppConfig {
     // ================== BANQUITO ==================
     public static final String BANQUITO_API_BASE =
             System.getProperty("banquito.api.base",
-                    "http://localhost:8080/WS_JAVA_REST_BanQuito/api");
+                    "http://10.40.27.74:8080/WS_JAVA_REST_BanQuito/api");
 
     // ================== COMERCIALIZADORA / ELECTROQUITO ==================
     public static final String COMERCIALIZADORA_API_BASE =
             System.getProperty("comercializadora.api.base",
-                    "http://localhost:8080/WS_JAVA_REST_Comercializadora/api");
+                    "http://10.40.27.74:8080/WS_JAVA_REST_Comercializadora/api");
 
     public static final String COMERCIALIZADORA_HOST_BASE =
             System.getProperty("comercializadora.host.base",
-                    "http://localhost:8080/WS_JAVA_REST_Comercializadora");
+                    "http://10.40.27.74:8080/WS_JAVA_REST_Comercializadora");
 }

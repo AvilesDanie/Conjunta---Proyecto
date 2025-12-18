@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,11 +31,17 @@ public class ElectroquitoFacturarController extends HttpServlet {
     private static final String BASE_HOST = AppConfig.COMERCIALIZADORA_HOST_BASE;
 
     // DTOs para el POST de factura (solo del lado cliente)
+    public static class DetalleFacturaRequest {
+        public Long idElectrodomestico;
+        public int cantidad;
+    }
+
     public static class CrearFacturaRequest {
         public String cedulaCliente;
         public String nombreCliente;
         public Long idElectrodomestico;
         public int cantidad;
+        public List<DetalleFacturaRequest> productos;
         public String formaPago;
         public Integer plazoMeses;
         public String numCuentaCredito;
@@ -66,6 +73,7 @@ public class ElectroquitoFacturarController extends HttpServlet {
             List<ElectrodomesticoDTO> productos = obtenerProductosDesdeAPI();
             request.setAttribute("productos", productos);
             request.setAttribute("imagenBaseUrl", BASE_HOST);
+            request.setAttribute("itemsStateValue", "[]");
 
             RequestDispatcher rd = request.getRequestDispatcher(
                     "/WEB-INF/views/electroquito/electroquitoFacturar.jsp");
@@ -77,6 +85,7 @@ public class ElectroquitoFacturarController extends HttpServlet {
                     "No se pudo cargar el catálogo de productos. Intente nuevamente.");
             request.setAttribute("productos", List.of());
             request.setAttribute("imagenBaseUrl", BASE_HOST);
+            request.setAttribute("itemsStateValue", "[]");
 
             RequestDispatcher rd = request.getRequestDispatcher(
                     "/WEB-INF/views/electroquito/electroquitoFacturar.jsp");
@@ -98,48 +107,95 @@ public class ElectroquitoFacturarController extends HttpServlet {
 
         String cedula = request.getParameter("cedula");
         String nombreCompleto = request.getParameter("nombreCompleto");
-        String productoIdStr = request.getParameter("productoId");
-        String cantidadStr = request.getParameter("cantidad");
         String formaPago = request.getParameter("formaPago");
+        String plazoMesesStr = request.getParameter("plazoMeses");
+        String numCuentaCredito = request.getParameter("numCuentaCredito");
+        String itemsStateJson = request.getParameter("itemsState");
+
+        Jsonb jsonb = JsonbBuilder.create();
 
         if (cedula == null || cedula.isBlank()
-                || nombreCompleto == null || nombreCompleto.isBlank()
-                || productoIdStr == null || productoIdStr.isBlank()
-                || cantidadStr == null || cantidadStr.isBlank()) {
+                || nombreCompleto == null || nombreCompleto.isBlank()) {
 
             request.setAttribute("error",
-                    "Complete todos los campos y seleccione un producto para generar la factura.");
+                    "Complete los datos del cliente antes de generar la factura.");
             recargarProductosYForward(request, response);
             return;
         }
 
-        int cantidad;
-        Long productoId;
+        if (itemsStateJson == null || itemsStateJson.isBlank()) {
+            request.setAttribute("error",
+                    "Agregue al menos un producto a la factura.");
+            request.setAttribute("itemsStateValue", "[]");
+            recargarProductosYForward(request, response);
+            return;
+        }
+
+        DetalleFacturaRequest[] itemsArray;
         try {
-            cantidad = Integer.parseInt(cantidadStr);
-            productoId = Long.parseLong(productoIdStr);
-        } catch (NumberFormatException ex) {
-            request.setAttribute("error", "Cantidad o producto inválidos.");
+            itemsArray = jsonb.fromJson(itemsStateJson, DetalleFacturaRequest[].class);
+        } catch (Exception ex) {
+            request.setAttribute("error",
+                    "No se pudo leer la lista de productos seleccionados. Intente nuevamente.");
+            request.setAttribute("itemsStateValue", "[]");
             recargarProductosYForward(request, response);
             return;
         }
 
-        if (cantidad <= 0) {
-            request.setAttribute("error", "La cantidad debe ser mayor a cero.");
+        List<DetalleFacturaRequest> detalles = new ArrayList<>();
+        if (itemsArray != null) {
+            for (DetalleFacturaRequest item : itemsArray) {
+                if (item == null || item.idElectrodomestico == null) {
+                    continue;
+                }
+                if (item.cantidad <= 0) {
+                    request.setAttribute("error",
+                            "Cada producto debe tener una cantidad mayor a cero.");
+                    request.setAttribute("itemsStateValue", itemsStateJson);
+                    recargarProductosYForward(request, response);
+                    return;
+                }
+                DetalleFacturaRequest detalle = new DetalleFacturaRequest();
+                detalle.idElectrodomestico = item.idElectrodomestico;
+                detalle.cantidad = item.cantidad;
+                detalles.add(detalle);
+            }
+        }
+
+        if (detalles.isEmpty()) {
+            request.setAttribute("error",
+                    "Agregue al menos un producto a la factura.");
+            request.setAttribute("itemsStateValue", "[]");
             recargarProductosYForward(request, response);
             return;
         }
+
+        String sanitizedItemsJson = jsonb.toJson(detalles);
+        request.setAttribute("itemsStateValue", sanitizedItemsJson);
 
         CrearFacturaRequest facturaReq = new CrearFacturaRequest();
         facturaReq.cedulaCliente = cedula.trim();
         facturaReq.nombreCliente = nombreCompleto.trim();
-        facturaReq.idElectrodomestico = productoId;
-        facturaReq.cantidad = cantidad;
+        facturaReq.idElectrodomestico = detalles.get(0).idElectrodomestico;
+        facturaReq.cantidad = detalles.get(0).cantidad;
+        facturaReq.productos = detalles;
         facturaReq.formaPago = (formaPago == null || formaPago.isBlank())
                 ? "EFECTIVO"
                 : formaPago.trim().toUpperCase();
-
-        Jsonb jsonb = JsonbBuilder.create();
+        
+        // Agregar plazoMeses y numCuentaCredito si es pago a crédito
+        if ("CREDITO".equals(facturaReq.formaPago)) {
+            if (plazoMesesStr != null && !plazoMesesStr.isBlank()) {
+                try {
+                    facturaReq.plazoMeses = Integer.parseInt(plazoMesesStr.trim());
+                } catch (NumberFormatException e) {
+                    // Ignorar si no es un número válido
+                }
+            }
+            if (numCuentaCredito != null && !numCuentaCredito.isBlank()) {
+                facturaReq.numCuentaCredito = numCuentaCredito.trim();
+            }
+        }
 
         try {
             URL url = new URL(BASE_URL + "/facturas");
@@ -174,6 +230,7 @@ public class ElectroquitoFacturarController extends HttpServlet {
                                 "Factura generada correctamente.");
                     }
                 }
+                request.setAttribute("itemsStateValue", "[]");
 
             } else {
                 String detalle = "";
@@ -211,6 +268,15 @@ public class ElectroquitoFacturarController extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error",
                     "No se pudo cargar el catálogo de productos. Intente nuevamente.");
+        }
+
+        if (request.getAttribute("itemsStateValue") == null) {
+            String paramState = request.getParameter("itemsState");
+            if (paramState != null && !paramState.isBlank()) {
+                request.setAttribute("itemsStateValue", paramState);
+            } else {
+                request.setAttribute("itemsStateValue", "[]");
+            }
         }
 
         RequestDispatcher rd = request.getRequestDispatcher(

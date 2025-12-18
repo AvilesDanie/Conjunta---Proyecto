@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,11 +31,24 @@ public class BanquitoCuotasCreditoController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Validar sesión
-        Object usuarioSesion = request.getSession().getAttribute("usuarioSesion");
+        HttpSession session = request.getSession(false);
+        Object usuarioSesion = session != null ? session.getAttribute("usuarioSesion") : null;
         if (usuarioSesion == null) {
             response.sendRedirect(request.getContextPath() + "/banquito/login");
             return;
+        }
+
+        if (session != null) {
+            Object flashExito = session.getAttribute(BanquitoCuotasFlash.EXITO);
+            if (flashExito != null) {
+                request.setAttribute("mensajeExito", flashExito.toString());
+                session.removeAttribute(BanquitoCuotasFlash.EXITO);
+            }
+            Object flashError = session.getAttribute(BanquitoCuotasFlash.ERROR);
+            if (flashError != null) {
+                request.setAttribute("error", flashError.toString());
+                session.removeAttribute(BanquitoCuotasFlash.ERROR);
+            }
         }
 
         String idCredito = request.getParameter("idCredito");
@@ -95,3 +109,4 @@ public class BanquitoCuotasCreditoController extends HttpServlet {
         }
     }
 }
+

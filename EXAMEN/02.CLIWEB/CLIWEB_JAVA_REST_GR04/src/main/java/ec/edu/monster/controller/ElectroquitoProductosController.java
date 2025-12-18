@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +34,24 @@ public class ElectroquitoProductosController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Validar sesiÃ³n (mismo atributo que usaste en login)
-        Object usuarioSesion = request.getSession().getAttribute("usuarioSesion");
+        HttpSession session = request.getSession(false);
+        Object usuarioSesion = session != null ? session.getAttribute("usuarioSesion") : null;
         if (usuarioSesion == null) {
             response.sendRedirect(request.getContextPath() + "/electroquito/login");
             return;
+        }
+
+        if (session != null) {
+            Object flashExito = session.getAttribute(ElectroquitoProductosFlash.EXITO);
+            if (flashExito != null) {
+                request.setAttribute("mensajeExito", flashExito.toString());
+                session.removeAttribute(ElectroquitoProductosFlash.EXITO);
+            }
+            Object flashError = session.getAttribute(ElectroquitoProductosFlash.ERROR);
+            if (flashError != null) {
+                request.setAttribute("error", flashError.toString());
+                session.removeAttribute(ElectroquitoProductosFlash.ERROR);
+            }
         }
 
         String filtro = request.getParameter("q");
@@ -74,10 +88,8 @@ public class ElectroquitoProductosController extends HttpServlet {
 
     private List<ElectrodomesticoDTO> obtenerProductosDesdeAPI(String filtro) throws IOException {
 
-        // Ajusta el path si tu ElectrodomesticoController usa otro (por ejemplo "productos")
         String urlStr = BASE_URL + "/electrodomesticos";
 
-        // Si el servicio soporta filtro por query param, lo mandas:
         if (filtro != null && !filtro.isBlank()) {
             urlStr += "?q=" + java.net.URLEncoder.encode(filtro, StandardCharsets.UTF_8);
         }
@@ -124,7 +136,3 @@ public class ElectroquitoProductosController extends HttpServlet {
                 .collect(Collectors.toList());
     }
 }
-
-
-
-

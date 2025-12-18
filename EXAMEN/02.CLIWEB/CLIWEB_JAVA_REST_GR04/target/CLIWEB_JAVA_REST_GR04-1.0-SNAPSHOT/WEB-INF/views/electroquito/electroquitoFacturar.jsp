@@ -335,6 +335,114 @@
             margin-top: 22px;
         }
 
+        .eq-add-item-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .eq-add-item-btn {
+            border: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: linear-gradient(120deg, #ff9a4a, #f97316);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 12px 24px rgba(249, 115, 22, 0.3);
+        }
+
+        .eq-add-item-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .eq-cart-section {
+            margin-top: 28px;
+            border: 1px dashed var(--eq-border);
+            border-radius: 22px;
+            padding: 18px;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .eq-cart-title {
+            margin: 0 0 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .eq-cart-empty {
+            margin: 0;
+            color: var(--eq-text-muted);
+            font-size: 0.95rem;
+        }
+
+        .eq-cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .eq-cart-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .eq-cart-item-info {
+            flex: 1;
+        }
+
+        .eq-cart-item-title {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .eq-cart-item-meta {
+            margin: 4px 0 0;
+            font-size: 0.85rem;
+            color: var(--eq-text-muted);
+        }
+
+        .eq-cart-item-qty {
+            font-weight: 600;
+            color: var(--eq-navy);
+        }
+
+        .eq-cart-item-subtotal {
+            margin: 0;
+            font-weight: 700;
+            color: var(--eq-green);
+        }
+
+        .eq-cart-remove {
+            border: none;
+            background: rgba(15, 23, 42, 0.08);
+            color: var(--eq-text-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .eq-cart-remove:hover {
+            background: rgba(15, 23, 42, 0.18);
+        }
+
         .eq-payment-pills {
             display: flex;
             flex-wrap: wrap;
@@ -585,9 +693,11 @@
 
 <c:set var="formaPagoSeleccionada"
        value="${empty param.formaPago ? 'EFECTIVO' : param.formaPago}"/>
-<c:set var="cantidadSeleccionada"
-       value="${empty param.cantidad ? 1 : param.cantidad}"/>
-<c:set var="productoSeleccionadoId" value="${param.productoId}"/>
+<c:set var="cantidadSeleccionada" value="1"/>
+<c:set var="productoSeleccionadoId" value=""/>
+<c:set var="itemsStateAttr" value="${requestScope.itemsStateValue}"/>
+<c:set var="itemsStateValue"
+       value="${empty itemsStateAttr ? (empty param.itemsState ? '[]' : param.itemsState) : itemsStateAttr}"/>
 <c:set var="tieneProductos" value="${not empty productos}"/>
 
 <div class="eq-gradient-wrapper">
@@ -633,6 +743,11 @@
               method="post"
               action="${pageContext.request.contextPath}/electroquito/facturacion/nueva"
               data-has-success="${not empty exito}">
+
+            <input type="hidden"
+                   name="itemsState"
+                   id="itemsStateInput"
+                   value="${fn:escapeXml(itemsStateValue)}">
 
             <div class="eq-form-grid">
                 <section class="eq-form-card eq-card-span-2">
@@ -682,10 +797,12 @@
                     <button type="button"
                             id="selectProductButton"
                             class="eq-select-product"
+                            onclick="if(window.eqOpenProductModal){return window.eqOpenProductModal(event);}var m=document.getElementById('productModal');if(m){m.classList.add('is-active');if(document.body){document.body.classList.add('eq-modal-open');}}return false;"
                             <c:if test="${not tieneProductos}">disabled</c:if>>
                         <span class="material-icons-round">point_of_sale</span>
                         <span>Seleccionar producto</span>
                     </button>
+
 
                     <div class="eq-selected-product">
                         <div class="eq-selected-placeholder"
@@ -710,7 +827,7 @@
                     </div>
 
                     <input type="hidden"
-                           name="productoId"
+                           name="productoSeleccionado"
                            id="productoIdInput"
                            value="${fn:escapeXml(productoSeleccionadoId)}">
 
@@ -723,7 +840,7 @@
                                        id="cantidadInput"
                                        min="1"
                                        step="1"
-                                       name="cantidad"
+                                       name="cantidadSeleccionada"
                                        value="${fn:escapeXml(cantidadSeleccionada)}"
                                        required>
                             </div>
@@ -731,6 +848,27 @@
                         <p class="eq-hint">
                             Cada producto aplica stock inmediato. Cantidad m&iacute;nima: 1.
                         </p>
+                    </div>
+
+                    <div class="eq-add-item-actions">
+                        <button type="button"
+                                class="eq-add-item-btn"
+                                id="addProductButton"
+                                disabled>
+                            <span class="material-icons-round">playlist_add</span>
+                            <span>Agregar a la factura</span>
+                        </button>
+                        <p class="eq-hint">
+                            Puedes sumar varios electrodom&eacute;sticos antes de generar la factura.
+                        </p>
+                    </div>
+
+                    <div class="eq-cart-section">
+                        <p class="eq-cart-title">Resumen de productos</p>
+                        <p class="eq-cart-empty" id="cartEmptyMessage">
+                            A&uacute;n no agregas productos a la factura.
+                        </p>
+                        <div class="eq-cart-items" id="cartItemsList"></div>
                     </div>
 
                     <c:if test="${not tieneProductos}">
@@ -753,6 +891,7 @@
                             <input type="radio"
                                    name="formaPago"
                                    value="EFECTIVO"
+                                   id="pagoEfectivo"
                                    <c:if test="${formaPagoSeleccionada eq 'EFECTIVO'}">checked</c:if>>
                             <span class="eq-pill-body">
                                 <span class="material-icons-round">attach_money</span>
@@ -767,6 +906,7 @@
                             <input type="radio"
                                    name="formaPago"
                                    value="CREDITO"
+                                   id="pagoCredito"
                                    <c:if test="${formaPagoSeleccionada eq 'CREDITO'}">checked</c:if>>
                             <span class="eq-pill-body">
                                 <span class="material-icons-round">credit_score</span>
@@ -776,6 +916,38 @@
                                 </span>
                             </span>
                         </label>
+                    </div>
+
+                    <div id="creditoFields" style="display: none; margin-top: 1rem;">
+                        <div class="eq-field-grid">
+                            <label class="eq-field">
+                                <span class="eq-field-label">Plazo en meses</span>
+                                <div class="eq-input-wrapper">
+                                    <span class="material-icons-round">event</span>
+                                    <select name="plazoMeses" id="plazoMeses">
+                                        <option value="">Seleccione...</option>
+                                        <option value="3" <c:if test="${param.plazoMeses eq '3'}">selected</c:if>>3 meses</option>
+                                        <option value="6" <c:if test="${param.plazoMeses eq '6'}">selected</c:if>>6 meses</option>
+                                        <option value="12" <c:if test="${param.plazoMeses eq '12'}">selected</c:if>>12 meses</option>
+                                        <option value="18" <c:if test="${param.plazoMeses eq '18'}">selected</c:if>>18 meses</option>
+                                        <option value="24" <c:if test="${param.plazoMeses eq '24'}">selected</c:if>>24 meses</option>
+                                    </select>
+                                </div>
+                            </label>
+
+                            <label class="eq-field">
+                                <span class="eq-field-label">N&uacute;mero de cuenta</span>
+                                <div class="eq-input-wrapper">
+                                    <span class="material-icons-round">account_balance</span>
+                                    <input type="text"
+                                           name="numCuentaCredito"
+                                           id="numCuentaCredito"
+                                           placeholder="000000000"
+                                           maxlength="20"
+                                           value="${fn:escapeXml(param.numCuentaCredito)}">
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -854,133 +1026,425 @@
 </div>
 
 <script>
-    (function () {
-        const modal = document.getElementById('productModal');
-        const selectButton = document.getElementById('selectProductButton');
-        const closeButton = document.getElementById('closeProductModal');
-        const productCards = modal.querySelectorAll('.eq-product-card');
-        const productIdInput = document.getElementById('productoIdInput');
-        const placeholder = document.getElementById('selectedProductEmpty');
-        const details = document.getElementById('selectedProductDetails');
-        const thumbContainer = document.getElementById('selectedProductThumb');
-        const thumbIcon = document.getElementById('selectedProductThumbIcon');
-        const thumbImg = document.getElementById('selectedProductThumbImg');
-        const nameEl = document.getElementById('selectedProductName');
-        const codeEl = document.getElementById('selectedProductCode');
-        const priceEl = document.getElementById('selectedProductPrice');
-        const quantityInput = document.getElementById('cantidadInput');
-        const form = document.getElementById('facturaForm');
-
-        const formatPrice = (value) => {
-            const number = Number(value);
-            if (Number.isNaN(number)) {
-                return '$0.00';
-            }
-            return new Intl.NumberFormat('es-EC', {
-                style: 'currency',
-                currency: 'USD',
-                minimumFractionDigits: 2
-            }).format(number);
-        };
-
-        const updateSelectedProduct = (card) => {
-            if (!card) {
-                productIdInput.value = '';
-                details.hidden = true;
-                placeholder.hidden = false;
-                if (thumbImg) {
-                    thumbImg.hidden = true;
-                }
-                if (thumbIcon) {
-                    thumbIcon.style.display = 'inline-flex';
-                }
-                return;
-            }
-            productIdInput.value = card.dataset.productId || '';
-            const image = card.dataset.productImage || '';
-
-            if (image) {
-                thumbImg.src = image;
-                thumbImg.hidden = false;
-                thumbIcon.style.display = 'none';
+    (() => {
+        const onReady = (fn) => {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', fn, { once: true });
             } else {
-                thumbImg.hidden = true;
-                thumbIcon.style.display = 'inline-flex';
+                fn();
             }
-
-            nameEl.textContent = card.dataset.productName || 'Producto ElectroQuito';
-            codeEl.textContent = card.dataset.productCode
-                ? 'Codigo: ' + card.dataset.productCode
-                : 'Codigo no disponible';
-            priceEl.textContent = formatPrice(card.dataset.productPrice);
-            details.hidden = false;
-            placeholder.hidden = true;
         };
 
-        const openModal = () => {
-            if (!selectButton || selectButton.disabled) {
-                return;
-            }
-            modal.classList.add('is-active');
-            document.body.classList.add('eq-modal-open');
-        };
+        onReady(() => {
+            const modal = document.getElementById('productModal');
+            const selectButton = document.getElementById('selectProductButton');
+            const closeButton = document.getElementById('closeProductModal');
+            const productCards = modal ? Array.from(modal.querySelectorAll('.eq-product-card')) : [];
+            const productIdInput = document.getElementById('productoIdInput');
+            const placeholder = document.getElementById('selectedProductEmpty');
+            const details = document.getElementById('selectedProductDetails');
+            const thumbIcon = document.getElementById('selectedProductThumbIcon');
+            const thumbImg = document.getElementById('selectedProductThumbImg');
+            const nameEl = document.getElementById('selectedProductName');
+            const codeEl = document.getElementById('selectedProductCode');
+            const priceEl = document.getElementById('selectedProductPrice');
+            const quantityInput = document.getElementById('cantidadInput');
+            const addButton = document.getElementById('addProductButton');
+            const cartList = document.getElementById('cartItemsList');
+            const cartEmptyMessage = document.getElementById('cartEmptyMessage');
+            const itemsStateInput = document.getElementById('itemsStateInput');
+            const form = document.getElementById('facturaForm');
 
-        const closeModal = () => {
-            modal.classList.remove('is-active');
-            document.body.classList.remove('eq-modal-open');
-        };
+            const products = {};
+            const hydrateProductFromCard = (card) => {
+                if (!card || !card.dataset) {
+                    return null;
+                }
+                const rawId = card.dataset.productId;
+                if (!rawId) {
+                    return null;
+                }
+                return {
+                    id: rawId,
+                    name: card.dataset.productName || '',
+                    code: card.dataset.productCode || '',
+                    price: Number(card.dataset.productPrice || 0),
+                    image: card.dataset.productImage || ''
+                };
+            };
 
-        if (selectButton) {
-            selectButton.addEventListener('click', openModal);
-        }
-
-        if (closeButton) {
-            closeButton.addEventListener('click', closeModal);
-        }
-
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && modal.classList.contains('is-active')) {
-                closeModal();
-            }
-        });
-
-        productCards.forEach((card) => {
-            card.addEventListener('click', () => {
-                updateSelectedProduct(card);
-                closeModal();
+            productCards.forEach((card) => {
+                const product = hydrateProductFromCard(card);
+                if (product) {
+                    products[product.id] = product;
+                }
             });
-        });
 
-        const presetProductId = productIdInput.value;
-        if (presetProductId) {
-            const match = Array.from(productCards)
-                .find((card) => card.dataset.productId === presetProductId);
-            if (match) {
-                updateSelectedProduct(match);
+            let selectedProduct = null;
+            let cartItems = [];
+
+            const formatPrice = (value) => {
+                const number = Number(value);
+                if (Number.isNaN(number)) {
+                    return '$0.00';
+                }
+                return new Intl.NumberFormat('es-EC', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 2
+                }).format(number);
+            };
+
+            const updateSelectedView = () => {
+                if (!placeholder || !details) {
+                    return;
+                }
+                if (!selectedProduct) {
+                    details.hidden = true;
+                    placeholder.hidden = false;
+                    if (thumbImg) {
+                        thumbImg.hidden = true;
+                    }
+                    if (thumbIcon) {
+                        thumbIcon.style.display = 'inline-flex';
+                    }
+                    if (nameEl) {
+                        nameEl.textContent = 'Producto';
+                    }
+                    if (codeEl) {
+                        codeEl.textContent = 'C&oacute;digo';
+                    }
+                    if (priceEl) {
+                        priceEl.textContent = '$0.00';
+                    }
+                    return;
+                }
+                details.hidden = false;
+                placeholder.hidden = true;
+                if (thumbImg && selectedProduct.image) {
+                    thumbImg.src = selectedProduct.image;
+                    thumbImg.hidden = false;
+                    if (thumbIcon) {
+                        thumbIcon.style.display = 'none';
+                    }
+                } else if (thumbImg) {
+                    thumbImg.hidden = true;
+                    if (thumbIcon) {
+                        thumbIcon.style.display = 'inline-flex';
+                    }
+                }
+                if (nameEl) {
+                    nameEl.textContent = selectedProduct.name || 'Producto ElectroQuito';
+                }
+                if (codeEl) {
+                    codeEl.textContent = selectedProduct.code
+                        ? 'C&oacute;digo: ' + selectedProduct.code
+                        : 'C&oacute;digo no disponible';
+                }
+                if (priceEl) {
+                    priceEl.textContent = formatPrice(selectedProduct.price);
+                }
+            };
+
+            const setSelectedProduct = (product) => {
+                selectedProduct = product || null;
+                if (productIdInput) {
+                    productIdInput.value = selectedProduct ? selectedProduct.id || '' : '';
+                }
+                if (addButton) {
+                    addButton.disabled = !selectedProduct;
+                }
+                updateSelectedView();
+            };
+
+            const syncItemsState = () => {
+                if (!itemsStateInput) {
+                    return;
+                }
+                const payload = cartItems.map((item) => ({
+                    idElectrodomestico: Number(item.id),
+                    cantidad: item.cantidad
+                }));
+                itemsStateInput.value = JSON.stringify(payload);
+            };
+
+            const renderCart = () => {
+                if (!cartList || !cartEmptyMessage) {
+                    return;
+                }
+                cartList.innerHTML = '';
+                if (cartItems.length === 0) {
+                    cartEmptyMessage.hidden = false;
+                    return;
+                }
+                cartEmptyMessage.hidden = true;
+                cartItems.forEach((item, index) => {
+                    const product = products[item.id] || {};
+                    const subtotal = (product.price || 0) * item.cantidad;
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'eq-cart-item';
+
+                    const info = document.createElement('div');
+                    info.className = 'eq-cart-item-info';
+
+                    const title = document.createElement('p');
+                    title.className = 'eq-cart-item-title';
+                    title.textContent = product.name || 'Producto seleccionado';
+                    info.appendChild(title);
+
+                    const meta = document.createElement('p');
+                    meta.className = 'eq-cart-item-meta';
+                    if (product.code) {
+                        const codeSpan = document.createElement('span');
+                        codeSpan.textContent = 'C\u00F3digo: ' + product.code + ' - ';
+                        meta.appendChild(codeSpan);
+                    }
+                    const qtySpan = document.createElement('span');
+                    qtySpan.className = 'eq-cart-item-qty';
+                    qtySpan.textContent = 'Cantidad: ' + item.cantidad;
+                    meta.appendChild(qtySpan);
+                    info.appendChild(meta);
+
+                    wrapper.appendChild(info);
+
+                    const subtotalEl = document.createElement('p');
+                    subtotalEl.className = 'eq-cart-item-subtotal';
+                    subtotalEl.textContent = formatPrice(subtotal);
+                    wrapper.appendChild(subtotalEl);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'eq-cart-remove';
+                    removeBtn.dataset.index = String(index);
+
+                    const removeIcon = document.createElement('span');
+                    removeIcon.className = 'material-icons-round';
+                    removeIcon.textContent = 'close';
+                    removeBtn.appendChild(removeIcon);
+
+                    wrapper.appendChild(removeBtn);
+                    cartList.appendChild(wrapper);
+                });
+            };
+
+            const loadInitialItems = () => {
+                if (!itemsStateInput) {
+                    return;
+                }
+                let parsed = [];
+                try {
+                    parsed = JSON.parse(itemsStateInput.value || '[]');
+                } catch (err) {
+                    parsed = [];
+                }
+                if (Array.isArray(parsed)) {
+                    cartItems = parsed
+                        .filter((item) => item && item.idElectrodomestico)
+                        .map((item) => ({
+                            id: String(item.idElectrodomestico),
+                            cantidad: Number(item.cantidad) > 0 ? Number(item.cantidad) : 1
+                        }));
+                } else {
+                    cartItems = [];
+                }
+                renderCart();
+                syncItemsState();
+            };
+
+            const addCurrentProduct = () => {
+                if (!selectedProduct) {
+                    alert('Selecciona un producto del cat&aacute;logo antes de agregarlo.');
+                    return;
+                }
+                const raw = quantityInput ? Number(quantityInput.value) : 1;
+                const quantity = Math.max(1, Number.isNaN(raw) ? 1 : raw);
+                const existing = cartItems.find((item) => item.id === selectedProduct.id);
+                if (existing) {
+                    existing.cantidad += quantity;
+                } else {
+                    cartItems.push({
+                        id: selectedProduct.id,
+                        cantidad: quantity
+                    });
+                }
+                if (quantityInput) {
+                    quantityInput.value = 1;
+                }
+                renderCart();
+                syncItemsState();
+            };
+
+            const openModal = () => {
+                if (!modal || (selectButton && selectButton.disabled)) {
+                    return;
+                }
+                modal.classList.add('is-active');
+                if (document.body) {
+                    document.body.classList.add('eq-modal-open');
+                }
+            };
+
+        window.eqOpenProductModal = (event) => {
+            if (event) {
+                event.preventDefault();
             }
-        }
+            openModal();
+            return false;
+        };
 
-        if (form && form.dataset.hasSuccess === 'true') {
-            form.reset();
-            Array.from(form.querySelectorAll('input[type="text"]')).forEach((input) => {
-                input.value = '';
+            const closeModal = () => {
+                if (!modal) {
+                    return;
+                }
+                modal.classList.remove('is-active');
+                if (document.body) {
+                    document.body.classList.remove('eq-modal-open');
+                }
+            };
+
+            if (selectButton) {
+                selectButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openModal();
+                });
+            }
+
+            if (closeButton) {
+                closeButton.addEventListener('click', closeModal);
+            }
+
+            if (modal) {
+                modal.addEventListener('click', (event) => {
+                    const card = event.target.closest
+                        ? event.target.closest('.eq-product-card')
+                        : null;
+                    if (card) {
+                        const productId = card.dataset ? card.dataset.productId : null;
+                        const product = productId ? products[productId] : null;
+                        if (product) {
+                            setSelectedProduct(product);
+                        } else {
+                            const hydrated = hydrateProductFromCard(card);
+                            setSelectedProduct(hydrated);
+                            if (hydrated) {
+                                products[hydrated.id] = hydrated;
+                            }
+                        }
+                        closeModal();
+                        return;
+                    }
+                    if (event.target === modal) {
+                        closeModal();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal && modal.classList.contains('is-active')) {
+                    closeModal();
+                }
             });
-            if (quantityInput) {
-                quantityInput.value = 1;
+
+            if (addButton) {
+                addButton.addEventListener('click', addCurrentProduct);
             }
-            const efectivo = form.querySelector('input[name="formaPago"][value="EFECTIVO"]');
-            if (efectivo) {
-                efectivo.checked = true;
+
+            if (cartList) {
+                cartList.addEventListener('click', (event) => {
+                    const button = event.target.closest('.eq-cart-remove');
+                    if (!button) {
+                        return;
+                    }
+                    const index = Number(button.dataset.index);
+                    if (Number.isNaN(index)) {
+                        return;
+                    }
+                    cartItems.splice(index, 1);
+                    renderCart();
+                    syncItemsState();
+                });
             }
-            updateSelectedProduct(null);
-        }
+
+            if (form) {
+                form.addEventListener('submit', (event) => {
+                    if (cartItems.length === 0) {
+                        event.preventDefault();
+                        alert('Agrega al menos un producto antes de generar la factura.');
+                        return;
+                    }
+                    syncItemsState();
+                });
+            }
+
+            // Manejar la visibilidad de los campos de crédito
+            const pagoEfectivo = document.getElementById('pagoEfectivo');
+            const pagoCredito = document.getElementById('pagoCredito');
+            const creditoFields = document.getElementById('creditoFields');
+            const plazoMeses = document.getElementById('plazoMeses');
+            const numCuentaCredito = document.getElementById('numCuentaCredito');
+
+            function toggleCreditoFields() {
+                if (pagoCredito && pagoCredito.checked) {
+                    if (creditoFields) creditoFields.style.display = 'block';
+                    if (plazoMeses) plazoMeses.setAttribute('required', 'required');
+                    if (numCuentaCredito) numCuentaCredito.setAttribute('required', 'required');
+                } else {
+                    if (creditoFields) creditoFields.style.display = 'none';
+                    if (plazoMeses) {
+                        plazoMeses.removeAttribute('required');
+                        plazoMeses.value = '';
+                    }
+                    if (numCuentaCredito) {
+                        numCuentaCredito.removeAttribute('required');
+                        numCuentaCredito.value = '';
+                    }
+                }
+            }
+
+            if (pagoEfectivo) {
+                pagoEfectivo.addEventListener('change', toggleCreditoFields);
+            }
+            if (pagoCredito) {
+                pagoCredito.addEventListener('change', toggleCreditoFields);
+            }
+
+            // Inicializar la visibilidad al cargar
+            toggleCreditoFields();
+
+            if (form && form.dataset.hasSuccess === 'true') {
+                form.reset();
+                Array.from(form.querySelectorAll('input[type="text"]')).forEach((input) => {
+                    input.value = '';
+                });
+                if (quantityInput) {
+                    quantityInput.value = 1;
+                }
+                if (form) {
+                    const efectivo = form.querySelector('input[name="formaPago"][value="EFECTIVO"]');
+                    if (efectivo) {
+                        efectivo.checked = true;
+                    }
+                }
+                toggleCreditoFields();
+                cartItems = [];
+                renderCart();
+                syncItemsState();
+                setSelectedProduct(null);
+            } else {
+                loadInitialItems();
+                if (productIdInput && productIdInput.value) {
+                    const preset = products[productIdInput.value];
+                    setSelectedProduct(preset || null);
+                } else {
+                    setSelectedProduct(null);
+                }
+            }
+        });
     })();
 </script>
 </body>
 </html>
+
+
+
